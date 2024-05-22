@@ -5,19 +5,13 @@
  */
 
 import './bootstrap';
-import { createApp } from 'vue';
+import {createApp, ref} from 'vue';
+import Dashboard from "@/layout/Dashboard.vue";
+import {languages} from "@/utils/languages.js";
 
-/**
- * Next, we will create a fresh Vue application instance. You may then begin
- * registering components with the application instance so they are ready
- * to use in your application's views. An example is included for you.
- */
-
-const app = createApp({});
-
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
-
+createApp(Dashboard)
+    .provide('lang', ref(languages()))
+    .mount("#app")
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -36,4 +30,3 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
-app.mount('#app');
