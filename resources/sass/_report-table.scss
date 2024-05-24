@@ -1,0 +1,14 @@
+.report-table {
+    flex: 1;
+    overflow: scroll;
+    
+    &__col {
+
+        border: 1px solid $grey;
+        padding: 1em;
+    }
+
+    &__row {
+    }
+
+}

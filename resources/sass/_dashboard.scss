@@ -1,4 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+}
+
 .dashboard {
-    flex: 1;
-    max-width: 100%;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+
+    &__content {
+        flex:1;
+        overflow-x: hidden;
+    }
+    &__navigation {
+        flex: 220px 0;
+    }
 }

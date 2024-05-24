@@ -1,13 +1,27 @@
 .report {
-    min-height: 100vh;
-    &__content {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: 89vh !important;
+    max-height: 89vh !important;
+
+    &__container {
         flex: 1;
-        background-color: #2d3748;
-        overflow-x: auto;
+        background-color: $white;
+        border: 2px solid $grey;
+        overflow: hidden;
     }
 
     &__filters {
-        background-color: #4a5568;
-        flex: 100px 0;
+        flex: 200px 0;
+        background-color: $white;
+        border: 2px solid $grey;
+    }
+
+    &__tittle {
+        color: $grey-dark;
+        border-bottom: 1px solid $grey;
+        font-size: 1.4em;
+        font-weight: 500;
+        flex: 50px 0;
     }
 }

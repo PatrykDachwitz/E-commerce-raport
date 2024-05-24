@@ -1,7 +1,6 @@
 .navigation {
     padding-top: 50px;
     background-color: $white;
-    flex: 200px 0;
     border-right: 2px solid $grey;
     &__header {
         text-transform: uppercase;
@@ -15,7 +14,7 @@
     }
     &__subsection {
         color: $dark;
-        font-size: 1.1em;
+        font-size: 1em;
         cursor: pointer;
         font-weight: 500;
         &:hover{

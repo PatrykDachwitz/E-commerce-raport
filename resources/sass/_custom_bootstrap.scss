@@ -1,0 +1,12 @@
+.form-check-input--dark {
+    min-height: 20px !important;
+    min-width: 20px !important;
+    &:checked {
+        background-color: $dark;
+        border-color: $dark;
+    }
+}
+
+.form-check-label--grey {
+    color: $grey-dark;
+}
