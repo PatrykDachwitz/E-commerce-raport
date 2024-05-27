@@ -8,8 +8,10 @@ import './bootstrap';
 import {createApp, ref} from 'vue';
 import Dashboard from "@/layout/Dashboard.vue";
 import {languages} from "@/utils/languages.js";
+import {router} from "@/setting/router.js";
 
 createApp(Dashboard)
+    .use(router)
     .provide('lang', ref(languages()))
     .mount("#app")
 /**

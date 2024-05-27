@@ -22,4 +22,20 @@ body {
     &__navigation {
         flex: 220px 0;
     }
+    &__header {
+        flex: 50px 0;
+
+        &--tittle {
+            color: $grey-dark;
+            font-size: 1.4em;
+            font-weight: 500;
+        }
+    }
+
+    &__container {
+        flex: 1;
+        overflow: hidden;
+        max-width: 100% !important;
+        min-width: 100%;
+    }
 }
