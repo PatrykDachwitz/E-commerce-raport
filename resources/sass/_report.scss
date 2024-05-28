@@ -9,6 +9,7 @@
     }
 
     &__row {
+        border-bottom: 1px solid $dark;
         &--header {
             height: 100px;
             &.position-fixed {

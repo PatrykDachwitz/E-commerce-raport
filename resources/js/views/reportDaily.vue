@@ -25,14 +25,14 @@
                     <div class="report__value report__value--double">Szwajcaria</div>
                 </div>
             </div>
-            <div class="report__row d-flex flex-column">
-                <div class="report__col" v-for="item in 25">
+            <div class="report__col d-flex flex-column">
+                <div class="report__row" v-for="item in 25">
                     <div class="report__value report__value--success">210%</div>
                     <div class="report__value report__value--danger">-210%</div>
                 </div>
             </div>
-            <div class="report__row d-flex flex-column" v-for="jitemJ in 16">
-                <div class="report__col" v-for="item in 25">
+            <div class="report__col d-flex flex-column" v-for="jitemJ in 16">
+                <div class="report__row" v-for="item in 25">
                     <div class="report__value">€  984</div>
                     <div class="report__value">15 szt</div>
                 </div>
