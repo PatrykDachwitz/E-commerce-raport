@@ -73,19 +73,21 @@ describe('verification format and count response data', function () {
        get(route('report.daily'))
            ->assertJsonStructure(
                [
-                   'shops' => [
-                       'countries',
-                       'shop_sales' => $structureValueAndArt,
-                       'avgComparison' => $structureValueAndArt,
-                       'avgLast30Day' => $structureValueAndArt,
-                       'minValueLast30Day' => $structureValueAndArt,
-                       'maxValueLast30Day' => $structureValueAndArt,
-                   ],
-                   'global' => $structureStatistic,
-                   'google' => $structureStatistic,
-                   'facebook' => $structureStatistic,
-                   'cost-google' => $structureStatisticCost,
-                   'cost-facebook' => $structureStatisticCost,
+                  'data' => [
+                      'shops' => [
+                      'countries',
+                      'shop_sales' => $structureValueAndArt,
+                      'avgComparison' => $structureValueAndArt,
+                      'avgLast30Day' => $structureValueAndArt,
+                      'minValueLast30Day' => $structureValueAndArt,
+                      'maxValueLast30Day' => $structureValueAndArt,
+                  ],
+                      'global' => $structureStatistic,
+                      'google' => $structureStatistic,
+                      'facebook' => $structureStatistic,
+                      'cost-google' => $structureStatisticCost,
+                      'cost-facebook' => $structureStatisticCost,
+                      ]
                ]
            );
    });

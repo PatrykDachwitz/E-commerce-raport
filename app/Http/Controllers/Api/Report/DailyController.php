@@ -112,6 +112,8 @@ class DailyController extends Controller
                 'cost-facebook' => $testStatisticSales,
             ];
 
-        return response($testResponse);
+        return response([
+            'data' => $testResponse
+        ]);
     }
 }

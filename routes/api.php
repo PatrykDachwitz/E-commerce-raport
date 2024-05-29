@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Report\ComparisonController;
 use App\Http\Controllers\Api\Report\DailyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,5 +15,8 @@ Route::group([
     'as' => 'report.',
 ], function () {
     Route::get('daily', DailyController::class)
-    ->name('daily');
+        ->name('daily');
+
+    Route::get('comparison', ComparisonController::class)
+        ->name('comparison');
 });
