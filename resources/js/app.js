@@ -13,6 +13,7 @@ import {router} from "@/setting/router.js";
 createApp(Dashboard)
     .use(router)
     .provide('lang', ref(languages()))
+    .provide('apiUrl', import.meta.env.VITE_API_PREFIX)
     .mount("#app")
 /**
  * The following block of code may be used to automatically register your

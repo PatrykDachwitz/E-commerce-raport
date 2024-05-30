@@ -1,12 +1,12 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
-import reportDaily from "@/views/reportDaily.vue";
-import reportComparison from "@/views/reportComparison.vue";
+import comparison from "@/views/report/comparison.vue";
+import daily from "@/views/report/daily.vue";
 
 const routes = [
     {
       path: "/",
       name: "home",
-      component: reportDaily
+      component: daily
     },
     {
         path: "/report",
@@ -14,12 +14,12 @@ const routes = [
             {
                 path: "daily",
                 name: "report-daily",
-                component: reportDaily
+                component: daily
             },
             {
                 path: "comparison",
                 name: "report-comparison",
-                component: reportComparison
+                component: comparison
             }
         ],
     }

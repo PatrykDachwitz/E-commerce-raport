@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 use function Pest\Laravel\get;
 
 describe('Verification url api', function () {
@@ -27,6 +27,13 @@ describe('test format and structure response api', function () {
        get(route('report.comparison'))
            ->assertJsonStructure([
                'data' => [
+                   'names' => [
+                       'resultsFromBeginnerMonthCurrentYear',
+                       'resultsFromBeginnerMonthPreviousYear',
+                       'avgResultMonthCurrentYear',
+                       'avgResultMonthPreviousYear',
+                       'resultsFromBeginnerPreviousMonthCurrentYear',
+                   ],
                    'resultsFromBeginnerMonthCurrentYear' => $structureWithValueAndArt,
                    'resultsFromBeginnerMonthPreviousYear' => $structureWithValueAndArt,
                    'resultsFromBeginnerMonthComparisonYear' => $structureWithValueAndArt,
@@ -34,7 +41,7 @@ describe('test format and structure response api', function () {
                    'avgResultMonthPreviousYear' => $structureWithValueAndArt,
                    'avgResultMonthComparisonYear' => $structureWithValueAndArt,
                    'resultsFromBeginnerPreviousMonthCurrentYear' => $structureWithValueAndArt,
-                   'resultsFromBeginnerComparisonMont' => $structureWithValueAndArt,
+                   'resultsFromBeginnerComparisonMonth' => $structureWithValueAndArt,
                ]
            ]);
    });

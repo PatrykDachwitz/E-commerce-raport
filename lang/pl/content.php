@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 return [
     'dashboard' => "Dashboard",
     'setting' => "Ustawienia",
@@ -9,4 +9,26 @@ return [
     'comparisonReport' => "Raport porównawczy",
     'monthlyReport' => "Raport miesięczny",
     'users' => "Użytkownicy",
+    'sum' => "Suma",
+    'shop' => "Sklep",
+    'comparison' => "Porównanie",
+    'avgValue' => "Średnia wartość",
+    'shopSales' => "Sprzedaż sklep",
+    'shopSalesComparison' => "Porównanie sprzedaży z poprzednimi dniami",
+    'comparisonToAvg' => "Porównanie do średniej",
+    'avgLast30Day' => "Śr wartość - ostatnie 30 dni",
+    'minLast30Day' => "Najniższa wartość Ostatnie 30 dni",
+    'maxLast30Day' => "Najwyższa wartość Ostatnie 30 dni",
+    'nameHeader' => [
+        'global' => "Global",
+        'google' => "Google",
+        'facebook' => "Facebook",
+    ],
+    "moveShop" => "Ruch na sklepie",
+    "countClick" => "Ilość kliknięć",
+    "spentAmount" => "Wydana kwota",
+    "costs" => "Koszta",
+    "costFromBeginningMonth" => "Wydana kwota od początku miesiąca",
+    "budgetMonth" => "Założony budżet miesięczny",
+    "percentCostFromBeginningMonth" => "Wydany % miesięcznego budżetu",
 ];

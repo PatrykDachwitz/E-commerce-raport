@@ -7,34 +7,24 @@ use Illuminate\Http\Request;
 
 class DailyController extends Controller
 {
+
+    private array $statisticResult;
+    private array $statisticCost;
+    private array $statisticShop;
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+
+    public function __construct()
     {
         $params = [
-            'valueWithCurrency' => [],
-            'art' => [],
-            'value' => [],
+            'valueWithCurrency' => rand(100, 1999),
+            'art' => rand(100, 999),
+            'value' => rand(100, 999),
+            'percent' => rand(5, 100),
         ];
 
-        $countries = [];
-        for ($i = 0; $i <= 25; $i++) {
-            $countries[] = 'Polska';
-            $params['valueWithCurrency'][] = rand(100, 1999);
-            $params['art'][] = rand(1, 25);
-            $params['value'][] = rand(100, 999);
-            $params['percent'][] = rand(5, 100);
-        }
-
-        $countries = [
-            'Polska',
-        ];
-        for ($i = 0; $i < 25; $i++) {
-            $countries[] = 'Polska';
-        }
-
-        $testStatistic = [
+        $this->statisticResult = [
             'countClick' => [
                 'value' => $params['value']
             ],
@@ -52,7 +42,7 @@ class DailyController extends Controller
             ]
         ];
 
-        $testStatisticSales = [
+        $this->statisticCost = [
             'cost' => [
                 'value' => $params['valueWithCurrency']
             ],
@@ -79,41 +69,38 @@ class DailyController extends Controller
             ],
         ];
 
-        $testResponse =
-            [
-                'shops' => [
-                    'countries' => $countries,
-                    'shop_sales' => [
-                        'value' => $params['valueWithCurrency'],
-                        'art' => $params['art']
-                    ],
+        $structureValueAndArt = [
+            'value' => $params['value'],
+            'art' => $params['art'],
+        ];
+        $this->statisticShop = [
+            'shopSales' => $structureValueAndArt,
+            'avgComparison' => $structureValueAndArt,
+            'avgLast30Day' => $structureValueAndArt,
+            'minValueLast30Day' => $structureValueAndArt,
+            'maxValueLast30Day' => $structureValueAndArt,
+        ];
 
-                    'avgComparison' => [
-                        'value' => $params['percent'],
-                        'art' => $params['percent']
-                    ],
-                    'avgLast30Day' => [
-                        'value' => $params['valueWithCurrency'],
-                        'art' => $params['art']
-                    ],
-                    'minValueLast30Day' => [
-                        'value' => $params['valueWithCurrency'],
-                        'art' => $params['art']
-                    ],
-                    'maxValueLast30Day' => [
-                        'value' => $params['valueWithCurrency'],
-                        'art' => $params['art']
-                    ],
-                ],
-                'global' => $testStatistic,
-                'google' => $testStatistic,
-                'facebook' => $testStatistic,
-                'cost-google' => $testStatisticSales,
-                'cost-facebook' => $testStatisticSales,
+    }
+
+    public function __invoke(Request $request)
+    {
+        $responseStructure = [];
+
+        for ($i = 0; $i <= 25; $i++) {
+            $responseStructure[] = [
+                'country' => 'Polska',
+                'shop' => $this->statisticShop,
+                'global' => $this->statisticResult,
+                'google' => $this->statisticResult,
+                'facebook' => $this->statisticResult,
+                'costGoogle' => $this->statisticCost,
+                'costFacebook' => $this->statisticCost,
             ];
+        }
 
         return response([
-            'data' => $testResponse
+            'data' => $responseStructure
         ]);
     }
 }

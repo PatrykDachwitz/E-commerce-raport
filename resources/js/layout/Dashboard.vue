@@ -1,13 +1,10 @@
 <script setup>
 import {inject, onMounted} from "vue";
-import {changePositionToFixed} from "@/utils/changePositionToFixed.js";
 import Navigation from "@/layout/navigation.vue";
 
 const lang = inject('lang');
 
-onMounted(() => {
-    changePositionToFixed('report__row--header');
-});
+
 </script>
 
 <template>

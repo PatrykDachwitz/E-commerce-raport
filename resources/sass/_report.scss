@@ -1,7 +1,7 @@
 .report {
     max-width: 100%;
     max-height: 100%;
-    overflow: scroll;
+    overflow: auto;
 
     &__col {
         min-width: 165px;
@@ -9,7 +9,6 @@
     }
 
     &__row {
-        border-bottom: 1px solid $dark;
         &--header {
             height: 100px;
             &.position-fixed {
@@ -29,9 +28,11 @@
             background-color: $grey-light;
         }
         &:nth-child(2) {
+            border-bottom: 1px solid $dark;
             background-color: $body-bg;
         }
         &--double {
+            border-bottom: 1px solid $dark;
             min-height: 100px !important;
             max-height: 100px !important;
         }
@@ -58,6 +59,34 @@
         &--double {
             min-height: 100px !important;
             max-height: 100px !important;
+        }
+
+        &--global {
+            background-color: #F4B083 !important;
+            &--secondary {
+                background-color: #FBE4D5 !important;
+            }
+        }
+        &--google {
+            background-color: #A8D08D !important;
+            &--secondary {
+                background-color: #E2EFD9 !important;
+            }
+        }
+        &--facebook {
+            background-color: #FFD965 !important;
+            &--secondary {
+                background-color: #FEF2CB !important;
+            }
+        }
+        &--shop {
+            background-color: #8EAADB !important;
+            &--secondary {
+                background-color: #DEEAF6 !important;
+            }
+            &--name {
+                background-color: #FFFF00 !important;
+            }
         }
 
     }
