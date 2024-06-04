@@ -31,8 +31,8 @@ class ComparisonController extends Controller
         return [
             'resultsFromBeginnerMonthCurrentYear' => "1-{$this->currentDay} " . __("month.{$this->currentMonth}") . " {$this->currentYear}",
             'resultsFromBeginnerMonthPreviousYear' => "1-{$this->currentDay} " . __("month.{$this->currentMonth}") . " {$this->previousYear}",
-            'avgResultMonthCurrentYear' => __('content.avgValue') . __("month.{$this->currentMonth}") . " {$this->currentYear}",
-            'avgResultMonthPreviousYear' => __('content.avgValue') . __("month.{$this->currentMonth}") . " {$this->previousYear}",
+            'avgResultMonthCurrentYear' => __('content.avgValue') . " " . __("month.{$this->currentMonth}") . " {$this->currentYear}",
+            'avgResultMonthPreviousYear' => __('content.avgValue') . " " . __("month.{$this->currentMonth}") . " {$this->previousYear}",
             'resultsFromBeginnerPreviousMonthCurrentYear' => "1-{$this->currentDay} " . __("month.{$this->previousMonth}") . " {$this->currentYear}",
         ];
     }
