@@ -17,3 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/storage/credentials/google_ads_php.ini
+/storage/credentials/credentials-google-ads.json
+/storage/credentials/token-google-ads.json

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get("/testGoogle", \App\Http\Controllers\testGoogle::class);
+
 Route::get('{any}', function () {
     return view('index');
 })->where('any', '.*');
