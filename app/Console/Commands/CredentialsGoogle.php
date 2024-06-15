@@ -90,7 +90,7 @@ class CredentialsGoogle extends Command
         $url .= "?client_id=" . $this->getClientId();
         $url .= "&redirect_uri=http://localhost/";
         $url .= "&response_type=code";
-        $url .= "&scope=https://www.googleapis.com/auth/adwords+https://www.googleapis.com/auth/analytics.readonly";
+        $url .= "&scope=https://www.googleapis.com/auth/adwords+https://www.googleapis.com/auth/analytics.readonly+https://www.googleapis.com/auth/analytics";
         $url .= "&state=state";
 
         return $url;

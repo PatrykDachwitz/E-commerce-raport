@@ -18,6 +18,7 @@ class CountrySeeder extends Seeder
             [
                 'name' => 'Polska',
                 'shop' => 1,
+                'analytics' => "446206454"
             ],
             [
                 'name' => 'Anglia',

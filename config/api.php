@@ -8,5 +8,5 @@ return [
     'pathGoogleToken' => storage_path('credentials\token-google.json'),
     'pathGoogleCredentials' => storage_path('credentials\credentials-google.json'),
 
-    'endPointAnalytics' => "https://analyticsdata.googleapis.com"
+    'endPointAnalytics' => "https://analyticsdata.googleapis.com",
 ];
