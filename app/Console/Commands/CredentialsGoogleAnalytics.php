@@ -8,7 +8,7 @@ use stdClass;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
-class CredentialsGoogle extends Command
+class CredentialsGoogleAnalytics extends Command
 {
     const URL_TOKEN_API_GOOGLE = "https://oauth2.googleapis.com/token";
     const URL_AUTH_API_GOOGLE = "https://accounts.google.com/o/oauth2/auth";
@@ -27,14 +27,14 @@ class CredentialsGoogle extends Command
         $this->tokenPath = config('api.pathGoogleToken');
     }
 
-    protected $signature = 'google:auth';
+    protected $signature = 'google-auth:analytics';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'First token configuration and acceptance of Google resources.';
+    protected $description = 'First token configuration and acceptance of Google resources for Data API.';
 
     /**
      * Execute the console command.
@@ -90,7 +90,7 @@ class CredentialsGoogle extends Command
         $url .= "?client_id=" . $this->getClientId();
         $url .= "&redirect_uri=http://localhost/";
         $url .= "&response_type=code";
-        $url .= "&scope=https://www.googleapis.com/auth/adwords+https://www.googleapis.com/auth/analytics.readonly+https://www.googleapis.com/auth/analytics";
+        $url .= "&scope=https://www.googleapis.com/auth/analytics.readonly+https://www.googleapis.com/auth/analytics";
         $url .= "&state=state";
 
         return $url;
@@ -111,6 +111,7 @@ class CredentialsGoogle extends Command
         return  json_decode($contentFile)->web;
     }
     protected function credentialsFileIsset() : bool {
+
         if (file_exists($this->credentialsPath)) {
             return true;
         } else {

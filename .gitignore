@@ -20,3 +20,5 @@ yarn-error.log
 /storage/credentials/google_ads_php.ini
 /storage/credentials/credentials-google.json
 /storage/credentials/token-google.json
+/storage/credentials/credentials-google-adwords.json
+/storage/credentials/token-google-adwords.json
