@@ -8,7 +8,7 @@ use stdClass;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
-class CredentialsGoogleAds extends Command
+class CredentialsGoogle extends Command
 {
     const URL_TOKEN_API_GOOGLE = "https://oauth2.googleapis.com/token";
     const URL_AUTH_API_GOOGLE = "https://accounts.google.com/o/oauth2/auth";
@@ -23,18 +23,18 @@ class CredentialsGoogleAds extends Command
     {
         parent::__construct();
 
-        $this->credentialsPath = config('api.googleAdsCredentials');
-        $this->tokenPath = config('api.googleAdsToken');
+        $this->credentialsPath = config('api.pathGoogleCredentials');
+        $this->tokenPath = config('api.pathGoogleToken');
     }
 
-    protected $signature = 'app:credentials-google-ads';
+    protected $signature = 'google:auth';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'First token configuration and acceptance of Google resources.';
 
     /**
      * Execute the console command.
@@ -48,7 +48,7 @@ class CredentialsGoogleAds extends Command
 
         $codeAuth = text(__('command.giveCodeAccess'));
 
-        if ($this->saveTokenFile($codeAuth)) {
+        if (!$this->saveTokenFile($codeAuth)) {
             $this->fail(__('command.notSavedToken'));
         } else {
             echo __("command.saveToken");
@@ -90,7 +90,7 @@ class CredentialsGoogleAds extends Command
         $url .= "?client_id=" . $this->getClientId();
         $url .= "&redirect_uri=http://localhost/";
         $url .= "&response_type=code";
-        $url .= "&scope=https://www.googleapis.com/auth/adwords";
+        $url .= "&scope=https://www.googleapis.com/auth/adwords+https://www.googleapis.com/auth/analytics.readonly";
         $url .= "&state=state";
 
         return $url;
