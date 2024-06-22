@@ -17,7 +17,7 @@ class Shop
     private function checkCurrentFormatDate(string|null $date = null) : bool {
         if ($date === null) {
             return true;
-        } elseif(preg_match("/$(0-9){4}+-+(0-9){2}+-+(0-9){2}^/", $date)) {
+        } elseif(strtotime($date)) {
             return true;
         } else {
             return false;
@@ -35,11 +35,16 @@ class Shop
             return "";
         }
     }
+
+    /**
+     * @throws Exception
+     */
     public function get(string|null $startDate = null, string|null $endData = null) {
         if (!$this->checkCurrentFormatDate($startDate) | !$this->checkCurrentFormatDate($endData)) throw new Exception('Incorrect format date');
         $query = $this->getQuery($startDate, $endData);
 
         $response = Http::get($this->apiUrl . $query);
-        return $response->json();
+        if (!$response->ok()) throw new Exception('Error response code');
+        else return $response->json();
     }
 }

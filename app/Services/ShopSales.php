@@ -33,20 +33,29 @@ class ShopSales
             'item' => $confirmedValueByShop['items'],
         ];
     }
-    private function attributionResults(array $resultsShop) : array {
+    private function attributionResults(array|null $resultsShop) : array {
         $attributionResult = [];
 
         foreach ($this->country->where('active', true)->get() as $country) {
-            $attributionResult[$country->id] = $this->getItemAndValueByIdShop($resultsShop, $country->shop);
+            if (!is_null($resultsShop)) {
+                $attributionResult[$country->id] = $this->getItemAndValueByIdShop($resultsShop, $country->shop);
+            } else {
+                $attributionResult[$country->id] = [
+                    'value' => 0,
+                    'item' => 0,
+                ];
+            }
         }
 
         return $attributionResult;
     }
-    public function getSales() {
+    public function getSales(string|null $starDate, string|null $endDate) {
 
         try {
-            $responseShop = $this->shop->get();
-        } catch (Exception) {}
+            $responseShop = $this->shop->get($starDate, $endDate);
+        } catch (Exception $e) {
+            $responseShop = null;
+        }
 
         return $this->attributionResults($responseShop);
     }

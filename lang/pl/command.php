@@ -6,4 +6,7 @@ return [
     'giveCodeAccess' => "Podaj kod tokena z linku odpowiedzi.",
     'saveToken' => "Zapisano token",
     'notSavedToken' => "Nie udało się zapisać tokenu",
+    'saveFileSuccess' => "Plik zapisano poprawnie",
+    'saveFileWrong' => "Nie udało się zapisać pliku",
+    'wrongFormatDate' => "Nie poprawny format daty",
 ];
