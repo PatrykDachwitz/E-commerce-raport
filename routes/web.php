@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get("/testGoogle", \App\Http\Controllers\testGoogle::class);
+Route::get("/testGoogle", \App\Http\Controllers\Api\Report\DailyController::class);
 
 Route::get('{any}', function () {
     return view('index');

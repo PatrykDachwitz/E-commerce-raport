@@ -28,4 +28,8 @@ class Country extends Model
         "active",
     ];
 
+    public function scopeActive() {
+        return $this->where("active", true);
+    }
+
 }

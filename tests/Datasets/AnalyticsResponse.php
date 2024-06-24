@@ -173,3 +173,182 @@ dataset('analyticsResponseWithoutRows', function () {
 '];
 });
 
+dataset('analyticsPolandReportDay', function () {
+    return [
+        '{
+          "dimensionHeaders": [
+            {
+              "name": "date"
+            },
+            {
+              "name": "eventName"
+            }
+          ],
+          "metricHeaders": [
+            {
+              "name": "eventCount",
+              "type": "TYPE_INTEGER"
+            }
+          ],
+          "rows": [
+            {
+              "dimensionValues": [
+                {
+                  "value": "20240620"
+                },
+                {
+                  "value": "click"
+                }
+              ],
+              "metricValues": [
+                {
+                  "value": "100"
+                }
+              ]
+            },
+            {
+              "dimensionValues": [
+                {
+                  "value": "20240619"
+                },
+                {
+                  "value": "click"
+                }
+              ],
+              "metricValues": [
+                {
+                  "value": "100000"
+                }
+              ]
+            },
+            {
+              "dimensionValues": [
+                {
+                  "value": "20240618"
+                },
+                {
+                  "value": "click"
+                }
+              ],
+              "metricValues": [
+                {
+                  "value": "11111"
+                }
+              ]
+            },
+            {
+              "dimensionValues": [
+                {
+                  "value": "20240617"
+                },
+                {
+                  "value": "click"
+                }
+              ],
+              "metricValues": [
+                {
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "rowCount": 23,
+          "metadata": {
+            "currencyCode": "EUR",
+            "timeZone": "Europe/Warsaw"
+          },
+          "kind": "analyticsData#runReport"
+        }
+'
+    ];
+});
+
+dataset('analyticsEnglandReportDay', function () {
+    return [
+        '{
+  "dimensionHeaders": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "eventName"
+    }
+  ],
+  "metricHeaders": [
+    {
+      "name": "eventCount",
+      "type": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimensionValues": [
+        {
+          "value": "20240620"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "123"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240619"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240618"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240617"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "1900"
+        }
+      ]
+    }
+  ],
+  "rowCount": 23,
+  "metadata": {
+    "currencyCode": "EUR",
+    "timeZone": "Europe/Warsaw"
+  },
+  "kind": "analyticsData#runReport"
+}
+'
+    ];
+});
