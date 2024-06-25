@@ -24,7 +24,7 @@ describe('Test services with query in 200 status', function () {
         $analytics->setCountry($country);
         $analytics->setDateCurrent("20240614");
 
-        $responseData = $analytics->get('click', "2024-06-12", "2024-06-14");
+        $responseData = $analytics->get('click', "2024-06-11", "2024-06-14");
 
 
         expect($responseData)
@@ -33,16 +33,28 @@ describe('Test services with query in 200 status', function () {
                 "min",
                 "avg",
                 "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
             ]);
 
         expect($responseData['current'])
             ->toBe(2);
         expect($responseData['min'])
-            ->toBe(1);
-        expect($responseData['max'])
             ->toBe(2);
+        expect($responseData['max'])
+            ->toBe(1011);
         expect($responseData['avg'])
-            ->toBe(1);
+            ->toBe(281);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(1122);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(374);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(10);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(1011);
 
     })->with('properties-account', 'analyticsResponse');
 
@@ -93,6 +105,10 @@ describe('Test services with query in 200 status', function () {
                 "min",
                 "avg",
                 "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
             ]);
 
         expect($responseData['current'])
@@ -102,6 +118,14 @@ describe('Test services with query in 200 status', function () {
         expect($responseData['max'])
             ->toBe(0);
         expect($responseData['avg'])
+            ->toBe(0);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['maxWithoutCurrent'])
             ->toBe(0);
 
     })->with('properties-account', 'analyticsResponseWithoutRows');

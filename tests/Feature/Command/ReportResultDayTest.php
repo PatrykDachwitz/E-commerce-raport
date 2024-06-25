@@ -1,28 +1,28 @@
 <?php
 declare(strict_types=1);
 
-use App\Models\Country;
-use App\Services\Adwords\AnalyticsApi;
-use App\Services\Connection\Shop;
-use App\Services\Report\ResultDay;
-use App\Services\ShopSales;
 use Database\Seeders\ComparisonDayJuneCountry;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\artisan;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
-    seed(ComparisonDayJuneCountry::class);
+   seed(ComparisonDayJuneCountry::class);
 });
-// Do ogarniećia jest średnai i mozłiwośc dodanie google i fb PRzetestować co sięstanie jeśl iejst kraj za durzo do któego nei ma api co jeśłi nei ma wartosći shop api w db
-// tu nie ma podsuomwnia w analytcs i sprawdzić czy srednai jest z ostatnich 30 dni
-test('Verification work services Report result Day with good response api', function (
+
+
+it('Verification correct working command generation result day report with correct response api', function (
     string $shopResponseOneVariant,
     string $shopResponseSecondVariant,
     string $shopResponseThreeVariant,
     string $analyticsPolandReportDay,
     string $analyticsEnglandReportDay,
 ) {
-    $date = "2024-06-20";
+
+    $startDay = "2024-06-20";
+    Storage::fake();
+
     Http::fake([
         config('api.shop') . "?start=2024-06-20&end=2024-06-20" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-19&end=2024-06-19" => Http::response($shopResponseOneVariant),
@@ -58,15 +58,6 @@ test('Verification work services Report result Day with good response api', func
         "https://analyticsdata.googleapis.com/v1beta/properties/123123123123:runReport" => Http::response($analyticsPolandReportDay),
         "https://analyticsdata.googleapis.com/v1beta/properties/987987987987:runReport" => Http::response($analyticsEnglandReportDay),
     ]);
-
-    $reportDay = new ResultDay(
-        new ShopSales(
-            new Shop(),
-            new Country()
-        ),
-        new Country(),
-        new AnalyticsApi()
-    );
 
     $expectResult = [
         [
@@ -239,13 +230,40 @@ test('Verification work services Report result Day with good response api', func
         ]
     ];
 
+    artisan('report:result-day', [
+        "date" => $startDay
+    ])
+        ->expectsOutput(__("command.saveFileSuccess"))
+        ->assertOk();
 
+    Storage::disk()
+        ->assertExists(config('report.containerReportResultDay') . "{$startDay}.json");
 
+    $valueSavedInFile = json_decode(Storage::disk()
+        ->get(config('report.containerReportResultDay') . "{$startDay}.json"), true);
 
-    expect(
-        $reportDay
-            ->get($date)
-    )
+    expect($valueSavedInFile)
         ->toMatchArray($expectResult);
 
 })->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay");
+/*
+it('Verification correct valid date format', function () {
+    Storage::fake();
+    Http::fake([
+        config('api.shop') . "?start=2024-06-01&end=2024-06-20" => Http::response(""),
+        config('api.shop') . "?start=2023-06-01&end=2023-06-20" => Http::response(""),
+        config('api.shop') . "?start=2023-06-01&end=2023-06-30" => Http::response(""),
+        config('api.shop') . "?start=2024-05-01&end=2024-05-20" => Http::response(""),
+    ]);
+
+    $startDay = "202423";
+
+    artisan('report:comparison-day', [
+        "date" => $startDay
+    ])
+        ->expectsOutput(__("command.wrongFormatDate"))
+        ->assertFailed();
+
+    Storage::disk()
+        ->assertMissing(config('report.containerReportComparisonDay') . "{$startDay}.json");
+});*/

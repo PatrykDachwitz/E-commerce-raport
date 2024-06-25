@@ -133,7 +133,37 @@ dataset('analyticsResponse', function () {
       ],
       "metricValues": [
         {
-          "value": "1"
+          "value": "101"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240612"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "1011"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240611"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "10"
         }
       ]
     }

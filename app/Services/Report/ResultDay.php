@@ -215,26 +215,95 @@ class ResultDay
         return $finalResultShop;
     }
 
-    private function returnFormatAnalytics(array $dataAnalytics) : array {
+    private function returnFormatAnalytics(array|null $dataAnalytics) : array {
+        if (is_null($dataAnalytics)) {
+            return [
+                'countClick' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ],
+                'summaryWithoutCurrent' => [
+                    'value' => 0
+                ]
+            ];
 
-        return [
+        } else {
+            return [
+                'countClick' => [
+                    'value' => intval($dataAnalytics['current'])
+                ],
+                'avgComparison' => [
+                    'value' => intval($dataAnalytics['current'] - $dataAnalytics['avgWithoutCurrent'])
+                ],
+                'avgLast30Day' => [
+                    'value' => intval($dataAnalytics['avgWithoutCurrent'])
+                ],
+                'minValueLast30Day' => [
+                    'value' => intval($dataAnalytics['minWithoutCurrent'])
+                ],
+                'maxValueLast30Day' => [
+                    'value' => intval($dataAnalytics['maxWithoutCurrent'])
+                ],
+                'summaryWithoutCurrent' => [
+                    'value' => intval($dataAnalytics['summaryWithoutCurrent'])
+                ]
+            ];
+
+        }
+
+    }
+
+    private function calculateSummaryAnalytics(array $resultsAnalytics) : array {
+
+        $result = [
             'countClick' => [
-                'value' => intval($dataAnalytics['current'])
+                'value' => 0
             ],
             'avgComparison' => [
-                'value' => intval($dataAnalytics['current'] - $dataAnalytics['avg'])
+                'value' => 0
             ],
             'avgLast30Day' => [
-                'value' => intval($dataAnalytics['avg'])
+                'value' => 0
             ],
             'minValueLast30Day' => [
-                'value' => intval($dataAnalytics['min'])
+                'value' => 0
             ],
             'maxValueLast30Day' => [
-                'value' => intval($dataAnalytics['max'])
+                'value' => 0
+            ],
+            'summaryWithoutCurrent' => [
+                'value' => 0
             ]
         ];
+
+        foreach ($resultsAnalytics as $key => $resultAnalytics) {
+            $result['countClick']['value'] += $resultAnalytics['countClick']['value'];
+            $result['minValueLast30Day']['value'] += $resultAnalytics['minValueLast30Day']['value'];
+            $result['maxValueLast30Day']['value'] += $resultAnalytics['maxValueLast30Day']['value'];
+            $result['summaryWithoutCurrent']['value'] += $resultAnalytics['summaryWithoutCurrent']['value'];
+            unset($resultsAnalytics[$key]['summaryWithoutCurrent']);
+        }
+
+        $result['avgLast30Day']['value'] = intval($result['summaryWithoutCurrent']['value'] / 30);
+        $result['avgComparison']['value'] = intval($result['countClick']['value'] - $result['avgLast30Day']['value']);
+        unset($result["summaryWithoutCurrent"]);
+
+        $resultsAnalytics['summary'] = $result;
+
+        return $resultsAnalytics;
     }
+
     private function getAnalyticsResult(Collection $activesCountry) : array {
         $lastDate = $this->datesReport[0];
         $startDate = $this->datesReport[count($this->datesReport) - 1];
@@ -244,7 +313,10 @@ class ResultDay
 
         foreach ($activesCountry as $country) {
 
-
+            if (is_null($country->analytics)) {
+                $response[$country->id] = $this->returnFormatAnalytics(null);
+                continue;
+            }
             $this->analyticsApi
                 ->setCountry($country);
 
@@ -253,8 +325,11 @@ class ResultDay
 
             $resultAnalytics = $this->analyticsApi
                 ->get('click', $startDate, $lastDate);
+
             $response[$country->id] = $this->returnFormatAnalytics($resultAnalytics);
         }
+
+        return $this->calculateSummaryAnalytics($response);
     }
     public function get(string $date) : array {
         $this->createDatesByCountPreviousDay($date);
@@ -268,17 +343,18 @@ class ResultDay
 
         $analyticsResult = $this->getAnalyticsResult($activesCountry);
 
-
         foreach ($activesCountry as $country) {
             $completeReport[] = [
                 'country' => $country->name,
-                'shop' => $resultShopApi[$country->id]
+                'shop' => $resultShopApi[$country->id],
+                'global' => $analyticsResult[$country->id],
             ];
         }
 
         $completeReport[] = [
             'country' => "summary",
-            'shop' => $resultShopApi["summary"]
+            'shop' => $resultShopApi["summary"],
+            'global' => $analyticsResult["summary"],
         ];
 
 

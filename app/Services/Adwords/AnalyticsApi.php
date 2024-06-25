@@ -4,7 +4,6 @@ namespace App\Services\Adwords;
 
 use App\Models\Country;
 use Illuminate\Support\Facades\Http;
-use function PHPUnit\Framework\isEmpty;
 
 class AnalyticsApi
 {
@@ -68,6 +67,10 @@ class AnalyticsApi
             'current' => null,
             'max' => null,
             'count' => 0,
+            'summaryWithoutCurrent' => 0,
+            'avgWithoutCurrent' => null,
+            'maxWithoutCurrent' => null,
+            'minWithoutCurrent' => null,
         ];
 
 
@@ -75,6 +78,9 @@ class AnalyticsApi
             $responseParams['min'] = 0;
             $responseParams['current'] = 0;
             $responseParams['max'] = 0;
+            $responseParams['summaryWithoutCurrent'] = 0;
+            $responseParams['maxWithoutCurrent'] = 0;
+            $responseParams['minWithoutCurrent'] = 0;
 
             return $responseParams;
         }
@@ -86,6 +92,17 @@ class AnalyticsApi
 
                 if ($row['dimensionValues'][0]['value'] === $this->dateCurrent) {
                     $responseParams['current'] = $valueEvent;
+                }
+
+                if ($row['dimensionValues'][0]['value'] !== $this->dateCurrent) {
+                    $responseParams['summaryWithoutCurrent'] += $valueEvent;
+                    if (is_null($responseParams['minWithoutCurrent']) | $responseParams['minWithoutCurrent'] > $valueEvent) {
+                        $responseParams['minWithoutCurrent'] = $valueEvent;
+                    }
+
+                    if (is_null($responseParams['maxWithoutCurrent']) | $responseParams['maxWithoutCurrent'] < $valueEvent) {
+                        $responseParams['maxWithoutCurrent'] = $valueEvent;
+                    }
                 }
 
                 if (is_null($responseParams['min']) | $responseParams['min'] > $valueEvent) {
@@ -101,15 +118,18 @@ class AnalyticsApi
         return $responseParams;
     }
 
-    private function getCountDayInDate(string $startDate, string $endDate) : int {
+    private function getCountDayInDate(string $startDate, string $endDate, int $addDay) : int {
         $startTime = strtotime($startDate);
         $endTime = strtotime($endDate);
 
-        return intval(($endTime - $startTime) / (60 * 60 * 24) + 1);
+        return intval(($endTime - $startTime) / (60 * 60 * 24) + $addDay);
     }
 
-    private function avg(int|float $count, string $startDate, string $endDate) : int | float {
-        $countDay = $this->getCountDayInDate($startDate, $endDate);
+    private function avg(int|float $count, string $startDate, string $endDate, bool $withCurrentDay = false) : int | float {
+        if (!$withCurrentDay) $addDay = 0;
+        else $addDay = 1;
+
+        $countDay = $this->getCountDayInDate($startDate, $endDate, $addDay);
 
         if ($count === 0 | is_null($count)) return 0;
         else return ($count / $countDay);
@@ -118,17 +138,19 @@ class AnalyticsApi
         $responseApi = $this->connectApi($startDate, $endDate);
 
         $dataCustomEvent = $this->searchCustomEventParams($responseApi, $customParams);
-        $avgEvent = $this->avg($dataCustomEvent['count'], $startDate, $endDate);
+        $avgEvent = $this->avg($dataCustomEvent['count'], $startDate, $endDate, true);
+        $avgWithoutCurrentValue = $this->avg($dataCustomEvent['summaryWithoutCurrent'], $startDate, $endDate);
 
-
-        $response = [
+        return [
             'current' => $dataCustomEvent['current'],
             'min' => $dataCustomEvent['min'],
             'max' => $dataCustomEvent['max'],
+            'minWithoutCurrent' => $dataCustomEvent['minWithoutCurrent'],
+            'maxWithoutCurrent' => $dataCustomEvent['maxWithoutCurrent'],
             'avg' => $avgEvent,
+            'summaryWithoutCurrent' => $dataCustomEvent['summaryWithoutCurrent'],
+            'avgWithoutCurrent' => $avgWithoutCurrentValue,
         ];
-
-        return $response;
     }
 
     public function setDateCurrent(string $dateCurrent) : string {

@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\testGoogle;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/testGoogle", \App\Http\Controllers\Api\Report\DailyController::class);
+Route::get("/testGoogle", testGoogle::class);
 
 Route::get('{any}', function () {
     return view('index');

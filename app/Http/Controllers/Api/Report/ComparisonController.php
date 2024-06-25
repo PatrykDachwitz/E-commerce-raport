@@ -3,7 +3,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\Report;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ReportDateFormat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ComparisonController extends Controller
 {
@@ -17,15 +19,6 @@ class ComparisonController extends Controller
     private int $previousMonth;
     private int $currentDay;
 
-    public function __construct()
-    {
-        $this->currentYear = intval(date("Y"));
-        $this->previousYear = $this->currentYear - 1;
-        $this->currentMonth = intval(date("m"));
-        $this->previousMonth = $this->currentMonth - 1;
-        $this->currentDay = intval(date("d"));
-    }
-
     private function getHeadersName() : array {
 
         return [
@@ -37,24 +30,25 @@ class ComparisonController extends Controller
         ];
     }
 
-    public function __invoke(Request $request)
-    {
-        $structureWithValueAndArt = [
-            'value' => 122,
-            'art' => 122,
-        ];
+    private function updateDates(array $date) : void {
 
-        $response = [
-            'names' => $this->getHeadersName(),
-            'resultsFromBeginnerMonthCurrentYear' => $structureWithValueAndArt,
-            'resultsFromBeginnerMonthPreviousYear' => $structureWithValueAndArt,
-            'resultsFromBeginnerMonthComparisonYear' => $structureWithValueAndArt,
-            'avgResultMonthCurrentYear' => $structureWithValueAndArt,
-            'avgResultMonthPreviousYear' => $structureWithValueAndArt,
-            'avgResultMonthComparisonYear' => $structureWithValueAndArt,
-            'resultsFromBeginnerPreviousMonthCurrentYear' => $structureWithValueAndArt,
-            'resultsFromBeginnerComparisonMonth' => $structureWithValueAndArt,
-        ];
+        $this->currentYear = intval($date['year']);
+        $this->previousYear = $this->currentYear - 1;
+        $this->currentMonth = intval($date['month']);
+        $this->previousMonth = $this->currentMonth - 1;
+        $this->currentDay = intval($date['day']);
+    }
+
+    public function __invoke(ReportDateFormat $request)
+    {
+        $fileContent = json_decode(Storage::disk()
+            ->get(config('report.containerReportComparisonDay') . $request->input('date') . '.json'), true);
+
+        $this->updateDates($fileContent["date"]);
+
+        $response = array_merge([
+            'names' => $this->getHeadersName()
+        ], $fileContent);
 
         return response([
             'data' => $response

@@ -11,10 +11,8 @@ const lang = inject('lang');
 onMounted(() => {
 });
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}`)
-watch(data, () => {
-    console.log(data)
-});
+const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-06-25`);
+
 </script>
 
 <template>
@@ -41,49 +39,49 @@ watch(data, () => {
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
                     <div class="report__value">{{ data.data.resultsFromBeginnerMonthPreviousYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthPreviousYear['art'] }} szt</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthPreviousYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
                     <div class="report__value">{{ data.data.resultsFromBeginnerMonthComparisonYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthComparisonYear['art'] }} szt</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthComparisonYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['value'] }}</div>
-                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['art'] }}</div>
+                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['value'] }}</div>
-                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['art'] }}</div>
+                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.avgResultMonthComparisonYear['value'] }}</div>
-                    <div class="report__value">{{ data.data.avgResultMonthComparisonYear['art'] }}</div>
+                    <div class="report__value">{{ data.data.avgResultMonthComparisonYear['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.avgResultMonthComparisonYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['value'] }}</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['art'] }}</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['value'] }}</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['art'] }}</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['art'] }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerComparisonMonth['value'] }}</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerComparisonMonth['art'] }}</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerComparisonMonth['value'] }} Eur</div>
+                    <div class="report__value">{{ data.data.resultsFromBeginnerComparisonMonth['art'] }} Szt</div>
                 </div>
             </div>
         </div>
