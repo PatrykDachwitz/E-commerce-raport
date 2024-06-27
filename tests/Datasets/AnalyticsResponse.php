@@ -5,14 +5,11 @@ dataset('analyticsResponse', function () {
   "dimensionHeaders": [
     {
       "name": "date"
-    },
-    {
-      "name": "eventName"
     }
   ],
   "metricHeaders": [
     {
-      "name": "eventCount",
+      "name": "activeUsers",
       "type": "TYPE_INTEGER"
     }
   ],
@@ -21,84 +18,6 @@ dataset('analyticsResponse', function () {
       "dimensionValues": [
         {
           "value": "20240614"
-        },
-        {
-          "value": "page_view"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "266"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240612"
-        },
-        {
-          "value": "page_view"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "78"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240613"
-        },
-        {
-          "value": "page_view"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "78"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240614"
-        },
-        {
-          "value": "add_to_cart"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "8"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240614"
-        },
-        {
-          "value": "click"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "2"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240614"
-        },
-        {
-          "value": "purchase"
         }
       ],
       "metricValues": [
@@ -111,24 +30,6 @@ dataset('analyticsResponse', function () {
       "dimensionValues": [
         {
           "value": "20240613"
-        },
-        {
-          "value": "add_to_cart"
-        }
-      ],
-      "metricValues": [
-        {
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "dimensionValues": [
-        {
-          "value": "20240613"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -141,9 +42,6 @@ dataset('analyticsResponse', function () {
       "dimensionValues": [
         {
           "value": "20240612"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -156,9 +54,6 @@ dataset('analyticsResponse', function () {
       "dimensionValues": [
         {
           "value": "20240611"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -168,7 +63,7 @@ dataset('analyticsResponse', function () {
       ]
     }
   ],
-  "rowCount": 23,
+  "rowCount": 5,
   "metadata": {
     "currencyCode": "EUR",
     "timeZone": "Europe/Warsaw"
@@ -183,17 +78,15 @@ dataset('analyticsResponseWithoutRows', function () {
   "dimensionHeaders": [
     {
       "name": "date"
-    },
-    {
-      "name": "eventName"
     }
   ],
   "metricHeaders": [
     {
-      "name": "eventCount",
+      "name": "activeUsers",
       "type": "TYPE_INTEGER"
     }
   ],
+  "rowCount": 5,
   "metadata": {
     "currencyCode": "EUR",
     "timeZone": "Europe/Warsaw"
@@ -206,89 +99,74 @@ dataset('analyticsResponseWithoutRows', function () {
 dataset('analyticsPolandReportDay', function () {
     return [
         '{
-          "dimensionHeaders": [
-            {
-              "name": "date"
-            },
-            {
-              "name": "eventName"
-            }
-          ],
-          "metricHeaders": [
-            {
-              "name": "eventCount",
-              "type": "TYPE_INTEGER"
-            }
-          ],
-          "rows": [
-            {
-              "dimensionValues": [
-                {
-                  "value": "20240620"
-                },
-                {
-                  "value": "click"
-                }
-              ],
-              "metricValues": [
-                {
-                  "value": "100"
-                }
-              ]
-            },
-            {
-              "dimensionValues": [
-                {
-                  "value": "20240619"
-                },
-                {
-                  "value": "click"
-                }
-              ],
-              "metricValues": [
-                {
-                  "value": "100000"
-                }
-              ]
-            },
-            {
-              "dimensionValues": [
-                {
-                  "value": "20240618"
-                },
-                {
-                  "value": "click"
-                }
-              ],
-              "metricValues": [
-                {
-                  "value": "11111"
-                }
-              ]
-            },
-            {
-              "dimensionValues": [
-                {
-                  "value": "20240617"
-                },
-                {
-                  "value": "click"
-                }
-              ],
-              "metricValues": [
-                {
-                  "value": "9"
-                }
-              ]
-            }
-          ],
-          "rowCount": 23,
-          "metadata": {
-            "currencyCode": "EUR",
-            "timeZone": "Europe/Warsaw"
-          },
-          "kind": "analyticsData#runReport"
+  "dimensionHeaders": [
+    {
+      "name": "date"
+    }
+  ],
+  "metricHeaders": [
+    {
+      "name": "activeUsers",
+      "type": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimensionValues": [
+        {
+          "value": "20240620"
         }
+      ],
+      "metricValues": [
+        {
+          "value": "100"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240619"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "100000"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240618"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "11111"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "20240617"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "9"
+        }
+      ]
+    }
+  ],
+  "rowCount": 5,
+  "metadata": {
+    "currencyCode": "EUR",
+    "timeZone": "Europe/Warsaw"
+  },
+  "kind": "analyticsData#runReport"
+}
 '
     ];
 });
@@ -299,14 +177,11 @@ dataset('analyticsEnglandReportDay', function () {
   "dimensionHeaders": [
     {
       "name": "date"
-    },
-    {
-      "name": "eventName"
     }
   ],
   "metricHeaders": [
     {
-      "name": "eventCount",
+      "name": "activeUsers",
       "type": "TYPE_INTEGER"
     }
   ],
@@ -315,9 +190,6 @@ dataset('analyticsEnglandReportDay', function () {
       "dimensionValues": [
         {
           "value": "20240620"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -330,9 +202,6 @@ dataset('analyticsEnglandReportDay', function () {
       "dimensionValues": [
         {
           "value": "20240619"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -345,9 +214,6 @@ dataset('analyticsEnglandReportDay', function () {
       "dimensionValues": [
         {
           "value": "20240618"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -360,9 +226,6 @@ dataset('analyticsEnglandReportDay', function () {
       "dimensionValues": [
         {
           "value": "20240617"
-        },
-        {
-          "value": "click"
         }
       ],
       "metricValues": [
@@ -372,7 +235,7 @@ dataset('analyticsEnglandReportDay', function () {
       ]
     }
   ],
-  "rowCount": 23,
+  "rowCount": 5,
   "metadata": {
     "currencyCode": "EUR",
     "timeZone": "Europe/Warsaw"

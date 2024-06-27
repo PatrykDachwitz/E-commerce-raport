@@ -324,7 +324,7 @@ class ResultDay
                 ->setDateCurrent($currentDate);
 
             $resultAnalytics = $this->analyticsApi
-                ->get('click', $startDate, $lastDate);
+                ->get($startDate, $lastDate);
 
             $response[$country->id] = $this->returnFormatAnalytics($resultAnalytics);
         }

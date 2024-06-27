@@ -24,7 +24,7 @@ describe('Test services with query in 200 status', function () {
         $analytics->setCountry($country);
         $analytics->setDateCurrent("20240614");
 
-        $responseData = $analytics->get('click', "2024-06-11", "2024-06-14");
+        $responseData = $analytics->get("2024-06-11", "2024-06-14");
 
 
         expect($responseData)

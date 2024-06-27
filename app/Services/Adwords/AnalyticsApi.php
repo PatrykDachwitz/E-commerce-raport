@@ -37,14 +37,14 @@ class AnalyticsApi
 
     private function getDataBodyQuery(string $startDate, string $endDate) : string {
 
-        $bodyQuery = [
+        return json_encode([
             'dateRanges' => [
                 "startDate" => $startDate,
                 "endDate" => $endDate
             ],
             'metrics' => [
                 [
-                    "name" => "eventCount"
+                    "name" => "activeUsers"
                 ]
             ],
             "keepEmptyRows" => true,
@@ -52,88 +52,50 @@ class AnalyticsApi
                 [
                     "name" => 'date'
                 ],
-                [
-                    "name" => 'eventName'
-                ],
             ]
-        ];
+        ]);
 
-
-        $bodyQuery = [
-            'dateRanges' => [
-                "startDate" => $startDate,
-                "endDate" => $endDate
-            ],
-            'metrics' => [
-                [
-                    "name" => "eventCount"
-                ]
-            ],
-            "keepEmptyRows" => true,
-            "dimensions" => [
-                [
-                    "name" => 'date'
-                ],
-                [
-                    "name" => 'eventName'
-                ],
-            ]
-        ];
-
-        return json_encode($bodyQuery);
     }
 
-    private function searchCustomEventParams(array $data, string $customParams) {
-        $responseParams = [
-            'min' => null,
-            'current' => null,
-            'max' => null,
+    private function getStructureNeedData(bool $rowExists = true) : array {
+        return [
+            'min' => $rowExists ? null : 0,
+            'current' => $rowExists ? null : 0,
+            'max' => $rowExists ? null : 0,
             'count' => 0,
             'summaryWithoutCurrent' => 0,
-            'avgWithoutCurrent' => null,
-            'maxWithoutCurrent' => null,
-            'minWithoutCurrent' => null,
+            'maxWithoutCurrent' => $rowExists ? null : 0,
+            'minWithoutCurrent' => $rowExists ? null : 0,
         ];
+    }
+    private function calculateData(array $data) : array {
 
-
-        if (!isset($data['rows'])) {
-            $responseParams['min'] = 0;
-            $responseParams['current'] = 0;
-            $responseParams['max'] = 0;
-            $responseParams['summaryWithoutCurrent'] = 0;
-            $responseParams['maxWithoutCurrent'] = 0;
-            $responseParams['minWithoutCurrent'] = 0;
-
-            return $responseParams;
-        }
+        $responseParams = $this->getStructureNeedData();
 
         foreach ($data['rows'] as $row) {
-            if ($row['dimensionValues'][1]['value'] === $customParams) {
-                $valueEvent = intval($row['metricValues'][0]['value']);
-                $responseParams['count'] += $valueEvent;
 
-                if ($row['dimensionValues'][0]['value'] === $this->dateCurrent) {
-                    $responseParams['current'] = $valueEvent;
+            $valueEvent = intval($row['metricValues'][0]['value']);
+            $responseParams['count'] += $valueEvent;
+
+            if ($row['dimensionValues'][0]['value'] === $this->dateCurrent) {
+                $responseParams['current'] = $valueEvent;
+            } else {
+                $responseParams['summaryWithoutCurrent'] += $valueEvent;
+                if (is_null($responseParams['minWithoutCurrent']) | $responseParams['minWithoutCurrent'] > $valueEvent) {
+                    $responseParams['minWithoutCurrent'] = $valueEvent;
                 }
 
-                if ($row['dimensionValues'][0]['value'] !== $this->dateCurrent) {
-                    $responseParams['summaryWithoutCurrent'] += $valueEvent;
-                    if (is_null($responseParams['minWithoutCurrent']) | $responseParams['minWithoutCurrent'] > $valueEvent) {
-                        $responseParams['minWithoutCurrent'] = $valueEvent;
-                    }
-
-                    if (is_null($responseParams['maxWithoutCurrent']) | $responseParams['maxWithoutCurrent'] < $valueEvent) {
-                        $responseParams['maxWithoutCurrent'] = $valueEvent;
-                    }
+                if (is_null($responseParams['maxWithoutCurrent']) | $responseParams['maxWithoutCurrent'] < $valueEvent) {
+                    $responseParams['maxWithoutCurrent'] = $valueEvent;
                 }
+            }
 
-                if (is_null($responseParams['min']) | $responseParams['min'] > $valueEvent) {
-                    $responseParams['min'] = $valueEvent;
-                }
+            if (is_null($responseParams['min']) | $responseParams['min'] > $valueEvent) {
+                $responseParams['min'] = $valueEvent;
+            }
 
-                if (is_null($responseParams['max']) | $responseParams['max'] < $valueEvent) {
-                    $responseParams['max'] = $valueEvent;
-                }
+            if (is_null($responseParams['max']) | $responseParams['max'] < $valueEvent) {
+                $responseParams['max'] = $valueEvent;
             }
         }
 
@@ -156,23 +118,19 @@ class AnalyticsApi
         if ($count === 0 | is_null($count)) return 0;
         else return ($count / $countDay);
     }
-    public function get(string $customParams, string $startDate, string $endDate) : array {
+    public function get(string $startDate, string $endDate) : array {
         $responseApi = $this->connectApi($startDate, $endDate);
 
-        $dataCustomEvent = $this->searchCustomEventParams($responseApi, $customParams);
-        $avgEvent = $this->avg($dataCustomEvent['count'], $startDate, $endDate, true);
-        $avgWithoutCurrentValue = $this->avg($dataCustomEvent['summaryWithoutCurrent'], $startDate, $endDate);
+        if (!isset($responseApi['rows'])) {
+            $calculateData = $this->getStructureNeedData(false);
+        } else {
+            $calculateData = $this->calculateData($responseApi);
+        }
 
-        return [
-            'current' => $dataCustomEvent['current'],
-            'min' => $dataCustomEvent['min'],
-            'max' => $dataCustomEvent['max'],
-            'minWithoutCurrent' => $dataCustomEvent['minWithoutCurrent'],
-            'maxWithoutCurrent' => $dataCustomEvent['maxWithoutCurrent'],
-            'avg' => $avgEvent,
-            'summaryWithoutCurrent' => $dataCustomEvent['summaryWithoutCurrent'],
-            'avgWithoutCurrent' => $avgWithoutCurrentValue,
-        ];
+        $calculateData['avg'] = $this->avg($calculateData['count'], $startDate, $endDate, true);
+        $calculateData['avgWithoutCurrent'] = $this->avg($calculateData['summaryWithoutCurrent'], $startDate, $endDate);
+
+        return $calculateData;
     }
 
     public function setDateCurrent(string $dateCurrent) : string {
