@@ -78,7 +78,7 @@ const nameHeaderCost = [
                     </div>
 
                     <daily-shop-result :result="result.shop" />
-                    <daily-adwords-result :result="result.global" />
+                    <daily-adwords-result :curency="false" :result="result.global" />
 <!--                    <daily-adwords-result :result="result.google" />
                     <daily-adwords-result :result="result.facebook" />
                     <daily-cost :result="result.costGoogle" />

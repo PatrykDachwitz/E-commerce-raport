@@ -55,6 +55,10 @@ class CredentialsGoogleAnalytics extends Command
         }
     }
 
+    protected function getRedirectUrl() {
+        return $this->getDataCredentials()
+            ->redirect_uris[0];
+    }
     protected function saveTokenFile($codeAuh) : bool|int {
         $accessTokenResponse = $this->downloadAccessToken($codeAuh);
 
@@ -63,8 +67,10 @@ class CredentialsGoogleAnalytics extends Command
     protected function buildParams($codeAuth) : string {
         $params = "code={$codeAuth}";
         $params .= "&client_id=" . $this->getClientId();
-        $params .= "&redirect_uri=http://localhost/";
+        $params .= "&redirect_uri=" . $this->getRedirectUrl();
         $params .= "&grant_type=authorization_code";
+        $params .= "&access_type=offline";
+        $params .= "&prompt=consent";
         $params .= "&client_secret=" . $this->getClientSecret();
 
         return $params;
@@ -88,7 +94,7 @@ class CredentialsGoogleAnalytics extends Command
     protected function getUrlAccessCodeForToken() : string {
         $url = self::URL_AUTH_API_GOOGLE;
         $url .= "?client_id=" . $this->getClientId();
-        $url .= "&redirect_uri=http://localhost/";
+        $url .= "&redirect_uri=" . $this->getRedirectUrl();
         $url .= "&response_type=code";
         $url .= "&scope=https://www.googleapis.com/auth/analytics.readonly+https://www.googleapis.com/auth/analytics";
         $url .= "&state=state";

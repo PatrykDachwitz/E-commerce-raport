@@ -22,3 +22,5 @@ yarn-error.log
 /storage/credentials/token-google.json
 /storage/credentials/credentials-google-adwords.json
 /storage/credentials/token-google-adwords.json
+/storage/app/report/*
+/database/seeders/ArtformaCountry.php

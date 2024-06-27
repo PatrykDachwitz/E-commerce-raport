@@ -20,7 +20,7 @@ class AnalyticsApi
 
         return $contentToken->access_token;
     }
-    private function connectApi(string $startDate, string $endDate) {
+    public function connectApi(string $startDate, string $endDate) {
         $bodyQuery = $this->getDataBodyQuery($startDate, $endDate);
         $accessToken = $this->getAccessToken();
 
@@ -36,6 +36,28 @@ class AnalyticsApi
     }
 
     private function getDataBodyQuery(string $startDate, string $endDate) : string {
+
+        $bodyQuery = [
+            'dateRanges' => [
+                "startDate" => $startDate,
+                "endDate" => $endDate
+            ],
+            'metrics' => [
+                [
+                    "name" => "eventCount"
+                ]
+            ],
+            "keepEmptyRows" => true,
+            "dimensions" => [
+                [
+                    "name" => 'date'
+                ],
+                [
+                    "name" => 'eventName'
+                ],
+            ]
+        ];
+
 
         $bodyQuery = [
             'dateRanges' => [
