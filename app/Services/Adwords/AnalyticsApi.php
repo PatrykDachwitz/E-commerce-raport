@@ -44,7 +44,7 @@ class AnalyticsApi
             ],
             'metrics' => [
                 [
-                    "name" => "activeUsers"
+                    "name" => "totalUsers"
                 ]
             ],
             "keepEmptyRows" => true,

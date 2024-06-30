@@ -18,12 +18,16 @@ class ComparisonDayJuneCountry extends Seeder
             [
                 'name' => 'Polska',
                 'shop' => 1,
-                "analytics" => 123123123123
+                "analytics" => 123123123123,
+                "facebook" => "123123123",
+                "facebook_daily_budget" => 300,
             ],
             [
                 'name' => 'Anglia',
                 'shop' => 2,
-                "analytics" => 987987987987
+                "analytics" => 987987987987,
+                "facebook" => "123123145",
+                "facebook_daily_budget" => 600,
             ],
             [
                 'name' => 'Niemcy',

@@ -17,6 +17,10 @@ class Country extends Model
         "facebook" => 'string',
         "analytics" => 'string',
         "active" => 'bool',
+        "facebook_daily_budget" => "integer",
+        "google_daily_budget" => "integer",
+        "facebook_budget_currency" => "string",
+        "google_budget_currency" => "string",
     ];
 
     protected $fillable = [
@@ -26,6 +30,10 @@ class Country extends Model
         "facebook",
         "analytics",
         "active",
+        "facebook_daily_budget",
+        "google_daily_budget",
+        "facebook_budget_currency",
+        "google_budget_currency",
     ];
 
     public function scopeActive() {
