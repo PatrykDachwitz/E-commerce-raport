@@ -15,14 +15,33 @@ class MetaAdsCountrySeed extends Seeder
     public function run(): void
     {
         $countries = [
-            'name' => 'Polska',
-            'shop' => 1,
-            "analytics" => 123123123123,
-            "facebook" => "123123123",
-            "facebook_daily_budget" => 300,
+            [
+                'name' => 'Polska',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "facebook" => "123123123",
+                "facebook_daily_budget" => 300,
+            ],
+            [
+                'name' => 'Niemcy',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "facebook" => "123123123",
+                "facebook_daily_budget" => 0,
+            ],
+            [
+                'name' => 'Niemcy',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "facebook" => "123123123",
+                "facebook_daily_budget" => 1902,
+                "facebook_budget_currency" => "EUR",
+            ]
         ];
 
         DB::table('countries')->truncate();
-        Country::create($countries);
+        foreach ($countries as $country) {
+            Country::create($country);
+        }
     }
 }

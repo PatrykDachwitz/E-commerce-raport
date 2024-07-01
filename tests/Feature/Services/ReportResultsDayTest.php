@@ -5,6 +5,9 @@ use App\Models\Country;
 use App\Services\Adwords\AnalyticsApi;
 use App\Services\Adwords\MetaAdsApi;
 use App\Services\Connection\Shop;
+use App\Services\Currency\CoursePLN;
+use App\Services\Report\ReportDaily\AdwordsResult;
+use App\Services\Report\ReportDaily\ShopResult;
 use App\Services\Report\ResultDay;
 use App\Services\ShopSales;
 use Database\Seeders\ComparisonDayJuneCountry;
@@ -28,9 +31,9 @@ test('Verification work services Report result Day with good response api', func
     string $metaAdsTemplateDataForThirdDay,
     string $metaFourthDayResponseApi,
 ) {
-    $date = "2024-06-21";
+    $date = "2024-06-20";
     Http::fake([
-        config('api.shop') . "?start=2024-06-21&end=2024-06-21" => Http::response($shopResponseOneVariant),
+        config('api.shop') . "?start=2024-06-20&end=2024-06-20" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-19&end=2024-06-19" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-18&end=2024-06-18" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-17&end=2024-06-17" => Http::response($shopResponseOneVariant),
@@ -60,81 +63,84 @@ test('Verification work services Report result Day with good response api', func
         config('api.shop') . "?start=2024-05-24&end=2024-05-24" => Http::response($shopResponseThreeVariant),
         config('api.shop') . "?start=2024-05-23&end=2024-05-23" => Http::response($shopResponseThreeVariant),
         config('api.shop') . "?start=2024-05-22&end=2024-05-22" => Http::response($shopResponseThreeVariant),
-        config('api.shop') . "?start=2024-06-20&end=2024-06-20" => Http::response($shopResponseThreeVariant),
+        config('api.shop') . "?start=2024-05-21&end=2024-05-21" => Http::response($shopResponseThreeVariant),
         "https://analyticsdata.googleapis.com/v1beta/properties/123123123123:runReport" => Http::response($analyticsPolandReportDay),
         "https://analyticsdata.googleapis.com/v1beta/properties/987987987987:runReport" => Http::response($analyticsEnglandReportDay),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response($metaFourthDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response($metaCurrentDateResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response($metaAdsTemplateDataForThirdDay),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response($metaSecondDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($metaOneDayResponseApi),
-        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response($metaCurrentDateResponseApi),
-    ]);
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-21&time_range%5Buntil%5D=2024-05-21" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response($metaFourthDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response($metaCurrentDateResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($metaAdsTemplateDataForThirdDay),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-21&time_range%5Buntil%5D=2024-05-21" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response($metaSecondDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response($metaOneDayResponseApi),
+        "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($metaCurrentDateResponseApi),
+        ]);
 
     $reportDay = new ResultDay(
-        new ShopSales(
-            new Shop(),
-            new Country()
-        ),
         new Country(),
         new AnalyticsApi(),
-        new MetaAdsApi()
+        new MetaAdsApi(new CoursePLN()),
+        new AdwordsResult(),
+        new ShopResult(
+            new ShopSales(
+                new Shop(),
+                new Country()
+            )
+        )
     );
 
     $expectResult = [
@@ -196,13 +202,13 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 280
                 ],
                 'costFromBeginningMonth' => [
-                    'value' => 4961
+                    'value' => 4781
                 ],
                 'budgetMonth' => [
                     'value' => 9000
                 ],
                 'percentCostFromBeginningMonth' => [
-                    'value' => 55
+                    'value' => 53
                 ],
             ],
             "facebook" => [
@@ -270,10 +276,10 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 76
                 ],
                 'avgComparison' => [
-                    'value' => -151
+                    'value' => -144
                 ],
                 'avgLast30Day' => [
-                    'value' => 227
+                    'value' => 220
                 ],
                 'minValueLast30Day' => [
                     'value' => 60
@@ -282,13 +288,13 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 361
                 ],
                 'costFromBeginningMonth' => [
-                    'value' => 4666
+                    'value' => 4421
                 ],
                 'budgetMonth' => [
                     'value' => 18000
                 ],
                 'percentCostFromBeginningMonth' => [
-                    'value' => 25
+                    'value' => 24
                 ],
             ],
             "facebook" => [
@@ -296,10 +302,10 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 100
                 ],
                 'avgComparison' => [
-                    'value' => -149
+                    'value' => -148
                 ],
                 'avgLast30Day' => [
-                    'value' => 249
+                    'value' => 248
                 ],
                 'minValueLast30Day' => [
                     'value' => 120
@@ -441,10 +447,10 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 437
                 ],
                 'avgComparison' => [
-                    'value' => -20
+                    'value' => -13
                 ],
                 'avgLast30Day' => [
-                    'value' => 457
+                    'value' => 450
                 ],
                 'minValueLast30Day' => [
                     'value' => 240
@@ -453,13 +459,13 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 641
                 ],
                 'costFromBeginningMonth' => [
-                    'value' => 9628
+                    'value' => 9202
                 ],
                 'budgetMonth' => [
                     'value' => 27000
                 ],
                 'percentCostFromBeginningMonth' => [
-                    'value' => 35
+                    'value' => 34
                 ],
             ],
             "facebook" => [
@@ -467,10 +473,10 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 304
                 ],
                 'avgComparison' => [
-                    'value' => -270
+                    'value' => -269
                 ],
                 'avgLast30Day' => [
-                    'value' => 574
+                    'value' => 573
                 ],
                 'minValueLast30Day' => [
                     'value' => 320
