@@ -25,6 +25,12 @@ defineProps([
         <div class="report__value">{{ result.maxValueLast30Day.value }} Eur</div>
         <div class="report__value">{{ result.maxValueLast30Day.art }} Szt</div>
     </div>
+    <div class="report__col d-flex flex-column">
+        <div class="report__value report__value--double">{{ result.costShare.value }} %</div>
+    </div>
+    <div class="report__col d-flex flex-column">
+        <div class="report__value report__value--double">{{ result.comparisonClickToCost.value }}</div>
+    </div>
 </template>
 
 <style scoped>

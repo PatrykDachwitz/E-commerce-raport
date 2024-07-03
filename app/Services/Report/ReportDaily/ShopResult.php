@@ -2,17 +2,21 @@
 declare(strict_types=1);
 namespace App\Services\Report\ReportDaily;
 
+use App\Services\Currency\CoursePLN;
 use App\Services\ShopSales;
 use PHPUnit\Exception;
 
 class ShopResult
 {
 
+
+    private CoursePLN $coursePLN;
     private array $responseApiShop;
     private ShopSales $shopSales;
-    public function __construct(ShopSales $shopSales)
+    public function __construct(ShopSales $shopSales, CoursePLN $coursePLN)
     {
         $this->shopSales = $shopSales;
+        $this->coursePLN = $coursePLN;
     }
 
     private function getClearStructureShopResponse() : array {
@@ -51,17 +55,62 @@ class ShopResult
         }
     }
 
-    private function resultShopSales(int $countDay, string $currentDate) : array {
+    private function getCostAdwordsInEuro(int|string $idAccount, array $metaAdsResult, array $googleAdsResult) : int {
+        $course = $this->coursePLN->getCurrentCourse('EUR');
+
+        $cost = intval($metaAdsResult[$idAccount]['budget']['cost']['value'] + $googleAdsResult[$idAccount]['budget']['cost']['value']);
+
+        try {
+            if ($cost > 0) {
+                return intval($cost / $course);
+            } else {
+                return 0;
+            }
+        } catch (Exception) {
+            return 0;
+        }
+    }
+    private function getComparisonClickToCost(int|string $idCountry, array $shopSales, array $analyticsResult) : array {
+
+        if ($analyticsResult[$idCountry]['countClick']['value'] > 0) {
+            $comparisonClickToCost = round($shopSales['art'] / $analyticsResult[$idCountry]['countClick']['value'], 2);
+        } else {
+            $comparisonClickToCost = $shopSales['art'];
+        }
+
+
+        return [
+            "value" => $comparisonClickToCost
+        ];
+    }
+    private function getCostShare(int|string $idCountry, array $shopSales, array $metaAdsResult, array $googleAdsResult) : array {
+        $costAdwords = $this->getCostAdwordsInEuro($idCountry, $metaAdsResult, $googleAdsResult);
+
+        if ($shopSales['value'] > 0) {
+            $costShare = round(($costAdwords / $shopSales['value']) * 100, 2);
+        } else {
+            $costShare = 100;
+        }
+
+        return [
+            "value" => $costShare
+        ];
+    }
+    private function resultShopSales(int $countDay, string $currentDate, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
         $finalResultShop = $this->getClearStructureShopResponse();
 
         foreach ($this->responseApiShop as $date => $response) {
             foreach ($response as $idCountry => $resultShop) {
+
 
                 if ($currentDate === $date) {
                     $finalResultShop[$idCountry]['shopSales'] = [
                         'value' => intval($resultShop['value']),
                         'art' => intval($resultShop['item']),
                     ];
+                    $finalResultShop[$idCountry]['costShare'] = $this->getCostShare($idCountry, $finalResultShop[$idCountry]['shopSales'], $metaAdsResult, $googleAdsResult);
+                    $finalResultShop[$idCountry]['comparisonClickToCost'] = $this->getComparisonClickToCost($idCountry, $finalResultShop[$idCountry]['shopSales'], $analyticsResult);
+
                     $finalResultShop["summary"]['shopSales']['value'] += $resultShop['value'];
                     $finalResultShop["summary"]['shopSales']['art'] += $resultShop['item'];
                 } else {
@@ -84,7 +133,7 @@ class ShopResult
             }
         }
 
-        $finalResultShop = $this->calculateSummaryResult($finalResultShop);
+        $finalResultShop = $this->calculateSummaryResult($finalResultShop, $analyticsResult, $metaAdsResult, $googleAdsResult);
         return $this->calculateAvgWithComparisonResult($finalResultShop, $countDay);
     }
 
@@ -159,7 +208,7 @@ class ShopResult
         return $responseCalculatedWithResult;
     }
 
-    private function calculateSummaryResult(array $currentResult) : array {
+    private function calculateSummaryResult(array $currentResult, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
         $finalCalculate = $currentResult;
 
         foreach ($currentResult as $key => $result) {
@@ -177,12 +226,16 @@ class ShopResult
         $finalCalculate['summary']['shopSales']['art'] = intval($finalCalculate['summary']['shopSales']['art']);
         $finalCalculate['summary']['shopSales']['value'] = intval($finalCalculate['summary']['shopSales']['value']);
 
+        $finalCalculate['summary']['costShare'] = $this->getCostShare('summary', $finalCalculate['summary']['shopSales'], $metaAdsResult, $googleAdsResult);
+        $finalCalculate['summary']['comparisonClickToCost'] = $this->getComparisonClickToCost('summary', $finalCalculate['summary']['shopSales'], $analyticsResult);
+
+
         return $finalCalculate;
     }
 
-    public function getResult(array $dates) : array {
+    public function getResult(array $dates, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
         $this->downloadResponseApiShop($dates['ranges']);
         //dodać od razu ilosć dni w adwords api
-        return $this->resultShopSales($dates['count'], $dates['current']);
+        return $this->resultShopSales($dates['count'], $dates['current'], $analyticsResult, $metaAdsResult, $googleAdsResult);
     }
 }

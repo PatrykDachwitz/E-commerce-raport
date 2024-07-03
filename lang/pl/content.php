@@ -31,4 +31,6 @@ return [
     "costFromBeginningMonth" => "Wydana kwota od początku miesiąca",
     "budgetMonth" => "Założony budżet miesięczny",
     "percentCostFromBeginningMonth" => "Wydany % miesięcznego budżetu",
+    "costShare" => "Udział kosztów",
+    "comparisonClickToCost" => "Sprzedaż / Użytkownicy",
 ];

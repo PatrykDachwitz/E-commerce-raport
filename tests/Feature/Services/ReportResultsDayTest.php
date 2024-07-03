@@ -144,7 +144,8 @@ test('Verification work services Report result Day with good response api', func
             new ShopSales(
                 new Shop(),
                 new Country()
-            )
+            ),
+            new CoursePLN()
         ),
         new GoogleAdwordsApi()
     );
@@ -172,6 +173,12 @@ test('Verification work services Report result Day with good response api', func
                 "maxValueLast30Day" => [
                     "value" => 99076,
                     "art" => 242
+                ],
+                "costShare" => [
+                    "value" => 0.29
+                ],
+                "comparisonClickToCost" => [
+                    "value" => 2.42
                 ]
             ],
             "global" => [
@@ -300,6 +307,12 @@ test('Verification work services Report result Day with good response api', func
                 "maxValueLast30Day" => [
                     "value" => 9999987446,
                     "art" => 990
+                ],
+                "costShare" => [
+                    "value" => 1.11
+                ],
+                "comparisonClickToCost" => [
+                    "value" => 1.2
                 ]
             ],
             "global" => [
@@ -429,6 +442,12 @@ test('Verification work services Report result Day with good response api', func
                 "maxValueLast30Day" => [
                     "value" => 1381262,
                     "art" => 290
+                ],
+                "costShare" => [
+                    "value" => 0
+                ],
+                "comparisonClickToCost" => [
+                    "value" => 5
                 ]
             ],
             "global" => [
@@ -557,6 +576,12 @@ test('Verification work services Report result Day with good response api', func
                 "maxValueLast30Day" => [
                     "value" => 10001467784,
                     "art" => 1522
+                ],
+                "costShare" => [
+                    "value" => 0.29
+                ],
+                "comparisonClickToCost" => [
+                    "value" => 1.77
                 ]
             ],
             "global" => [

@@ -37,6 +37,8 @@ const nameHeaderCost = [
                     <div class="report__header report__header--shop--secondary">{{ lang['avgLast30Day'] }}</div>
                     <div class="report__header report__header--shop--secondary">{{ lang['minLast30Day'] }}</div>
                     <div class="report__header report__header--shop--secondary">{{ lang['maxLast30Day'] }}</div>
+                    <div class="report__header report__header--shop--secondary">{{ lang['costShare'] }}</div>
+                    <div class="report__header report__header--shop--secondary">{{ lang['comparisonClickToCost'] }}</div>
                 </div>
             </div>
 

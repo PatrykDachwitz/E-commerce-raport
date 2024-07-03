@@ -172,8 +172,7 @@ class ResultDay
 
         $completeReport = [];
 
-        $resultShopApi = $this->shopResult
-            ->getResult($this->datesReport);
+
 
         $activesCountry = $this->country
             ->active()
@@ -182,6 +181,9 @@ class ResultDay
         $analyticsResult = $this->getAnalyticsResult($activesCountry);
         $facebookResults = $this->adwordsResult->getResult($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['last']);
         $googleResults = $this->adwordsResult->getResult($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['last']);
+
+        $resultShopApi = $this->shopResult
+            ->getResult($this->datesReport, $analyticsResult, $facebookResults, $googleResults);
 
         foreach ($activesCountry as $country) {
             $completeReport[] = [
