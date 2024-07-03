@@ -43,7 +43,11 @@ class Shop
         if (!$this->checkCurrentFormatDate($startDate) | !$this->checkCurrentFormatDate($endData)) throw new Exception('Incorrect format date');
         $query = $this->getQuery($startDate, $endData);
 
-        $response = Http::get($this->apiUrl . $query);
+        $response = Http::withHeaders([
+            "Authorization" => "Bearer " . env('SHOP_API_TOKEN'),
+            'Accept' => "application/json",
+            'Content-Type' => "application/json",
+        ])->get($this->apiUrl . $query);
         if (!$response->ok()) throw new Exception('Error response code');
         else return $response->json();
     }
