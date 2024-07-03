@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Country;
@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ComparisonDayJuneCountry extends Seeder
+class GoogleAdsCountrySeed extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,36 +19,29 @@ class ComparisonDayJuneCountry extends Seeder
                 'name' => 'Polska',
                 'shop' => 1,
                 "analytics" => 123123123123,
-                "facebook" => "123123123",
-                "facebook_daily_budget" => 300,
                 "google" => "123321321",
                 "google_daily_budget" => 300,
             ],
             [
-                'name' => 'Anglia',
-                'shop' => 2,
-                "analytics" => 987987987987,
-                "facebook" => "123123145",
-                "facebook_daily_budget" => 600,
-                "google_daily_budget" => 142,
+                'name' => 'Niemcy',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "google" => "123321321",
+                "google_daily_budget" => 0,
             ],
             [
                 'name' => 'Niemcy',
-                'shop' => 3,
+                'shop' => 1,
+                "analytics" => 123123123123,
                 "google" => "52432432",
-                "google_daily_budget" => 775,
-            ],
-            [
-                'name' => 'Irlandia',
-                'shop' => 4,
-                "active" => false
-            ],
+                "google_daily_budget" => 1902,
+                "facebook_budget_currency" => "EUR",
+            ]
         ];
 
         DB::table('countries')->truncate();
         foreach ($countries as $country) {
             Country::create($country);
         }
-
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Models\Country;
 use App\Services\Adwords\AnalyticsApi;
+use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
 use App\Services\Connection\Shop;
 use App\Services\Currency\CoursePLN;
@@ -30,9 +31,13 @@ test('Verification work services Report result Day with good response api', func
     string $metaSecondDayResponseApi,
     string $metaAdsTemplateDataForThirdDay,
     string $metaFourthDayResponseApi,
+    string $polandResponseApi,
+    string $germanyResponseApi,
 ) {
     $date = "2024-06-20";
     Http::fake([
+        "https://googleads.googleapis.com/v17/customers/123321321/googleAds:searchStream" => Http::response($polandResponseApi),
+        "https://googleads.googleapis.com/v17/customers/52432432/googleAds:searchStream" => Http::response($germanyResponseApi),
         config('api.shop') . "?start=2024-06-20&end=2024-06-20" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-19&end=2024-06-19" => Http::response($shopResponseOneVariant),
         config('api.shop') . "?start=2024-06-18&end=2024-06-18" => Http::response($shopResponseOneVariant),
@@ -140,7 +145,8 @@ test('Verification work services Report result Day with good response api', func
                 new Shop(),
                 new Country()
             )
-        )
+        ),
+        new GoogleAdwordsApi()
     );
 
     $expectResult = [
@@ -226,6 +232,49 @@ test('Verification work services Report result Day with good response api', func
                 ],
                 'maxValueLast30Day' => [
                     'value' => 450
+                ]
+            ],
+            "costGoogle" => [
+                'cost' => [
+                    'value' => 586
+                ],
+                'avgComparison' => [
+                    'value' => 250
+                ],
+                'avgLast30Day' => [
+                    'value' => 336
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 1061
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 10671
+                ],
+                'budgetMonth' => [
+                    'value' => 9000
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 118
+                ],
+            ],
+            "google" => [
+                'countClick' => [
+                    'value' => 259
+                ],
+                'avgComparison' => [
+                    'value' => 176
+                ],
+                'avgLast30Day' => [
+                    'value' => 83
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 345
                 ]
             ]
         ],
@@ -313,6 +362,49 @@ test('Verification work services Report result Day with good response api', func
                 'maxValueLast30Day' => [
                     'value' => 450
                 ]
+            ],
+            "costGoogle" => [
+                'cost' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 0
+                ],
+                'budgetMonth' => [
+                    'value' => 0
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 0
+                ],
+            ],
+            "google" => [
+                'countClick' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ]
             ]
         ],
         [
@@ -397,6 +489,49 @@ test('Verification work services Report result Day with good response api', func
                 ],
                 'maxValueLast30Day' => [
                     'value' => 0
+                ]
+            ],
+            "costGoogle" => [
+                'cost' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => -1130
+                ],
+                'avgLast30Day' => [
+                    'value' => 1130
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 10610
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 10085
+                ],
+                'budgetMonth' => [
+                    'value' => 23250
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 43
+                ],
+            ],
+            "google" => [
+                'countClick' => [
+                    'value' => 954
+                ],
+                'avgComparison' => [
+                    'value' => 126
+                ],
+                'avgLast30Day' => [
+                    'value' => 828
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 20432
                 ]
             ]
         ],
@@ -484,6 +619,49 @@ test('Verification work services Report result Day with good response api', func
                 'maxValueLast30Day' => [
                     'value' => 900
                 ]
+            ],
+            "costGoogle" => [
+                'cost' => [
+                    'value' => 586
+                ],
+                'avgComparison' => [
+                    'value' => -880
+                ],
+                'avgLast30Day' => [
+                    'value' => 1466
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 11671
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 20756
+                ],
+                'budgetMonth' => [
+                    'value' => 32250
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 64
+                ],
+            ],
+            "google" => [
+                'countClick' => [
+                    'value' => 1213
+                ],
+                'avgComparison' => [
+                    'value' => 301
+                ],
+                'avgLast30Day' => [
+                    'value' => 912
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 20777
+                ]
             ]
         ]
     ];
@@ -497,4 +675,4 @@ test('Verification work services Report result Day with good response api', func
     )
         ->toMatchArray($expectResult);
 
-})->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay", "metaAdsTemplateDataForCurrentDay", "metaAdsTemplateDataForOneDay", "metaAdsTemplateDataForSecondDay", "metaAdsTemplateDataForThirdDay", "metaAdsTemplateDataForFourthDay");
+})->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay", "metaAdsTemplateDataForCurrentDay", "metaAdsTemplateDataForOneDay", "metaAdsTemplateDataForSecondDay", "metaAdsTemplateDataForThirdDay", "metaAdsTemplateDataForFourthDay", "polandResponseApi", "germanyResponseApi");

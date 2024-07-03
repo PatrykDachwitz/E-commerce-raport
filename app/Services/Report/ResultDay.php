@@ -4,6 +4,7 @@ namespace App\Services\Report;
 
 use App\Models\Country;
 use App\Services\Adwords\AnalyticsApi;
+use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
 use App\Services\Report\ReportDaily\AdwordsResult;
 use App\Services\Report\ReportDaily\ShopResult;
@@ -21,14 +22,16 @@ class ResultDay
     private array $datesReport;
     private AnalyticsApi $analyticsApi;
     private ShopResult $shopResult;
+    private GoogleAdwordsApi $googleAdwordsApi;
 
-    public function __construct(Country $country, AnalyticsApi $analyticsApi, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult)
+    public function __construct(Country $country, AnalyticsApi $analyticsApi, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi)
     {
         $this->country = $country;
         $this->analyticsApi = $analyticsApi;
         $this->metaAdsApi = $metaAdsApi;
         $this->adwordsResult = $adwordsResult;
         $this->shopResult = $shopResult;
+        $this->googleAdwordsApi = $googleAdwordsApi;
     }
 
     private function createDatesByCountPreviousDay(string $date, int $countPreviousDay = 30) : array {
@@ -178,6 +181,7 @@ class ResultDay
 
         $analyticsResult = $this->getAnalyticsResult($activesCountry);
         $facebookResults = $this->adwordsResult->getResult($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['last']);
+        $googleResults = $this->adwordsResult->getResult($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['last']);
 
         foreach ($activesCountry as $country) {
             $completeReport[] = [
@@ -186,6 +190,8 @@ class ResultDay
                 'global' => $analyticsResult[$country->id],
                 'facebook' => $facebookResults[$country->id]['click'],
                 'costFacebook' => $facebookResults[$country->id]['budget'],
+                'google' => $googleResults[$country->id]['click'],
+                'costGoogle' => $googleResults[$country->id]['budget'],
             ];
         }
 
@@ -195,6 +201,8 @@ class ResultDay
             'global' => $analyticsResult["summary"],
             'facebook' => $facebookResults["summary"]['click'],
             'costFacebook' => $facebookResults["summary"]['budget'],
+            'google' => $googleResults["summary"]['click'],
+            'costGoogle' => $googleResults["summary"]['budget'],
         ];
 
 

@@ -173,7 +173,6 @@ class AdwordsResult
             $adwordsResult = $adwordsApi
                 ->get($currentDate, $lastDate, $country);
 
-
             $response[$country->id] = $this->getStructureWithData($adwordsResult);
         }
 

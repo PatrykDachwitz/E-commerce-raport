@@ -53,17 +53,59 @@ class MetaAdsApi extends AdwordsApi
         return $data;
     }
 
+    protected function calculateResultApi(Country $country, string $currentDate, string $lastDate) : array {
+        $dataResponseApi = $this->downloadResponseApi($country[$this->nameAdwordsColumn]);
+        $structureResponse = $this->getStructureResponse();
+
+        foreach ($dataResponseApi as $key => $data) {
+            if (is_null($data)) {
+                if ($key === "current") {
+                    $structureResponse['click']['current'] = 0;
+                    $structureResponse['budget']['current'] = 0;
+                }
+                continue;
+            }
+            if ($key === "current") {
+                $structureResponse['click']['current'] = intval($data['clicks']);
+                $structureResponse['budget']['current'] = intval($data['spend']);
+                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += intval($data['spend']);
+            } else {
+                $structureResponse['click']['summaryWithoutCurrent'] += intval($data['clicks']);
+                $structureResponse['budget']['summaryWithoutCurrent'] += intval($data['spend']);
+                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->addSpendBudgetCurrentMonth($this->dateRanges[$key], $data['spend']);
+
+                $structureResponse['click']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['clicks']), 'click');
+                $structureResponse['budget']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['spend']), 'budget');
+                $structureResponse['click']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, intval($data['clicks']), 'click');
+                $structureResponse['budget']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, intval($data['spend']), 'budget');
+            }
+        }
+
+        if (is_null($structureResponse['click']['minWithoutCurrent'])) $structureResponse['click']['minWithoutCurrent'] = 0;
+        if (is_null($structureResponse['budget']['minWithoutCurrent'])) $structureResponse['budget']['minWithoutCurrent'] = 0;
+        if (is_null($structureResponse['click']['maxWithoutCurrent'])) $structureResponse['click']['maxWithoutCurrent'] = 0;
+        if (is_null($structureResponse['budget']['maxWithoutCurrent'])) $structureResponse['budget']['maxWithoutCurrent'] = 0;
+
+
+
+        $structureResponse['budget']['budgetMonthly'] = $this->getMonthlyBudget();
+        $structureResponse['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($structureResponse['budget']);
+
+        return $this->calculateAvgWithComparison($structureResponse);
+    }
+
+
     public function get(string $currentDate, string $lastDate, Country $country) : array {
         $this->calculateDateRanges($currentDate, $lastDate);
         $this->country = $country;
 
-        $resultApi = $this->calculateResultApi($country);
+        $resultApi = $this->calculateResultApi($country, $currentDate, $lastDate);
 
         if(!is_null($country->facebook_budget_currency) & $country->facebook_budget_currency !== "PLN") {
             $resultApi = $this->conversionCostToDefaultCurrencies($country->facebook_budget_currency, $resultApi);
             $resultApi['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($resultApi['budget']);
         }
 
-        return $this->calculateAvgWithComparison($resultApi);;
+        return $this->calculateAvgWithComparison($resultApi);
     }
 }
