@@ -128,3 +128,110 @@ dataset('metaAdsTemplateDataForFourthDay', function () {
         '
     ];
 });
+
+
+
+dataset('metaAdsTemplateDataFor1_7_july_ResponseApi', function () {
+    return [
+        '
+            {
+              "data":
+              [
+                {
+                  "clicks":"120",
+                  "spend":"957",
+                  "date_start":"2024-06-21",
+                  "date_stop":"2024-06-24"
+                }
+              ],
+              "paging":
+              {
+                "cursors":
+                {
+                  "before":"MAZDZD",
+                  "after":"MAZDZD"
+                }
+              }
+            }
+        '
+    ];
+});
+
+
+dataset('metaAdsTemplateDataForJuneResponseApi', function () {
+    return [
+        '
+            {
+              "data":
+              [
+                {
+                  "clicks":"120",
+                  "spend":"4961",
+                  "date_start":"2024-06-21",
+                  "date_stop":"2024-06-24"
+                }
+              ],
+              "paging":
+              {
+                "cursors":
+                {
+                  "before":"MAZDZD",
+                  "after":"MAZDZD"
+                }
+              }
+            }
+        '
+    ];
+});
+
+dataset('metaResponsePolandResultDay', function () {
+    return [
+        '
+            {
+              "data":
+              [
+                {
+                  "clicks":"120",
+                  "spend":"4781",
+                  "date_start":"2024-06-21",
+                  "date_stop":"2024-06-24"
+                }
+              ],
+              "paging":
+              {
+                "cursors":
+                {
+                  "before":"MAZDZD",
+                  "after":"MAZDZD"
+                }
+              }
+            }
+        '
+    ];
+});
+
+dataset('metaResponseUKResultDay', function () {
+    return [
+        '
+            {
+              "data":
+              [
+                {
+                  "clicks":"120",
+                  "spend":"4421",
+                  "date_start":"2024-06-21",
+                  "date_stop":"2024-06-24"
+                }
+              ],
+              "paging":
+              {
+                "cursors":
+                {
+                  "before":"MAZDZD",
+                  "after":"MAZDZD"
+                }
+              }
+            }
+        '
+    ];
+});

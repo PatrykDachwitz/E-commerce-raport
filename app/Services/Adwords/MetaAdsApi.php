@@ -68,12 +68,10 @@ class MetaAdsApi extends AdwordsApi
             if ($key === "current") {
                 $structureResponse['click']['current'] = intval($data['clicks']);
                 $structureResponse['budget']['current'] = intval($data['spend']);
-                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += intval($data['spend']);
             } else {
+
                 $structureResponse['click']['summaryWithoutCurrent'] += intval($data['clicks']);
                 $structureResponse['budget']['summaryWithoutCurrent'] += intval($data['spend']);
-                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->addSpendBudgetCurrentMonth($this->dateRanges[$key], $data['spend']);
-
                 $structureResponse['click']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['clicks']), 'click');
                 $structureResponse['budget']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['spend']), 'budget');
                 $structureResponse['click']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, intval($data['clicks']), 'click');
@@ -87,7 +85,7 @@ class MetaAdsApi extends AdwordsApi
         if (is_null($structureResponse['budget']['maxWithoutCurrent'])) $structureResponse['budget']['maxWithoutCurrent'] = 0;
 
 
-
+        $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] = $this->getSpendBudgetInCurrentMonth($country, $this->dateRanges['current']['end']);
         $structureResponse['budget']['budgetMonthly'] = $this->getMonthlyBudget();
         $structureResponse['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($structureResponse['budget']);
 
@@ -100,6 +98,23 @@ class MetaAdsApi extends AdwordsApi
         $this->country = $country;
 
         $resultApi = $this->calculateResultApi($country, $currentDate, $lastDate);
+
+        if(!is_null($country->facebook_budget_currency) & $country->facebook_budget_currency !== "PLN") {
+            $resultApi = $this->conversionCostToDefaultCurrencies($country->facebook_budget_currency, $resultApi);
+            $resultApi['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($resultApi['budget']);
+        }
+
+        return $this->calculateAvgWithComparison($resultApi);
+    }
+
+
+
+    public function getWithManyRangesDate(array $currentDate, array $rangesOtherDate, Country $country) : array {
+        $this->addManyRangesDate($currentDate, $rangesOtherDate);
+        $this->country = $country;
+
+
+        $resultApi = $this->calculateResultApi($country, $currentDate['start'], $currentDate['end']);
 
         if(!is_null($country->facebook_budget_currency) & $country->facebook_budget_currency !== "PLN") {
             $resultApi = $this->conversionCostToDefaultCurrencies($country->facebook_budget_currency, $resultApi);

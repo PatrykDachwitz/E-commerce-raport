@@ -6,7 +6,7 @@ use App\Models\Country;
 
 abstract class AdwordsApi
 {
-    protected int $countDay;
+    protected int $countDayWithoutCurrent;
     protected array $dateRanges;
 
     protected string $budgetNameColumn;
@@ -41,8 +41,8 @@ abstract class AdwordsApi
         else return intval($data['spentBudgetFromBeginningOfMonth'] / ($data['budgetMonthly'] / 100));
     }
     protected function calculateAvgWithComparison(array $data) : array {
-        $data['click']['avgWithoutCurrent'] = intval($data['click']['summaryWithoutCurrent'] / $this->countDay);
-        $data['budget']['avgWithoutCurrent'] = intval($data['budget']['summaryWithoutCurrent'] / $this->countDay);
+        $data['click']['avgWithoutCurrent'] = intval($data['click']['summaryWithoutCurrent'] / $this->countDayWithoutCurrent);
+        $data['budget']['avgWithoutCurrent'] = intval($data['budget']['summaryWithoutCurrent'] / $this->countDayWithoutCurrent);
         $data['click']['avgComparisonWithoutCurrent'] = intval($data['click']['current'] - $data['click']['avgWithoutCurrent']);
         $data['budget']['avgComparisonWithoutCurrent'] = intval($data['budget']['current'] - $data['budget']['avgWithoutCurrent']);
 
@@ -66,7 +66,7 @@ abstract class AdwordsApi
     }
 
     protected function addSpendBudgetCurrentMonth(string $date, int|string $value) : int {
-        $currentMonth = date("m", strtotime($this->dateRanges['current']));
+        $currentMonth = date("m", strtotime($this->dateRanges['current']['start']));
         $dateMonth = date("m", strtotime($date));
 
         if ($currentMonth === $dateMonth) return intval($value);
@@ -76,8 +76,9 @@ abstract class AdwordsApi
     abstract public function get(string $currentDate, string $lastDate, Country $country);
 
     protected function getMonthlyBudget() : int {
-        $currentMonth = intval(date("m", strtotime($this->dateRanges['current'])));
-        $currentYear = intval(date("Y", strtotime($this->dateRanges['current'])));
+        $date = strtotime($this->dateRanges['current']['start']);
+        $currentMonth = intval(date("m", $date));
+        $currentYear = intval(date("Y", $date));
 
         return $this->country[$this->budgetNameColumn] * cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     }
@@ -87,13 +88,20 @@ abstract class AdwordsApi
 
         $timestampCurrentDay = strtotime($currentDate);
         $timestampLastDay = strtotime($lastDate);
-        $this->countDay = ($timestampCurrentDay - $timestampLastDay) / (60 * 60 * 24);
+        $this->countDayWithoutCurrent = ($timestampCurrentDay - $timestampLastDay) / (60 * 60 * 24);
 
-        for ($i = 0 ;  $i < $this->countDay; $i++) {
-            $dateRanges[] = date("Y-m-d", $timestampLastDay + (60 * 60 * 24 * $i));
+        for ($i = 0 ;  $i < $this->countDayWithoutCurrent; $i++) {
+            $dateGenerated = date("Y-m-d", $timestampLastDay + (60 * 60 * 24 * $i));
+            $dateRanges[] = [
+                "start" => $dateGenerated,
+                "end" => $dateGenerated
+            ];
         }
 
-        $dateRanges["current"] = $currentDate;
+        $dateRanges["current"] = [
+            "start" => $currentDate,
+            "end" => $currentDate
+        ];
         $this->dateRanges = $dateRanges;
     }
 
@@ -101,7 +109,7 @@ abstract class AdwordsApi
         $dataResponse = [];
 
         foreach ($this->dateRanges as $key => $date) {
-            $dataResponse[$key] = $this->connectApi($date, $date, $idAccount);
+            $dataResponse[$key] = $this->connectApi($date['start'], $date['end'], $idAccount);
         }
 
         return $dataResponse;
@@ -111,4 +119,36 @@ abstract class AdwordsApi
     public function getNameColumnAdwords() : string {
         return $this->nameAdwordsColumn;
     }
+
+    protected function addManyRangesDate(array $currentDate, array $rangesOtherDate) : void {
+        $dateRanges = [];
+        $this->countDayWithoutCurrent = count($rangesOtherDate);
+
+        foreach ($rangesOtherDate as $otherDate) {
+            $dateRanges[] = [
+                "start" => $otherDate['start'],
+                "end" => $otherDate['end']
+            ];
+        }
+
+        $dateRanges["current"] = [
+            "start" => $currentDate['start'],
+            "end" => $currentDate['end']
+        ];
+
+        $this->dateRanges = $dateRanges;
+    }
+
+
+    protected function getSpendBudgetInCurrentMonth(Country $country, string $dateCurrent) : int {
+        $currentYearWithMonth = date("Y-m", strtotime($dateCurrent));
+        $startDay = "{$currentYearWithMonth}-01";
+
+        $result = $this->connectApi($startDay, $dateCurrent, $country[$this->nameAdwordsColumn]);
+
+        if (is_null($result)) return 0;
+        return intval($result['spend']);
+    }
+
+    abstract public function getWithManyRangesDate(array $currentDate, array $rangesOtherDate, Country $country) : array;
 }

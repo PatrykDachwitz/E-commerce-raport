@@ -2,7 +2,8 @@
 
 dataset('googleAdwordsResponseApi', function () {
     return [
-        '
+        '[
+
         {
         "results": [
         {
@@ -93,7 +94,7 @@ dataset('googleAdwordsResponseApi', function () {
         "fieldMask": "metrics.clicks,metrics.costMicros,segments.date",
         "requestId": "V_YzUHhkv35zqntpPk9byg",
         "queryResourceConsumption": "322"
-        }
+        }]
         '
     ];
 });
@@ -101,7 +102,8 @@ dataset('googleAdwordsResponseApi', function () {
 
 dataset("polandResponseApi", function () {
     return [
-        '
+        '[
+
         {
   "results": [
     {
@@ -264,14 +266,15 @@ dataset("polandResponseApi", function () {
   "fieldMask": "metrics.clicks,metrics.costMicros,segments.date",
   "requestId": "bAUb41Mfoc_ZdkTTrRtQmg",
   "queryResourceConsumption": "274"
-}
+}]
         '
     ];
 });
 
 dataset('germanyResponseApi', function () {
     return [
-        '{
+        '
+        [{
   "results": [
     {
       "customer": {
@@ -469,6 +472,165 @@ dataset('germanyResponseApi', function () {
   "fieldMask": "metrics.clicks,metrics.costMicros,segments.date",
   "requestId": "bAUb41Mfoc_ZdkTTrRtQmg",
   "queryResourceConsumption": "274"
-}'
+}]'
     ];
+});
+
+
+
+dataset("googleAdwordsResponseApiJune", function () {
+    return ['
+    [
+
+  {
+    "results": [
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "204",
+          "costMicros": "1061083620"
+        },
+        "segments": {
+          "date": "2024-07-06"
+        }
+      }, {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "204",
+          "costMicros": "1061083620"
+        },
+        "segments": {
+          "date": "2024-06-21"
+        }
+      }, {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "204",
+          "costMicros": "1061083620"
+        },
+        "segments": {
+          "date": "2024-06-23"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "220",
+          "costMicros": "1109219997"
+        },
+        "segments": {
+          "date": "2024-06-28"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "206",
+          "costMicros": "1164811394"
+        },
+        "segments": {
+          "date": "2024-06-07"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "206",
+          "costMicros": "1164811394"
+        },
+        "segments": {
+          "date": "2024-06-08"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "167",
+          "costMicros": "999073804"
+        },
+        "segments": {
+          "date": "2024-06-09"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "167",
+          "costMicros": "999073804"
+        },
+        "segments": {
+          "date": "2024-06-20"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "167",
+          "costMicros": "999073804"
+        },
+        "segments": {
+          "date": "2024-07-01"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "152",
+          "costMicros": "881180318"
+        },
+        "segments": {
+          "date": "2024-07-05"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "148",
+          "costMicros": "735822814"
+        },
+        "segments": {
+          "date": "2024-07-06"
+        }
+      },
+      {
+        "customer": {
+          "resourceName": "customers/123321321"
+        },
+        "metrics": {
+          "clicks": "147",
+          "costMicros": "617424074"
+        },
+        "segments": {
+          "date": "2024-07-07"
+        }
+      }
+    ],
+    "fieldMask": "metrics.clicks,metrics.costMicros,segments.date",
+    "requestId": "V_YzUHhkv35zqntpPk9byg",
+    "queryResourceConsumption": "322"
+  }]
+
+    '];
 });

@@ -16,7 +16,7 @@ describe('Testing response Google ads services with correct data', function () {
     //Pamietąc że nie któę kraje mająwiecej niż jedno konto
     //Jakośc weryfikować ilość wydanej kasy naet gdy ostanie 30 dni nie łapią sięw nasyzm zakresie dat
 
-
+/*
     it("Testing correct calculate data about response api", function (
         string $currentDateResponseApi,
     ) {
@@ -70,7 +70,6 @@ describe('Testing response Google ads services with correct data', function () {
         ]);
 
 
-
         $googleAds = new GoogleAdwordsApi();
 
         $metaData = [
@@ -98,13 +97,69 @@ describe('Testing response Google ads services with correct data', function () {
         $country = Country::find(2);
         expect($googleAds->get("2024-06-07", "2024-06-01", $country))
             ->toMatchArray($metaData);
-
     })->with('googleAdwordsResponseApi');
 
+      */  it("Testing correct calculate data for many ranges Date", function (
+            string $currentDateResponseApi,
+        ) {
 
-   /* it('Testing n', function () {
-        $resultREsponse
-    });*/
+            Http::fake([
+                "https://googleads.googleapis.com/v17/customers/123321321/googleAds:searchStream" => Http::response($currentDateResponseApi),
+            ]);
+
+            $rangesDate = [
+                "start" => "2024-07-05",
+                "end" => "2024-07-07",
+            ];
+            $rangesOtherDate = [
+                [
+                    "start" => "2024-06-28",
+                    "end" => "2024-06-30",
+                ],
+                [
+                    "start" => "2024-06-21",
+                    "end" => "2024-06-23",
+                ],
+                [
+                    "start" => "2024-06-14",
+                    "end" => "2024-06-16",
+                ],
+                [
+                    "start" => "2024-06-07",
+                    "end" => "2024-06-09",
+                ]
+            ];
+
+            $googleAds = new GoogleAdwordsApi();
+
+            $metaData = [
+                'click' => [
+                    'current' => 300,
+                    "summaryWithoutCurrent" => 1244,
+                    "avgWithoutCurrent" => 311,
+                    "avgComparisonWithoutCurrent" => -11,
+                    "minWithoutCurrent" => 0,
+                    "maxWithoutCurrent" => 424,
+                ],
+                "budget" => [
+                    'current' => 2234,
+                    "avgComparisonWithoutCurrent" => 329,
+                    "summaryWithoutCurrent" => 7621,
+                    "avgWithoutCurrent" => 1905,
+                    "minWithoutCurrent" => 0,
+                    "maxWithoutCurrent" => 3328,
+                    "spentBudgetFromBeginningOfMonth" => 3233,
+                    "budgetMonthly" => 9300,
+                    "percentSpentBudgetMonthlyCurrentDay" => 34,
+                ]
+            ];
+
+            $country = Country::find(1);
+            expect($googleAds->getWithManyRangesDate($rangesDate, $rangesOtherDate, $country))
+                ->toMatchArray($metaData);
+
+        })->with('googleAdwordsResponseApiJune');
+
 
 });
 

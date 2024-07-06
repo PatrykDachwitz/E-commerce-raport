@@ -44,7 +44,7 @@ class GoogleAdwordsApi extends AdwordsApi
             ->withBody($bodyQuery)
             ->post("https://googleads.googleapis.com/v17/customers/{$idCompany}/googleAds:searchStream");
 
-        return $response->json('results');
+        return $response->json()[0]['results'];
     }
 
     private function calculateCurrentSpendBudget(string|int $cost) : int {
@@ -54,13 +54,43 @@ class GoogleAdwordsApi extends AdwordsApi
     //Verification correct count row in response and writing 0 click and spend in minimum value row if row is not completed
     private function verificationNumberReturnedRows(array $responseApi, array $structureResponse) : array {
         //Add 1 value because count day is without current date
-        if (count($responseApi) !== ($this->countDay + 1)) {
+        if (count($responseApi) !== ($this->countDayWithoutCurrent + 1)) {
             $structureResponse['click']['minWithoutCurrent'] = 0;
             $structureResponse['budget']['minWithoutCurrent'] = 0;
         }
 
         return $structureResponse;
     }
+
+    protected function isCurrentTimeInRange(string $date) : bool{
+
+        $startTime = strtotime($this->dateRanges['current']['start']);
+        $endTime = strtotime($this->dateRanges['current']['end']);
+        $currentTime = strtotime($date);
+
+        return boolval($currentTime >= $startTime & $currentTime <= $endTime);
+    }
+
+    protected function isRangesDate(string $date) : bool {
+        $currentTime = strtotime($date);
+        $isRanges = false;
+
+        foreach ($this->dateRanges as $key => $date) {
+
+            if ($key === "current") continue;
+
+            $startTime = strtotime($date['start']);
+            $endTime = strtotime($date['end']);
+
+            if ($currentTime >= $startTime & $currentTime <= $endTime) {
+                $isRanges = true;
+                break;
+            }
+        }
+
+        return $isRanges;
+    }
+
     protected function calculateResultApi(Country $country, string $currentDate, string $lastDate) : array {
         $dataResponseApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
         $structureResponse = $this->getStructureResponse();
@@ -68,11 +98,11 @@ class GoogleAdwordsApi extends AdwordsApi
 
         foreach ($dataResponseApi as $key => $data) {
 
-            if ($data['segments']['date'] === $currentDate) {
+            if ($this->isCurrentTimeInRange($data['segments']['date'])) {
                 $structureResponse['click']['current'] = intval($data['metrics']['clicks']);
                 $structureResponse['budget']['current'] = $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
                 $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
-            } else {
+            } elseif($this->isRangesDate($data['segments']['date'])) {
                 $structureResponse['click']['summaryWithoutCurrent'] += intval($data['metrics']['clicks']);
                 $structureResponse['budget']['summaryWithoutCurrent'] += $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
                 $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->addSpendBudgetCurrentMonth($data['segments']['date'], $this->calculateCurrentSpendBudget($data['metrics']['costMicros']));
@@ -107,4 +137,14 @@ class GoogleAdwordsApi extends AdwordsApi
         return $this->calculateAvgWithComparison($resultApi);
     }
 
+
+    public function getWithManyRangesDate(array $currentDate, array $rangesOtherDate, Country $country) : array {
+        $this->addManyRangesDate($currentDate, $rangesOtherDate);
+        $this->country = $country;
+
+
+        $resultApi = $this->calculateResultApi($country, $currentDate['start'], $rangesOtherDate[count($rangesOtherDate) - 1]['end']);
+
+        return $this->calculateAvgWithComparison($resultApi);
+    }
 }
