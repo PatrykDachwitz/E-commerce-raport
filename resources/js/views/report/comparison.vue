@@ -1,17 +1,13 @@
 <script setup>
-import {inject, onMounted, watch} from "vue";
-import {changePositionToFixed} from "@/utils/changePositionToFixed.js";
-import {createRouter, useRoute, useRouter} from "vue-router";
+import {inject, onMounted} from "vue";
+import {useRoute} from "vue-router";
 import {getContentReport} from "@/utils/getContentReport.js";
 
 const apiUrl = inject('apiUrl');
 const route = useRoute();
 const lang = inject('lang');
 
-onMounted(() => {
-});
-
-const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-06-25`);
+const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-07-07`);
 
 </script>
 

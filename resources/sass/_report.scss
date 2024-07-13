@@ -6,9 +6,19 @@
     &__col {
         min-width: 165px;
         width: 165px;
+        border-right: 1px solid $grey-dark;
     }
 
     &__row {
+        &:hover * {
+            background-color: $selectColor;
+            cursor: pointer;
+        }
+
+        &:nth-child(2n+1) div {
+            background-color: $white;
+        }
+
         &--header {
             height: 100px;
             &.position-fixed {
@@ -24,15 +34,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        &:nth-child(1) {
-            background-color: $grey-light;
-        }
-        &:nth-child(2) {
-            border-bottom: 1px solid $dark;
-            background-color: $body-bg;
-        }
+        border-bottom: 1px solid $grey-dark;
         &--double {
-            border-bottom: 1px solid $dark;
             min-height: 100px !important;
             max-height: 100px !important;
         }

@@ -2,16 +2,20 @@
 
 import {getContentReport} from "@/utils/getContentReport.js";
 import {useRoute} from "vue-router";
-import {inject, watch} from "vue";
+import {inject, onMounted} from "vue";
 import DailyShopResult from "@/components/report/dailyShopResult.vue";
 import DailyAdwordsResult from "@/components/report/dailyAdwordsResult.vue";
 import DailyCost from "@/components/report/dailyCost.vue";
+import {
+    changePositionCountryName,
+    changePositionTableHeader
+} from "@/utils/changePositionToFixed.js";
 
 const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-06-25`);
+const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-07-07`);
 
 const nameHeaderResult = [
   'global',
@@ -22,6 +26,13 @@ const nameHeaderCost = [
   'google',
   'facebook',
 ];
+
+onMounted(() => {
+    changePositionTableHeader('report__row--header');
+    changePositionCountryName('report__value--country-name', 'report__content', "report");
+})
+
+
 
 </script>
 
@@ -75,7 +86,7 @@ const nameHeaderCost = [
             <template v-for="result in data.data">
                 <div class="report__row d-flex">
 
-                    <div class="report__col d-flex flex-column">
+                    <div class="report__col d-flex flex-column report__value--country-name">
                         <div class="report__value report__value--double">{{ result.country }}</div>
                     </div>
 
