@@ -16,7 +16,7 @@ describe('Testing response Google ads services with correct data', function () {
     //Pamietąc że nie któę kraje mająwiecej niż jedno konto
     //Jakośc weryfikować ilość wydanej kasy naet gdy ostanie 30 dni nie łapią sięw nasyzm zakresie dat
 
-/*
+
     it("Testing correct calculate data about response api", function (
         string $currentDateResponseApi,
     ) {
@@ -99,7 +99,7 @@ describe('Testing response Google ads services with correct data', function () {
             ->toMatchArray($metaData);
     })->with('googleAdwordsResponseApi');
 
-      */  it("Testing correct calculate data for many ranges Date", function (
+        it("Testing correct calculate data for many ranges Date", function (
             string $currentDateResponseApi,
         ) {
 
@@ -134,23 +134,23 @@ describe('Testing response Google ads services with correct data', function () {
 
             $metaData = [
                 'click' => [
-                    'current' => 300,
-                    "summaryWithoutCurrent" => 1244,
-                    "avgWithoutCurrent" => 311,
-                    "avgComparisonWithoutCurrent" => -11,
+                    'current' => 651,
+                    "summaryWithoutCurrent" => 1207,
+                    "avgWithoutCurrent" => 301,
+                    "avgComparisonWithoutCurrent" => 350,
                     "minWithoutCurrent" => 0,
-                    "maxWithoutCurrent" => 424,
+                    "maxWithoutCurrent" => 579,
                 ],
                 "budget" => [
-                    'current' => 2234,
-                    "avgComparisonWithoutCurrent" => 329,
-                    "summaryWithoutCurrent" => 7621,
-                    "avgWithoutCurrent" => 1905,
+                    'current' => 3294,
+                    "avgComparisonWithoutCurrent" => 1655,
+                    "summaryWithoutCurrent" => 6558,
+                    "avgWithoutCurrent" => 1639,
                     "minWithoutCurrent" => 0,
-                    "maxWithoutCurrent" => 3328,
-                    "spentBudgetFromBeginningOfMonth" => 3233,
+                    "maxWithoutCurrent" => 3327,
+                    "spentBudgetFromBeginningOfMonth" => 4293,
                     "budgetMonthly" => 9300,
-                    "percentSpentBudgetMonthlyCurrentDay" => 34,
+                    "percentSpentBudgetMonthlyCurrentDay" => 46,
                 ]
             ];
 

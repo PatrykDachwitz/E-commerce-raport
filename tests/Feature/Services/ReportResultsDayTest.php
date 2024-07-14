@@ -582,7 +582,7 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 1522
                 ],
                 "costShare" => [
-                    "value" => 0.29
+                    "value" => 0.3
                 ],
                 "comparisonClickToCost" => [
                     "value" => 1.77
