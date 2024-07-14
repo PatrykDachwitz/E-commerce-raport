@@ -28,7 +28,7 @@ const nameHeaderCost = [
 ];
 
 onMounted(() => {
-    changePositionTableHeader('report__row--header');
+    changePositionTableHeader('report__row--header', "report");
     changePositionCountryName('report__value--country-name', 'report__content', "report");
 })
 

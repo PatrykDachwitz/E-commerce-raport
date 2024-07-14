@@ -15,6 +15,9 @@ const lang = inject('lang');
                 <router-link :to="{name: 'report-daily'}" class="navigation__subsection">{{ lang['dailyReport'] }}</router-link>
             </li>
             <li class="my-1">
+                <router-link :to="{name: 'weekly'}" class="navigation__subsection">Raport weekendowy</router-link>
+            </li>
+            <li class="my-1">
                 <router-link :to="{name: 'report-comparison'}" class="navigation__subsection">{{ lang['comparisonReport'] }}</router-link>
             </li>
 <!--            <li class="navigation__subsection my-1">{{ lang['monthlyReport'] }}</li>-->

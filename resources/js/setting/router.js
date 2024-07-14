@@ -17,6 +17,11 @@ const routes = [
                 component: daily
             },
             {
+                path: "weekly",
+                name: "weekly",
+                component: daily
+            },
+            {
                 path: "comparison",
                 name: "report-comparison",
                 component: comparison

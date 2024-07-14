@@ -1,9 +1,10 @@
-export function changePositionTableHeader(classTarget) {
+export function changePositionTableHeader(classTarget, scrollYTargetClass) {
+    const elementScrollY = document.querySelector(`.${scrollYTargetClass}`);
     const targetElement = document.querySelector(`.${classTarget}`);
     const targetElementHeight = targetElement.offsetHeight;
     const parentElement = targetElement.parentElement;
     const menuWidth = document.querySelector("#app > nav").offsetWidth;
-
+    let additionalSizeInLeftReport = 0;
     parentElement.addEventListener('scroll', e => {
 
         if (parentElement.scrollTop > (targetElementHeight - (targetElementHeight / 4))) {
@@ -12,12 +13,18 @@ export function changePositionTableHeader(classTarget) {
             removeFixedPositionElement(targetElement);
         }
 
+        if (elementScrollY.scrollLeft > 0) {
+            additionalSizeInLeftReport = 165;
+        } else {
+            additionalSizeInLeftReport = 0;
+        }
+
         if (parentElement.scrollLeft > 0) {
             if (parentElement.scrollLeft > menuWidth) {
-                let newWidth = parentElement.scrollLeft - menuWidth;
+                let newWidth = parentElement.scrollLeft - menuWidth - additionalSizeInLeftReport;
                 targetElement.style.left = `-${newWidth}px`;
             } else {
-                let newWidth = menuWidth - parentElement.scrollLeft;
+                let newWidth = menuWidth - (parentElement.scrollLeft + additionalSizeInLeftReport);
                 targetElement.style.left = `${newWidth}px`;
             }
         } else {
@@ -40,12 +47,12 @@ export function changePositionCountryName(className, containerClassName, scrollT
             if (scrollTarget.scrollLeft > 0) {
                 let offsetTopElement = targetElement.offsetTop;
                 if (scrollTarget.scrollTop < currentScrollValue || currentScrollValue === 0){
-                    console.info(1);
+
                     let newScrollDifference = currentScrollValue - scrollTarget.scrollTop;
                     let newOffsetTopTargetElement = offsetTopElement + newScrollDifference;
                     targetElement.style.top = `${newOffsetTopTargetElement}px`;
                 } else if (scrollTarget.scrollTop > currentScrollValue) {
-                    console.info(2);
+
                     let newScrollDifference = scrollTarget.scrollTop - currentScrollValue;
                     let newOffsetTopTargetElement = offsetTopElement - newScrollDifference;
                     targetElement.style.top = `${newOffsetTopTargetElement}px`;
@@ -56,18 +63,6 @@ export function changePositionCountryName(className, containerClassName, scrollT
                 targetElement.style.top = "";
                 currentScrollValue = 0;
             }
-
-
-
-           /* if (scrollTarget.scrollTop <= currentScrollValue){
-                let newScrollDifference = currentScrollValue - scrollTarget.scrollTop;
-                let newOffsetTopTargetElement = offsetTopElement + newScrollDifference;
-                targetElement.style.top = `${newOffsetTopTargetElement}px`;
-            } else {
-                let newScrollDifference = scrollTarget.scrollTop - currentScrollValue;
-                let newOffsetTopTargetElement = offsetTopElement - newScrollDifference;
-                targetElement.style.top = `${newOffsetTopTargetElement}px`;
-            }*/
 
         });
         if (scrollTarget.scrollLeft > 0) {

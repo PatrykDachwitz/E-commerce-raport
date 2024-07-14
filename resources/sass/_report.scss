@@ -18,8 +18,12 @@
         &:nth-child(2n+1) div {
             background-color: $white;
         }
+        &:nth-child(2n+2) div {
+            background-color: $body-bg;
+        }
 
         &--header {
+            z-index: 2;
             height: 100px;
             &.position-fixed {
                 //top: 0 !important;
