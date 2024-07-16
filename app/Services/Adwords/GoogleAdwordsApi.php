@@ -59,9 +59,15 @@ class GoogleAdwordsApi extends AdwordsApi
     //Verification correct count row in response and writing 0 click and spend in minimum value row if row is not completed
     private function verificationNumberReturnedRows(array|null $responseApi, array $structureResponse) : array {
         //Add 1 value because count day is without current date
-        if (is_null($responseApi) | count($responseApi) !== ($this->countDayWithoutCurrent + 1)) {
+        if (is_null($responseApi)) {
             $structureResponse['click']['minWithoutCurrent'] = 0;
             $structureResponse['budget']['minWithoutCurrent'] = 0;
+
+        } else  {
+            if (count($responseApi) !== ($this->countDayWithoutCurrent + 1)) {
+                $structureResponse['click']['minWithoutCurrent'] = 0;
+                $structureResponse['budget']['minWithoutCurrent'] = 0;
+            }
         }
 
         return $structureResponse;
