@@ -592,12 +592,12 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 1026
                 ],
                 "minValueLast30Day" => [
-                    "value" => 79591,
-                    "art" => 84
+                    "value" => 80836,
+                    "art" => 394
                 ],
                 "maxValueLast30Day" => [
-                    "value" => 10001467784,
-                    "art" => 1522
+                    "value" => 10000087503,
+                    "art" => 1190
                 ],
                 "costShare" => [
                     "value" => 0.3

@@ -15,7 +15,7 @@ const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-07-07`);
+const { data, error } = getContentReport(`${apiUrl}${route.path}`);
 
 const nameHeaderResult = [
   'global',
@@ -29,7 +29,7 @@ const nameHeaderCost = [
 
 onMounted(() => {
     changePositionTableHeader('report__row--header', "report");
-    changePositionCountryName('report__value--country-name', 'report__content', "report");
+    changePositionCountryName('report__value--country-name', 'report__content', "report", 'report__col--active-col-country');
 })
 
 

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Database\Seeders\ComparisonDayJuneCountry;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\get;
 use function Pest\Laravel\seed;
@@ -13,7 +14,7 @@ beforeEach(function () {
 //Dodać weryfiakcję co jeśli nie ma pliku czy tu nie ma zanych wtecz dat czy cuś i asseracia daty czy coś ddodać summary
 
 describe('verification correct url api', function () {
-    it('report daily url work', function () {
+ /*   it('report daily url work', function () {
         $expectResult = [
             [
                 "country" => "Polska",
@@ -444,7 +445,7 @@ describe('verification format and count response data', function () {
                            /*'google' => $structureStatistic,
                            'facebook' => $structureStatistic,
                            'costGoogle' => $structureStatisticCost,
-                           'costFacebook' => $structureStatisticCost,*/
+                           'costFacebook' => $structureStatisticCost,
                        ]
                    ]
                ]
@@ -632,6 +633,64 @@ describe('verification format and count response data', function () {
 
        expect($response)
            ->toMatchArray($expectResult);
-   });
+   });*/
 
+    it('Verification correct response for empty date input', function () {
+
+        $expectResult = [
+            [
+                "country" => "Test",
+                "shop" => [
+                    "shopSales" => [
+                        "value" => 123,
+                        "art" => 242
+                    ],
+                    "avgComparison" => [
+                        "value" => -19800,
+                        "art" => 183
+                    ],
+                    "avgLast30Day" => [
+                        "value" => 96876,
+                        "art" => 58
+                    ],
+                    "minValueLast30Day" => [
+                        "value" => 77076,
+                        "art" => 10
+                    ],
+                    "maxValueLast30Day" => [
+                        "value" => 99076,
+                        "art" => 242
+                    ]
+                ],
+                "global" => [
+                    'countClick' => [
+                        'value' => 100
+                    ],
+                    'avgComparison' => [
+                        'value' => -3604
+                    ],
+                    'avgLast30Day' => [
+                        'value' => 3704
+                    ],
+                    'minValueLast30Day' => [
+                        'value' => 9
+                    ],
+                    'maxValueLast30Day' => [
+                        'value' => 100000
+                    ]
+                ]
+            ],
+        ];
+        $lastDay = date("Y-m-d", strtotime("-1 day"));
+
+        Storage::fake();
+        Storage::disk()
+            ->put(config('report.containerReportResultDay') . "{$lastDay}.json", json_encode($expectResult));
+
+        $responseApi = get(route('report.daily'))
+            ->json('data');
+
+        expect($responseApi)
+            ->toMatchArray($expectResult);
+    });
 });

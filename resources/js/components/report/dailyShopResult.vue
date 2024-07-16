@@ -5,7 +5,7 @@ defineProps([
 </script>
 
 <template v-if="result !== null">
-    <div class="report__col d-flex flex-column">
+    <div class="report__col d-flex flex-column report__col--active-col-country">
         <div class="report__value">{{ result.shopSales.value }} Eur</div>
         <div class="report__value">{{ result.shopSales.art }} Szt</div>
     </div>

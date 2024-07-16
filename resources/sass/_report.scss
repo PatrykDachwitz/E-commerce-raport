@@ -2,7 +2,7 @@
     max-width: 100%;
     max-height: 100%;
     overflow: auto;
-
+    scrollbar-width: thin;
     &__col {
         min-width: 165px;
         width: 165px;
@@ -10,16 +10,17 @@
     }
 
     &__row {
-        &:hover * {
-            background-color: $selectColor;
-            cursor: pointer;
-        }
 
         &:nth-child(2n+1) div {
             background-color: $white;
         }
         &:nth-child(2n+2) div {
             background-color: $body-bg;
+        }
+
+        &:hover div {
+            background-color: $selectColor !important;
+            cursor: pointer;
         }
 
         &--header {

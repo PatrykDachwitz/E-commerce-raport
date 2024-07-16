@@ -7,7 +7,7 @@ const apiUrl = inject('apiUrl');
 const route = useRoute();
 const lang = inject('lang');
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}?date=2024-07-07`);
+const { data, error } = getContentReport(`${apiUrl}${route.path}`);
 
 </script>
 

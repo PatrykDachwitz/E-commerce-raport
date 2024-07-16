@@ -11,6 +11,7 @@ class ShopResult
 
 
     private CoursePLN $coursePLN;
+
     private array $responseApiShop;
     private ShopSales $shopSales;
     public function __construct(ShopSales $shopSales, CoursePLN $coursePLN)
@@ -27,8 +28,8 @@ class ShopResult
                     "art" => 0,
                 ],
                 "minValueLast30Day" => [
-                    "value" => 0,
-                    "art" => 0,
+                    "value" => null,
+                    "art" => null,
                 ],
                 "maxValueLast30Day" => [
                     "value" => 0,
@@ -96,10 +97,27 @@ class ShopResult
             "value" => $costShare
         ];
     }
+    private function summaryResultByCountry(array $data): array{
+        $art = 0;
+        $value = 0;
+
+        foreach ($data as $item) {
+            $art += $item['item'];
+            $value += $item['value'];
+        }
+
+        return [
+            'art' => intval($art),
+            'value' => intval($value),
+        ];
+    }
     private function resultShopSales(int $countDay, string $currentDate, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
         $finalResultShop = $this->getClearStructureShopResponse();
+        $summaryResultPerDay = [];
 
         foreach ($this->responseApiShop as $date => $response) {
+            $summaryResultPerDay[$date] = $this->summaryResultByCountry($response);
+
             foreach ($response as $idCountry => $resultShop) {
 
 
@@ -133,7 +151,7 @@ class ShopResult
             }
         }
 
-        $finalResultShop = $this->calculateSummaryResult($finalResultShop, $analyticsResult, $metaAdsResult, $googleAdsResult);
+        $finalResultShop = $this->calculateSummaryResult($summaryResultPerDay, $currentDate, $finalResultShop, $analyticsResult, $metaAdsResult, $googleAdsResult);
         return $this->calculateAvgWithComparisonResult($finalResultShop, $countDay);
     }
 
@@ -208,29 +226,37 @@ class ShopResult
         return $responseCalculatedWithResult;
     }
 
-    private function calculateSummaryResult(array $currentResult, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
-        $finalCalculate = $currentResult;
+    private function calculateSummaryResult(array $data, string $currentDate, array $currentResult, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
+        $response = $currentResult;
 
-        foreach ($currentResult as $key => $result) {
-            if ($key === "summary") continue;
-            $finalCalculate['summary']['minValueLast30Day']['value'] += $result['minValueLast30Day']['value'];
-            $finalCalculate['summary']['maxValueLast30Day']['value'] += $result['maxValueLast30Day']['value'];
-            $finalCalculate['summary']['maxValueLast30Day']['art'] += $result['maxValueLast30Day']['art'];
-            $finalCalculate['summary']['minValueLast30Day']['art'] += $result['minValueLast30Day']['art'];
+        foreach ($data as $date => $item) {
+            if ($currentDate === $date) {
+                $response['summary']['shopSales'] = [
+                    'value' => $item['value'],
+                    'art' => $item['art'],
+                ];
+            } else {
+                if ($response['summary']['minValueLast30Day']['value'] > $item['value'] | $response['summary']['minValueLast30Day']['value'] === null) {
+                    $response['summary']['minValueLast30Day']['value'] = $item['value'];
+                }
+                if ($response['summary']['minValueLast30Day']['art'] > $item['art'] | $response['summary']['minValueLast30Day']['art'] === null) {
+                    $response['summary']['minValueLast30Day']['art'] = $item['art'];
+                }
+
+                if ($response['summary']['maxValueLast30Day']['value'] < $item['value']) {
+                    $response['summary']['maxValueLast30Day']['value'] = $item['value'];
+                }
+                if ($response['summary']['maxValueLast30Day']['art'] < $item['art']) {
+                    $response['summary']['maxValueLast30Day']['art'] = $item['art'];
+                }
+            }
         }
 
-        $finalCalculate['summary']['minValueLast30Day']['value'] = intval($finalCalculate['summary']['minValueLast30Day']['value']);
-        $finalCalculate['summary']['maxValueLast30Day']['value'] = intval($finalCalculate['summary']['maxValueLast30Day']['value']);
-        $finalCalculate['summary']['maxValueLast30Day']['art'] = intval($finalCalculate['summary']['maxValueLast30Day']['art']);
-        $finalCalculate['summary']['minValueLast30Day']['art'] = intval($finalCalculate['summary']['minValueLast30Day']['art']);
-        $finalCalculate['summary']['shopSales']['art'] = intval($finalCalculate['summary']['shopSales']['art']);
-        $finalCalculate['summary']['shopSales']['value'] = intval($finalCalculate['summary']['shopSales']['value']);
 
-        $finalCalculate['summary']['costShare'] = $this->getCostShare('summary', $finalCalculate['summary']['shopSales'], $metaAdsResult, $googleAdsResult);
-        $finalCalculate['summary']['comparisonClickToCost'] = $this->getComparisonClickToCost('summary', $finalCalculate['summary']['shopSales'], $analyticsResult);
+        $response['summary']['costShare'] = $this->getCostShare('summary', $response['summary']['shopSales'], $metaAdsResult, $googleAdsResult);
+        $response['summary']['comparisonClickToCost'] = $this->getComparisonClickToCost('summary', $response['summary']['shopSales'], $analyticsResult);
 
-
-        return $finalCalculate;
+        return $response;
     }
 
     public function getResult(array $dates, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {

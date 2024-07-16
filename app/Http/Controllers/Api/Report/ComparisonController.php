@@ -42,7 +42,7 @@ class ComparisonController extends Controller
     public function __invoke(ReportDateFormat $request)
     {
         $fileContent = json_decode(Storage::disk()
-            ->get(config('report.containerReportComparisonDay') . $request->input('date') . '.json'), true);
+            ->get(config('report.containerReportComparisonDay') . $request->input('date', date("Y-m-d", strtotime('-1 day'))) . '.json'), true);
 
         $this->updateDates($fileContent["date"]);
 

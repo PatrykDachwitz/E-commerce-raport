@@ -33,14 +33,14 @@ export function changePositionTableHeader(classTarget, scrollYTargetClass) {
     })
 }
 
-export function changePositionCountryName(className, containerClassName, scrollTargetClassName) {
+export function changePositionCountryName(className, containerClassName, scrollTargetClassName, targetElementForMarginLeft) {
 
     const scrollTarget = document.querySelector(`.${scrollTargetClassName}`);
     let currentScrollValue = 0;
 
     scrollTarget.addEventListener('scroll', e => {
         let targetsElement = document.querySelectorAll(`.${className}`);
-
+        let elementForMarginLeft = document.querySelectorAll(`.${targetElementForMarginLeft}`);
         targetsElement.forEach(targetElement => {
 
 
@@ -57,9 +57,15 @@ export function changePositionCountryName(className, containerClassName, scrollT
                     let newOffsetTopTargetElement = offsetTopElement - newScrollDifference;
                     targetElement.style.top = `${newOffsetTopTargetElement}px`;
                 }
+                elementForMarginLeft.forEach(item => {
+                   item.style.marginLeft = '165px';
+                });
                 addFixedPositionElement(targetElement);
             } else {
                 removeFixedPositionElement(targetElement);
+                elementForMarginLeft.forEach(item => {
+                    item.style.marginLeft = '';
+                });
                 targetElement.style.top = "";
                 currentScrollValue = 0;
             }

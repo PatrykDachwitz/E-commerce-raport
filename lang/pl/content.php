@@ -33,4 +33,5 @@ return [
     "percentCostFromBeginningMonth" => "Wydany % miesięcznego budżetu",
     "costShare" => "Udział kosztów",
     "comparisonClickToCost" => "Sprzedaż / Użytkownicy",
+    "percentDaysPassedInCurrentMonth" => "Procent minionych dni w miesiącu",
 ];
