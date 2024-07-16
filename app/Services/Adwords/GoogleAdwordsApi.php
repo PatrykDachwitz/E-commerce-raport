@@ -155,7 +155,7 @@ class GoogleAdwordsApi extends AdwordsApi
         $dataResponseApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
         $structureResponse = $this->getStructureResponse();
         $structureResponse = $this->verificationNumberReturnedRows($dataResponseApi, $structureResponse);
-
+        if (!is_null($dataResponseApi)){
         foreach ($dataResponseApi as $key => $data) {
 
             if ($this->isCurrentTimeInRange($data['segments']['date'])) {
@@ -172,7 +172,7 @@ class GoogleAdwordsApi extends AdwordsApi
                 $structureResponse['click']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, intval($data['metrics']['clicks']), 'click');
                 $structureResponse['budget']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, $this->calculateCurrentSpendBudget($data['metrics']['costMicros']), 'budget');
             }
-        }
+        }}
 
         if (is_null($structureResponse['click']['minWithoutCurrent'])) $structureResponse['click']['minWithoutCurrent'] = 0;
         if (is_null($structureResponse['budget']['minWithoutCurrent'])) $structureResponse['budget']['minWithoutCurrent'] = 0;
