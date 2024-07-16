@@ -77,6 +77,7 @@ onMounted(() => {
                         <div :class="`report__header report__header&#45;&#45;${nameHeader}&#45;&#45;secondary`">{{ lang['costFromBeginningMonth'] }}</div>
                         <div :class="`report__header report__header&#45;&#45;${nameHeader}&#45;&#45;secondary`">{{ lang['budgetMonth'] }}</div>
                         <div :class="`report__header report__header&#45;&#45;${nameHeader}&#45;&#45;secondary`">{{ lang['percentCostFromBeginningMonth'] }}</div>
+                        <div :class="`report__header report__header&#45;&#45;${nameHeader}&#45;&#45;secondary`">{{ lang['percentDaysPassedInCurrentMonth'] }}</div>
                     </div>
                 </div>
             </template>

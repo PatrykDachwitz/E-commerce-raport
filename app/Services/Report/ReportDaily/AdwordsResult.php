@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 class AdwordsResult
 {
 
-    private function calculateSummaryRow(array $data) : array {
+    private function calculateSummaryRow(array $data, string $currentDate) : array {
 
-        $summary = $this->getEmptyStructureResponse();
+        $summary = $this->getEmptyStructureResponse($currentDate);
 
         $finallyData = $data;
 
@@ -50,7 +50,7 @@ class AdwordsResult
         return $data;
     }
 
-    private function getEmptyStructureResponse() : array {
+    private function getEmptyStructureResponse(string $currentDate) : array {
         return [
 
             "budget" => [
@@ -81,6 +81,9 @@ class AdwordsResult
                 'percentCostFromBeginningMonth' => [
                     'value' => 0
                 ],
+                'percentDaysPassedInCurrentMonth' => [
+                    'value' => $this->getNumberDaysPassedMonth($currentDate)
+                ],
             ],
             "click" => [
                 'countClick' => [
@@ -105,7 +108,17 @@ class AdwordsResult
         ];
     }
 
-    private function getStructureWithData(array $data) : array {
+    private function getNumberDaysPassedMonth(string $date) : float {
+        $currentTimestamp = strtotime($date);
+        $currentDay = date("d", $currentTimestamp);
+        $currentMonth = intval(date("m", $currentTimestamp));
+        $currentYear = intval(date("Y", $currentTimestamp));
+        $countDayInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
+
+        return round($currentDay / ($countDayInMonth / 100), 2);
+    }
+
+    private function getStructureWithData(array $data, string $currentDate) : array {
         return [
 
             "budget" => [
@@ -135,6 +148,9 @@ class AdwordsResult
                 ],
                 'percentCostFromBeginningMonth' => [
                     'value' => $data['budget']['percentSpentBudgetMonthlyCurrentDay']
+                ],
+                'percentDaysPassedInCurrentMonth' => [
+                    'value' => $this->getNumberDaysPassedMonth($currentDate)
                 ],
             ],
             "click" => [
@@ -166,16 +182,16 @@ class AdwordsResult
         foreach ($countries as $country) {
 
             if (is_null($country[$adwordsApi->getNameColumnAdwords()])) {
-                $response[$country->id] = $this->getEmptyStructureResponse();
+                $response[$country->id] = $this->getEmptyStructureResponse($currentDate);
                 continue;
             }
 
             $adwordsResult = $adwordsApi
                 ->get($currentDate, $lastDate, $country);
 
-            $response[$country->id] = $this->getStructureWithData($adwordsResult);
+            $response[$country->id] = $this->getStructureWithData($adwordsResult, $currentDate);
         }
 
-        return $this->calculateSummaryRow($response);
+        return $this->calculateSummaryRow($response, $currentDate);
     }
 }
