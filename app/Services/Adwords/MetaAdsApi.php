@@ -59,12 +59,19 @@ class MetaAdsApi extends AdwordsApi
 
         foreach ($dataResponseApi as $key => $data) {
             if (is_null($data)) {
+                $this->setDataPerDate(0, 0, $this->dateRanges[$key]['start']);
                 if ($key === "current") {
                     $structureResponse['click']['current'] = 0;
                     $structureResponse['budget']['current'] = 0;
+                } else {
+                    $structureResponse['click']['minWithoutCurrent'] = 0;
+                    $structureResponse['budget']['minWithoutCurrent'] = 0;
+
                 }
                 continue;
             }
+
+            $this->setDataPerDate(intval($data['spend']), intval($data['clicks']), $this->dateRanges[$key]['start']);
             if ($key === "current") {
                 $structureResponse['click']['current'] = intval($data['clicks']);
                 $structureResponse['budget']['current'] = intval($data['spend']);
@@ -104,7 +111,9 @@ class MetaAdsApi extends AdwordsApi
             $resultApi['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($resultApi['budget']);
         }
 
-        return $this->calculateAvgWithComparison($resultApi);
+        return array_merge($this->calculateAvgWithComparison($resultApi), [
+            'dates' => $this->dataPerDate
+        ]);
     }
 
 

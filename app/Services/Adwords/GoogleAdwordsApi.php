@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Adwords;
 
 use App\Models\Country;
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class GoogleAdwordsApi extends AdwordsApi
@@ -44,7 +45,11 @@ class GoogleAdwordsApi extends AdwordsApi
             ->withBody($bodyQuery)
             ->post("https://googleads.googleapis.com/v17/customers/{$idCompany}/googleAds:searchStream");
 
-        return $response->json()[0]['results'];
+        try {
+            return $response->json()[0]['results'];
+        } catch (Exception) {
+            return null;
+        }
     }
 
     private function calculateCurrentSpendBudget(string|int $cost) : int {

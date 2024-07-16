@@ -6,6 +6,8 @@ use App\Models\Country;
 
 abstract class AdwordsApi
 {
+
+    protected array $dataPerDate;
     protected int $countDayWithoutCurrent;
     protected array $dateRanges;
 
@@ -139,6 +141,13 @@ abstract class AdwordsApi
         $this->dateRanges = $dateRanges;
     }
 
+
+    protected function setDataPerDate(string|int $cost, string|int $click, string $date) : void {
+        $this->dataPerDate[$date] = [
+            'cost' => intval($cost),
+            'click' => intval($click)
+        ];
+    }
 
     protected function getSpendBudgetInCurrentMonth(Country $country, string $dateCurrent) : int {
         $currentYearWithMonth = date("Y-m", strtotime($dateCurrent));

@@ -62,7 +62,39 @@ describe('Testing response meta ads services with correct data', function () {
             "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-21" => Http::response($metaAdsTemplateDataForJuneResponseApi),
         ]);
 
-
+        $dataPerDates = [
+            "2024-05-22"=> ['click'=>200,'cost'=>180],
+            "2024-05-23"=> ['click'=>450,'cost'=>280],
+            "2024-05-24"=> ['click'=>200,'cost'=>180],
+            "2024-05-25"=> ['click'=>450,'cost'=>280],
+            "2024-05-26"=> ['click'=>200,'cost'=>180],
+            "2024-05-27"=> ['click'=>450,'cost'=>280],
+            "2024-05-28"=> ['click'=>200,'cost'=>180],
+            "2024-05-29"=> ['click'=>450,'cost'=>280],
+            "2024-05-30"=> ['click'=>200,'cost'=>180],
+            "2024-05-31"=> ['click'=>450,'cost'=>280],
+            "2024-06-01"=> ['click'=>200,'cost'=>180],
+            "2024-06-02"=> ['click'=>450,'cost'=>280],
+            "2024-06-03"=> ['click'=>200,'cost'=>180],
+            "2024-06-04"=> ['click'=>450,'cost'=>280],
+            "2024-06-05"=> ['click'=>200,'cost'=>180],
+            "2024-06-06"=> ['click'=>450,'cost'=>280],
+            "2024-06-07"=> ['click'=>200,'cost'=>180],
+            "2024-06-08"=> ['click'=>450,'cost'=>280],
+            "2024-06-09"=> ['click'=>200,'cost'=>180],
+            "2024-06-10"=> ['click'=>450,'cost'=>280],
+            "2024-06-11"=> ['click'=>200,'cost'=>180],
+            "2024-06-12"=> ['click'=>450,'cost'=>280],
+            "2024-06-13"=> ['click'=>200,'cost'=>180],
+            "2024-06-14"=> ['click'=>450,'cost'=>280],
+            "2024-06-15"=> ['click'=>200,'cost'=>180],
+            "2024-06-16"=> ['click'=>450,'cost'=>280],
+            "2024-06-17"=> ['click'=>200,'cost'=>180],
+            "2024-06-18"=> ['click'=>450,'cost'=>280],
+            "2024-06-19"=> ['click'=>200,'cost'=>180],
+            "2024-06-20"=> ['click'=>450,'cost'=>280],
+            "2024-06-21"=> ['click'=>204,'cost'=>361]
+        ];
 
         $metaAds = new MetaAdsApi(new CoursePLN());
 
@@ -85,7 +117,8 @@ describe('Testing response meta ads services with correct data', function () {
                 "spentBudgetFromBeginningOfMonth" => 4961,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 55,
-            ]
+            ],
+            "dates" => $dataPerDates
         ];
 
         $country = Country::find(1);
@@ -141,6 +174,40 @@ describe('Testing response meta ads services with correct data', function () {
         ]);
 
 
+        $dataPerDates = [
+            "2024-05-22"=> ['click'=>200,'cost'=>180],
+            "2024-05-23"=> ['click'=>450,'cost'=>280],
+            "2024-05-24"=> ['click'=>200,'cost'=>180],
+            "2024-05-25"=> ['click'=>450,'cost'=>280],
+            "2024-05-26"=> ['click'=>200,'cost'=>180],
+            "2024-05-27"=> ['click'=>450,'cost'=>280],
+            "2024-05-28"=> ['click'=>200,'cost'=>180],
+            "2024-05-29"=> ['click'=>450,'cost'=>280],
+            "2024-05-30"=> ['click'=>200,'cost'=>180],
+            "2024-05-31"=> ['click'=>450,'cost'=>280],
+            "2024-06-01"=> ['click'=>200,'cost'=>180],
+            "2024-06-02"=> ['click'=>450,'cost'=>280],
+            "2024-06-03"=> ['click'=>200,'cost'=>180],
+            "2024-06-04"=> ['click'=>450,'cost'=>280],
+            "2024-06-05"=> ['click'=>200,'cost'=>180],
+            "2024-06-06"=> ['click'=>450,'cost'=>280],
+            "2024-06-07"=> ['click'=>200,'cost'=>180],
+            "2024-06-08"=> ['click'=>450,'cost'=>280],
+            "2024-06-09"=> ['click'=>200,'cost'=>180],
+            "2024-06-10"=> ['click'=>450,'cost'=>280],
+            "2024-06-11"=> ['click'=>200,'cost'=>180],
+            "2024-06-12"=> ['click'=>450,'cost'=>280],
+            "2024-06-13"=> ['click'=>200,'cost'=>180],
+            "2024-06-14"=> ['click'=>450,'cost'=>280],
+            "2024-06-15"=> ['click'=>200,'cost'=>180],
+            "2024-06-16"=> ['click'=>450,'cost'=>280],
+            "2024-06-17"=> ['click'=>200,'cost'=>180],
+            "2024-06-18"=> ['click'=>450,'cost'=>280],
+            "2024-06-19"=> ['click'=>200,'cost'=>180],
+            "2024-06-20"=> ['click'=>450,'cost'=>280],
+            "2024-06-21"=> ['click'=>204,'cost'=>361]
+        ];
+
 
         $metaAds = new MetaAdsApi(new CoursePLN());
 
@@ -163,7 +230,8 @@ describe('Testing response meta ads services with correct data', function () {
                 "spentBudgetFromBeginningOfMonth" => 21322,
                 "budgetMonthly" => 57060,
                 "percentSpentBudgetMonthlyCurrentDay" => 37,
-            ]
+            ],
+            "dates" => $dataPerDates
         ];
 
         $country = Country::find(3);
@@ -218,6 +286,39 @@ describe('Testing response meta ads services with correct data', function () {
         ]);
 
 
+        $dataPerDates = [
+            "2024-05-22"=> ['click'=>200,'cost'=>180],
+            "2024-05-23"=> ['click'=>450,'cost'=>280],
+            "2024-05-24"=> ['click'=>200,'cost'=>180],
+            "2024-05-25"=> ['click'=>450,'cost'=>280],
+            "2024-05-26"=> ['click'=>200,'cost'=>180],
+            "2024-05-27"=> ['click'=>450,'cost'=>280],
+            "2024-05-28"=> ['click'=>200,'cost'=>180],
+            "2024-05-29"=> ['click'=>450,'cost'=>280],
+            "2024-05-30"=> ['click'=>200,'cost'=>180],
+            "2024-05-31"=> ['click'=>450,'cost'=>280],
+            "2024-06-01"=> ['click'=>200,'cost'=>180],
+            "2024-06-02"=> ['click'=>450,'cost'=>280],
+            "2024-06-03"=> ['click'=>200,'cost'=>180],
+            "2024-06-04"=> ['click'=>450,'cost'=>280],
+            "2024-06-05"=> ['click'=>200,'cost'=>180],
+            "2024-06-06"=> ['click'=>450,'cost'=>280],
+            "2024-06-07"=> ['click'=>200,'cost'=>180],
+            "2024-06-08"=> ['click'=>450,'cost'=>280],
+            "2024-06-09"=> ['click'=>200,'cost'=>180],
+            "2024-06-10"=> ['click'=>450,'cost'=>280],
+            "2024-06-11"=> ['click'=>200,'cost'=>180],
+            "2024-06-12"=> ['click'=>450,'cost'=>280],
+            "2024-06-13"=> ['click'=>200,'cost'=>180],
+            "2024-06-14"=> ['click'=>450,'cost'=>280],
+            "2024-06-15"=> ['click'=>200,'cost'=>180],
+            "2024-06-16"=> ['click'=>450,'cost'=>280],
+            "2024-06-17"=> ['click'=>200,'cost'=>180],
+            "2024-06-18"=> ['click'=>450,'cost'=>280],
+            "2024-06-19"=> ['click'=>200,'cost'=>180],
+            "2024-06-20"=> ['click'=>450,'cost'=>280],
+            "2024-06-21"=> ['click'=>204,'cost'=>361]
+        ];
 
         $metaAds = new MetaAdsApi(new CoursePLN());
 
@@ -240,7 +341,8 @@ describe('Testing response meta ads services with correct data', function () {
                 "spentBudgetFromBeginningOfMonth" => 4961,
                 "budgetMonthly" => 0,
                 "percentSpentBudgetMonthlyCurrentDay" => 100,
-            ]
+            ],
+            "dates" => $dataPerDates
         ];
 
         $country = Country::find(2);
@@ -274,6 +376,24 @@ describe('Testing response meta ads services with wrong data' , function () {
         ]);
 
 
+        $dates = [
+            '2024-06-21',
+            '2024-06-20',
+            '2024-06-19',
+            '2024-06-18',
+            '2024-06-17',
+            '2024-06-16',
+            '2024-06-15',
+            '2024-06-14'
+        ];
+
+        $singleDataPerDate = [];
+        foreach ($dates as $date) {
+            $singleDataPerDate[$date] = [
+                'cost' => 0,
+                'click' => 0
+            ];
+        }
 
         $metaAds = new MetaAdsApi(new CoursePLN());
 
@@ -296,7 +416,8 @@ describe('Testing response meta ads services with wrong data' , function () {
                 "spentBudgetFromBeginningOfMonth" => 0,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 0,
-            ]
+            ],
+            "dates" => $singleDataPerDate
         ];
 
         $country = Country::find(1);
@@ -323,6 +444,26 @@ describe('Testing response meta ads services with wrong data' , function () {
 
         $metaAds = new MetaAdsApi(new CoursePLN());
 
+        $dates = [
+            '2024-06-21',
+            '2024-06-20',
+            '2024-06-19',
+            '2024-06-18',
+            '2024-06-17',
+            '2024-06-16',
+            '2024-06-15',
+            '2024-06-14'
+        ];
+
+        $singleDataPerDate = [];
+        foreach ($dates as $date) {
+            $singleDataPerDate[$date] = [
+                'cost' => 0,
+                'click' => 0
+            ];
+        }
+
+
         $metaData = [
             'click' => [
                 'current' => 0,
@@ -342,7 +483,8 @@ describe('Testing response meta ads services with wrong data' , function () {
                 "spentBudgetFromBeginningOfMonth" => 0,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 0,
-            ]
+            ],
+            "dates" => $singleDataPerDate
         ];
 
         $country = Country::find(1);
@@ -400,7 +542,7 @@ describe("Testing response api for many date with correct data", function () {
                 "spentBudgetFromBeginningOfMonth" => 957,
                 "budgetMonthly" => 9300,
                 "percentSpentBudgetMonthlyCurrentDay" => 10,
-            ]
+            ],
         ];
 
         $rangesDate = [
