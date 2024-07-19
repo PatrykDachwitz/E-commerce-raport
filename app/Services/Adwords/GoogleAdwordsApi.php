@@ -20,7 +20,7 @@ class GoogleAdwordsApi extends AdwordsApi
 
     private function getBodyQuery(string $startDate, string $lastDate) : string {
         $query = [
-            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date FROM customer WHERE segments.date >= '{$startDate}' AND segments.date <= '{$lastDate}'"
+            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date FROM customer WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
         ];
 
         return json_encode($query);

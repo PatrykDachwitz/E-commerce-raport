@@ -207,18 +207,18 @@ class ShopResult
         $responseCalculatedWithResult = $result;
 
         foreach ($result as $key => $data) {
-            $avgArt = $data["summary"]['art'] / $countDay;
-            $avgValue = $data["summary"]['value'] / $countDay;
+            $avgArt = intval($data["summary"]['art'] / $countDay);
+            $avgValue = intval($data["summary"]['value'] / $countDay);
             unset($responseCalculatedWithResult[$key]['summary']);
 
             $responseCalculatedWithResult[$key]['avgLast30Day'] = [
-                'art' => intval($avgArt),
-                'value' => intval($avgValue),
+                'art' => $avgArt,
+                'value' => $avgValue,
             ];
 
             $responseCalculatedWithResult[$key]['avgComparison'] = [
-                'art' => intval($responseCalculatedWithResult[$key]['shopSales']['art'] - $avgArt),
-                'value' => intval($responseCalculatedWithResult[$key]['shopSales']['value'] - $avgValue),
+                'art' => $responseCalculatedWithResult[$key]['shopSales']['art'] - $avgArt,
+                'value' => $responseCalculatedWithResult[$key]['shopSales']['value'] - $avgValue,
             ];
 
         }

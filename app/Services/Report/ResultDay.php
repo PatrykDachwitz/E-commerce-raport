@@ -78,15 +78,18 @@ class ResultDay
             ];
 
         } else {
+
+            $avg = intval($dataAnalytics['avgWithoutCurrent']);
+
             return [
                 'countClick' => [
                     'value' => intval($dataAnalytics['current'])
                 ],
                 'avgComparison' => [
-                    'value' => intval($dataAnalytics['current'] - $dataAnalytics['avgWithoutCurrent'])
+                    'value' => intval($dataAnalytics['current']) - $avg
                 ],
                 'avgLast30Day' => [
-                    'value' => intval($dataAnalytics['avgWithoutCurrent'])
+                    'value' => $avg
                 ],
                 'minValueLast30Day' => [
                     'value' => intval($dataAnalytics['minWithoutCurrent'])

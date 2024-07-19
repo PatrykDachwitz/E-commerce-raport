@@ -164,7 +164,7 @@ test('Verification work services Report result Day with good response api', func
                 ],
                 "avgComparison" => [
                     "value" => -19800,
-                    "art" => 183
+                    "art" => 184
                 ],
                 "avgLast30Day" => [
                     "value" => 96876,
@@ -330,7 +330,7 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 123
                 ],
                 'avgComparison' => [
-                    'value' => 58
+                    'value' => 59
                 ],
                 'avgLast30Day' => [
                     'value' => 64
@@ -600,7 +600,7 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 1190
                 ],
                 "costShare" => [
-                    "value" => 0.3
+                    "value" => 0.29
                 ],
                 "comparisonClickToCost" => [
                     "value" => 1.77
