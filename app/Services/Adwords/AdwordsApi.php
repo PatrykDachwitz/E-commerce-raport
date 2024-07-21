@@ -69,7 +69,7 @@ abstract class AdwordsApi
 
     protected function addSpendBudgetCurrentMonth(string $date, int|string $value) : int {
         $currentMonth = date("m", strtotime($this->dateRanges['current']['start']));
-        $dateMonth = date("m", strtotime($date));
+        $dateMonth = date("m", intval(strtotime($date)));
 
         if ($currentMonth === $dateMonth) return intval($value);
         else return 0;

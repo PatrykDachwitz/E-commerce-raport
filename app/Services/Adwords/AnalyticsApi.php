@@ -9,6 +9,7 @@ class AnalyticsApi
 {
 
     private string $propertiesCountry, $dateCurrent;
+    private array $rangesDate;
     public function setCountry(Country $country) : string {
         $this->propertiesCountry = $country->analytics ?? "";
 
@@ -129,6 +130,152 @@ class AnalyticsApi
 
         $calculateData['avg'] = $this->avg($calculateData['count'], $startDate, $endDate, true);
         $calculateData['avgWithoutCurrent'] = $this->avg($calculateData['summaryWithoutCurrent'], $startDate, $endDate);
+
+        return $calculateData;
+    }
+
+    private function getNewestDate(string $currentDate, string $newDate) : string {
+        $currentDateTimestamp = strtotime($currentDate);
+        $newDateTimestamp = strtotime($newDate);
+
+        if ($newDateTimestamp  > $currentDateTimestamp) {
+            return $newDate;
+        } else {
+            return $currentDate;
+        }
+    }
+    private function getOldestDate(string $currentDate, string $newDate) : string {
+        $currentDateTimestamp = strtotime($currentDate);
+        $newDateTimestamp = strtotime($newDate);
+
+        if ($newDateTimestamp < $currentDateTimestamp) {
+            return $newDate;
+        } else {
+            return $currentDate;
+        }
+    }
+    private function getNewestAndOldestDate(array $date, array $secondDate) : array {
+        $newest = $date['end'];
+        $oldest = $date['start'];
+
+        foreach ($secondDate as $item) {
+            $newest = $this->getNewestDate($newest, $item['start']);
+            $newest = $this->getNewestDate($newest, $item['end']);
+
+            $oldest = $this->getOldestDate($oldest, $item['start']);
+            $oldest = $this->getOldestDate($oldest, $item['end']);
+        }
+
+        return [
+            "newest" => $newest,
+            "oldest" => $oldest,
+        ];
+    }
+
+    private function getKeyRangesDate(string $date) : string|int|null {
+        $responseKey = null;
+        $timeCheck = intval(str_replace("-", "", $date));
+
+        foreach ($this->rangesDate as $key => $rangesDate) {
+
+            $timeEnd = intval(str_replace("-", "", $rangesDate['end']));
+            $timeStart = intval(str_replace("-", "", $rangesDate['start']));
+
+           if ($timeCheck >= $timeStart && $timeCheck <= $timeEnd) {
+                $responseKey = $key;
+                break;
+            }
+        }
+
+        return $responseKey;
+    }
+    private function setRangesDate(array $currentDate, array $otherRangesDate) : void {
+
+        $this->rangesDate = array_merge([
+            "current" => $currentDate
+        ], $otherRangesDate);
+
+    }
+
+    private function completeDataRangesWhenNotHaveDataApi(array $data) :array {
+        foreach ($this->rangesDate as $key => $date) {
+            if (!isset($data[$key])) {
+                $data[$key] = 0;
+            }
+        }
+
+        return $data;
+    }
+    private function groupResultApiByRangesDate(array $data, array $currentDate, array $otherDate) : array {
+        $response = [];
+        $this->setRangesDate($currentDate, $otherDate);
+
+        foreach ($data['rows'] as $row) {
+            $keyDate = $this->getKeyRangesDate($row['dimensionValues'][0]['value']);
+
+            if(is_null($keyDate)) continue;
+
+            if (!isset($response[$keyDate])) {
+                $response[$keyDate] = intval($row['metricValues'][0]['value']);
+            } else {
+                $response[$keyDate] += intval($row['metricValues'][0]['value']);
+            }
+        }
+
+        return $this->completeDataRangesWhenNotHaveDataApi($response);
+    }
+
+    private function calculateDataGroupResponse(array $data) : array {
+
+        $responseParams = $this->getStructureNeedData();
+
+        foreach ($data as $key => $item) {
+
+            if ($key === "current") {
+                $responseParams['current'] = $item;
+            } else {
+                $responseParams['summaryWithoutCurrent'] += $item;
+
+                if (is_null($responseParams['minWithoutCurrent']) | $responseParams['minWithoutCurrent'] > $item) {
+                    $responseParams['minWithoutCurrent'] = $item;
+                }
+
+                if (is_null($responseParams['maxWithoutCurrent']) | $responseParams['maxWithoutCurrent'] < $item) {
+                    $responseParams['maxWithoutCurrent'] = $item;
+                }
+
+            }
+
+            if (is_null($responseParams['min']) | $responseParams['min'] > $item) {
+                $responseParams['min'] = $item;
+            }
+
+            if (is_null($responseParams['max']) | $responseParams['max'] < $item) {
+                $responseParams['max'] = $item;
+            }
+
+        }
+
+        return $responseParams;
+    }
+
+    public function getWithManyRangesDate(array $currentRangeDate, array $otherRangeDates) : array {
+        $date = $this->getNewestAndOldestDate($currentRangeDate, $otherRangeDates);
+
+        $responseApi = $this->connectApi($date['oldest'], $date['newest']);
+
+        if (isset($responseApi['rows'])) {
+            $groupResponseApi = $this->groupResultApiByRangesDate($responseApi, $currentRangeDate, $otherRangeDates);
+            $calculateData = $this->calculateDataGroupResponse($groupResponseApi);
+            $countRows = count($this->rangesDate);
+            $calculateData['avg'] = intval(($calculateData['summaryWithoutCurrent'] + $calculateData['current']) / $countRows);
+            //-1 Count because is avg without date ranges "current"
+            $calculateData['avgWithoutCurrent'] = intval($calculateData['summaryWithoutCurrent'] / ($countRows - 1));
+        } else {
+            $calculateData = $this->getStructureNeedData(false);
+            $calculateData['avg'] = 0;
+            $calculateData['avgWithoutCurrent'] = 0;
+        }
 
         return $calculateData;
     }

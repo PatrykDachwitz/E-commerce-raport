@@ -96,7 +96,7 @@ describe('Test services with query in 200 status', function () {
         $analytics->setCountry($country);
         $analytics->setDateCurrent("20240614");
 
-        $responseData = $analytics->get('click', "2024-06-12", "2024-06-14");
+        $responseData = $analytics->get("2024-06-12", "2024-06-14");
 
 
         expect($responseData)
@@ -129,4 +129,289 @@ describe('Test services with query in 200 status', function () {
             ->toBe(0);
 
     })->with('properties-account', 'analyticsResponseWithoutRows');
+});
+
+describe('Testng version for several between ranges date ', function () {
+
+    it("Verification result for correct data", function (string $propertiesAccount, string $responseApi) {
+        $country = Country::factory()->create([
+            'analytics' => $propertiesAccount
+        ]);
+
+        Http::fake([
+            "https://analyticsdata.googleapis.com/v1beta/properties/{$propertiesAccount}:runReport" => Http::response($responseApi)
+        ]);
+
+
+        $rangesDate = [
+            "start" => "2024-07-05",
+            "end" => "2024-07-07",
+        ];
+        $rangesOtherDate = [
+            [
+                "start" => "2024-06-28",
+                "end" => "2024-06-30",
+            ],
+            [
+                "start" => "2024-06-21",
+                "end" => "2024-06-23",
+            ],
+            [
+                "start" => "2024-06-14",
+                "end" => "2024-06-16",
+            ],
+            [
+                "start" => "2024-06-07",
+                "end" => "2024-06-09",
+            ]
+        ];
+        $analytics = new AnalyticsApi();
+        $analytics->setCountry($country);
+        $analytics->setDateCurrent("20240614");
+
+        $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
+
+
+        expect($responseData)
+            ->toHaveKeys([
+                'current',
+                "min",
+                "avg",
+                "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
+            ]);
+
+        expect($responseData['current'])
+            ->toBe(790);
+        expect($responseData['min'])
+            ->toBe(790);
+        expect($responseData['max'])
+            ->toBe(71151);
+        expect($responseData['avg'])
+            ->toBe(17565);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(21759);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(87039);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(1265);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(71151);
+
+    })->with('properties-account', 'analyticsResponseForWeek');
+
+    it("Verification result for deficit data", function (string $propertiesAccount, string $responseApi) {
+        $country = Country::factory()->create([
+            'analytics' => $propertiesAccount
+        ]);
+
+        Http::fake([
+            "https://analyticsdata.googleapis.com/v1beta/properties/{$propertiesAccount}:runReport" => Http::response($responseApi)
+        ]);
+
+
+        $rangesDate = [
+            "start" => "2024-07-05",
+            "end" => "2024-07-07",
+        ];
+        $rangesOtherDate = [
+            [
+                "start" => "2024-06-28",
+                "end" => "2024-06-30",
+            ],
+            [
+                "start" => "2024-06-21",
+                "end" => "2024-06-23",
+            ],
+            [
+                "start" => "2024-06-14",
+                "end" => "2024-06-16",
+            ],
+            [
+                "start" => "2024-06-07",
+                "end" => "2024-06-09",
+            ]
+        ];
+        $analytics = new AnalyticsApi();
+        $analytics->setCountry($country);
+        $analytics->setDateCurrent("20240614");
+
+        $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
+
+
+        expect($responseData)
+            ->toHaveKeys([
+                'current',
+                "min",
+                "avg",
+                "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
+            ]);
+
+        expect($responseData['current'])
+            ->toBe(790);
+        expect($responseData['min'])
+            ->toBe(0);
+        expect($responseData['max'])
+            ->toBe(71151);
+        expect($responseData['avg'])
+            ->toBe(16066);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(19885);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(79540);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(71151);
+
+    })->with('properties-account', 'analyticsResponseForWeekWithDeficitData');
+
+    it("Verification result for deficit current ranges date", function (string $propertiesAccount, string $responseApi) {
+        $country = Country::factory()->create([
+            'analytics' => $propertiesAccount
+        ]);
+
+        Http::fake([
+            "https://analyticsdata.googleapis.com/v1beta/properties/{$propertiesAccount}:runReport" => Http::response($responseApi)
+        ]);
+
+
+        $rangesDate = [
+            "start" => "2024-07-05",
+            "end" => "2024-07-07",
+        ];
+        $rangesOtherDate = [
+            [
+                "start" => "2024-06-28",
+                "end" => "2024-06-30",
+            ],
+            [
+                "start" => "2024-06-21",
+                "end" => "2024-06-23",
+            ],
+            [
+                "start" => "2024-06-14",
+                "end" => "2024-06-16",
+            ],
+            [
+                "start" => "2024-06-07",
+                "end" => "2024-06-09",
+            ]
+        ];
+        $analytics = new AnalyticsApi();
+        $analytics->setCountry($country);
+        $analytics->setDateCurrent("20240614");
+
+        $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
+
+
+        expect($responseData)
+            ->toHaveKeys([
+                'current',
+                "min",
+                "avg",
+                "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
+            ]);
+
+        expect($responseData['current'])
+            ->toBe(0);
+        expect($responseData['min'])
+            ->toBe(0);
+        expect($responseData['max'])
+            ->toBe(71151);
+        expect($responseData['avg'])
+            ->toBe(17407);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(21759);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(87039);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(1265);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(71151);
+
+    })->with('properties-account', 'analyticsResponseForWeekWithDeficitDataCurrentRange');
+
+    it("Verification result for empty response api", function (string $propertiesAccount) {
+        $country = Country::factory()->create([
+            'analytics' => $propertiesAccount
+        ]);
+
+        Http::fake([
+            "https://analyticsdata.googleapis.com/v1beta/properties/{$propertiesAccount}:runReport" => Http::response(null, 404)
+        ]);
+
+
+        $rangesDate = [
+            "start" => "2024-07-05",
+            "end" => "2024-07-07",
+        ];
+        $rangesOtherDate = [
+            [
+                "start" => "2024-06-28",
+                "end" => "2024-06-30",
+            ],
+            [
+                "start" => "2024-06-21",
+                "end" => "2024-06-23",
+            ],
+            [
+                "start" => "2024-06-14",
+                "end" => "2024-06-16",
+            ],
+            [
+                "start" => "2024-06-07",
+                "end" => "2024-06-09",
+            ]
+        ];
+        $analytics = new AnalyticsApi();
+        $analytics->setCountry($country);
+        $analytics->setDateCurrent("20240614");
+
+        $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
+
+
+        expect($responseData)
+            ->toHaveKeys([
+                'current',
+                "min",
+                "avg",
+                "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
+            ]);
+
+        expect($responseData['current'])
+            ->toBe(0);
+        expect($responseData['min'])
+            ->toBe(0);
+        expect($responseData['max'])
+            ->toBe(0);
+        expect($responseData['avg'])
+            ->toBe(0);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(0);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(0);
+
+    })->with('properties-account');
+
+
 });
