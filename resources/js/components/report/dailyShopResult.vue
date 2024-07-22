@@ -31,7 +31,7 @@ defineProps([
         <div class="report__value report__value--double">{{ result.costShare.value }} %</div>
     </div>
     <div class="report__col d-flex flex-column">
-        <div class="report__value report__value--double">{{ result.comparisonClickToCost.value }} $</div>
+        <div class="report__value report__value--double">{{ result.comparisonClickToCost.value }} %</div>
     </div>
 </template>
 
