@@ -2,6 +2,7 @@
 import {inject, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import {getContentReport} from "@/utils/getContentReport.js";
+import {insertSpace} from "../../utils/insertSpace.js";
 
 const apiUrl = inject('apiUrl');
 const route = useRoute();
@@ -28,56 +29,56 @@ const { data, error } = getContentReport(`${apiUrl}${route.path}`);
         <div class="report__content d-flex" v-if="data !== null">
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['art'] }} szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['art']) }} szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthPreviousYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthPreviousYear['art'] }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthPreviousYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthPreviousYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value" :class="[data.data.resultsFromBeginnerMonthComparisonYear['value'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerMonthComparisonYear['value'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.resultsFromBeginnerMonthComparisonYear['value'] }} Eur</div>
-                    <div class="report__value" :class="[data.data.resultsFromBeginnerMonthComparisonYear['art'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerMonthComparisonYear['art'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.resultsFromBeginnerMonthComparisonYear['art'] }} Szt</div>
+                    <div class="report__value" :class="[data.data.resultsFromBeginnerMonthComparisonYear['value'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerMonthComparisonYear['value'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.resultsFromBeginnerMonthComparisonYear['value']) }} Eur</div>
+                    <div class="report__value" :class="[data.data.resultsFromBeginnerMonthComparisonYear['art'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerMonthComparisonYear['art'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.resultsFromBeginnerMonthComparisonYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.avgResultMonthCurrentYear['art'] }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.avgResultMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.avgResultMonthCurrentYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.avgResultMonthPreviousYear['art'] }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.avgResultMonthPreviousYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.avgResultMonthPreviousYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value" :class="[data.data.avgResultMonthComparisonYear['value'] > 0 ? 'bg-success' : ''] + [data.data.avgResultMonthComparisonYear['value'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.avgResultMonthComparisonYear['value'] }} Eur</div>
-                    <div class="report__value" :class="[data.data.avgResultMonthComparisonYear['art'] > 0 ? 'bg-success' : ''] + [data.data.avgResultMonthComparisonYear['art'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.avgResultMonthComparisonYear['art'] }} Szt</div>
+                    <div class="report__value" :class="[data.data.avgResultMonthComparisonYear['value'] > 0 ? 'bg-success' : ''] + [data.data.avgResultMonthComparisonYear['value'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.avgResultMonthComparisonYear['value']) }} Eur</div>
+                    <div class="report__value" :class="[data.data.avgResultMonthComparisonYear['art'] > 0 ? 'bg-success' : ''] + [data.data.avgResultMonthComparisonYear['art'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.avgResultMonthComparisonYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerPreviousMonthCurrentYear['art'] }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['value'] }} Eur</div>
-                    <div class="report__value">{{ data.data.resultsFromBeginnerMonthCurrentYear['art'] }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value" :class="[data.data.resultsFromBeginnerComparisonMonth['value'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerComparisonMonth['value'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.resultsFromBeginnerComparisonMonth['value'] }} Eur</div>
-                    <div class="report__value" :class="[data.data.resultsFromBeginnerComparisonMonth['art'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerComparisonMonth['art'] < 0 ? 'bg-danger text-white' : '']">{{ data.data.resultsFromBeginnerComparisonMonth['art'] }} Szt</div>
+                    <div class="report__value" :class="[data.data.resultsFromBeginnerComparisonMonth['value'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerComparisonMonth['value'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.resultsFromBeginnerComparisonMonth['value']) }} Eur</div>
+                    <div class="report__value" :class="[data.data.resultsFromBeginnerComparisonMonth['art'] > 0 ? 'bg-success' : ''] + [data.data.resultsFromBeginnerComparisonMonth['art'] < 0 ? 'bg-danger text-white' : '']">{{ insertSpace(data.data.resultsFromBeginnerComparisonMonth['art']) }} Szt</div>
                 </div>
             </div>
         </div>

@@ -28,7 +28,7 @@ const nameHeaderCost = [
 ];
 
 onMounted(() => {
-    changePositionTableHeader('report__row--header', "report");
+    changePositionTableHeader('report__row--header', "report", 'report__row--first');
     changePositionCountryName('report__value--country-name', 'report__content', "report", 'report__col--active-col-country');
 })
 
@@ -84,11 +84,11 @@ onMounted(() => {
         </div>
 
         <div class="report__content d-flex flex-column" v-if="data !== null">
-            <template v-for="result in data.data">
-                <div class="report__row d-flex">
+            <template v-for="(result, key) in data.data">
+                <div class="report__row  d-flex" :class="[key === 0 ? 'report__row--first' : null]">
 
                     <div class="report__col d-flex flex-column report__value--country-name">
-                        <div class="report__value report__value--double">{{ result.country }}</div>
+                        <div class="report__value report__value--double text-center">{{ lang[result.country] ?? result.country }}</div>
                     </div>
 
                     <daily-shop-result :result="result.shop" />

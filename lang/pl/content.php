@@ -34,4 +34,5 @@ return [
     "costShare" => "Udział kosztów",
     "comparisonClickToCost" => "Sprzedaż / Użytkownicy",
     "percentDaysPassedInCurrentMonth" => "Procent minionych dni w miesiącu",
+    "summary" => "Podsumowanie z wykluczeniem B2B",
 ];

@@ -1,4 +1,4 @@
-export function changePositionTableHeader(classTarget, scrollYTargetClass) {
+export function changePositionTableHeader(classTarget, scrollYTargetClass, firstRowContent) {
     const elementScrollY = document.querySelector(`.${scrollYTargetClass}`);
     const targetElement = document.querySelector(`.${classTarget}`);
     const targetElementHeight = targetElement.offsetHeight;
@@ -9,8 +9,10 @@ export function changePositionTableHeader(classTarget, scrollYTargetClass) {
 
         if (parentElement.scrollTop > (targetElementHeight - (targetElementHeight / 4))) {
             addFixedPositionElement(targetElement);
+            updateMarginTop(firstRowContent, "100px");
         } else {
             removeFixedPositionElement(targetElement);
+            updateMarginTop(firstRowContent, "")
         }
 
         if (elementScrollY.scrollLeft > 0) {
@@ -21,16 +23,27 @@ export function changePositionTableHeader(classTarget, scrollYTargetClass) {
 
         if (parentElement.scrollLeft > 0) {
             if (parentElement.scrollLeft > menuWidth) {
-                let newWidth = parentElement.scrollLeft - menuWidth - additionalSizeInLeftReport;
+                console.log("test1");
+                let newWidth = parentElement.scrollLeft - menuWidth;
                 targetElement.style.left = `-${newWidth}px`;
             } else {
-                let newWidth = menuWidth - (parentElement.scrollLeft + additionalSizeInLeftReport);
+                console.log('test3');
+                let newWidth = menuWidth - (parentElement.scrollLeft);
                 targetElement.style.left = `${newWidth}px`;
             }
         } else {
+            console.log("test4")
             targetElement.style.left = `${menuWidth}px`;
         }
     })
+}
+
+function updateMarginTop(classTarget, margin) {
+    const elements = document.querySelectorAll(`.${classTarget}`);
+
+    elements.forEach(element => {
+        element.style.marginTop = margin;
+    });
 }
 
 export function changePositionCountryName(className, containerClassName, scrollTargetClassName, targetElementForMarginLeft) {
