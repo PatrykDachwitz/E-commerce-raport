@@ -21,6 +21,7 @@ class Country extends Model
         "google_daily_budget" => "integer",
         "facebook_budget_currency" => "string",
         "google_budget_currency" => "string",
+        "result-summary" => "bool"
     ];
 
     protected $fillable = [
@@ -34,6 +35,7 @@ class Country extends Model
         "google_daily_budget",
         "facebook_budget_currency",
         "google_budget_currency",
+        "result-summary",
     ];
 
     public function scopeActive() {

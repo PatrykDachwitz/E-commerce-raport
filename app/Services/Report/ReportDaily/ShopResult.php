@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace App\Services\Report\ReportDaily;
 
+use App\Models\Country;
 use App\Services\Currency\CoursePLN;
 use App\Services\ShopSales;
+use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Exception;
 
 class ShopResult
@@ -11,6 +13,7 @@ class ShopResult
 
 
     private CoursePLN $coursePLN;
+    private array $notSummaryResultId;
 
     private array $responseApiShop;
     private ShopSales $shopSales;
@@ -101,9 +104,12 @@ class ShopResult
         $art = 0;
         $value = 0;
 
-        foreach ($data as $item) {
-            $art += $item['item'];
-            $value += $item['value'];
+
+        foreach ($data as $idShop => $item) {
+            if (!in_array($idShop, $this->notSummaryResultId)) {
+                $art += $item['item'];
+                $value += $item['value'];
+            }
         }
 
         return [
@@ -129,8 +135,6 @@ class ShopResult
                     $finalResultShop[$idCountry]['costShare'] = $this->getCostShare($idCountry, $finalResultShop[$idCountry]['shopSales'], $metaAdsResult, $googleAdsResult);
                     $finalResultShop[$idCountry]['comparisonClickToCost'] = $this->getComparisonClickToCost($idCountry, $finalResultShop[$idCountry]['shopSales'], $analyticsResult);
 
-                    $finalResultShop["summary"]['shopSales']['value'] += $resultShop['value'];
-                    $finalResultShop["summary"]['shopSales']['art'] += $resultShop['item'];
                 } else {
                     $minValue = $this->verificationMinSales($resultShop, $finalResultShop[$idCountry], "minValueLast30Day");
                     $maxValue = $this->verificationMaxSales($resultShop, $finalResultShop[$idCountry], "maxValueLast30Day");
@@ -145,12 +149,9 @@ class ShopResult
                         $finalResultShop[$idCountry]['summary']['value'] += $resultShop['value'];
                         $finalResultShop[$idCountry]['summary']['art'] += $resultShop['item'];
                     }
-                    $finalResultShop["summary"]['summary']['value'] += $resultShop['value'];
-                    $finalResultShop["summary"]['summary']['art'] += $resultShop['item'];
                 }
             }
         }
-
         $finalResultShop = $this->calculateSummaryResult($summaryResultPerDay, $currentDate, $finalResultShop, $analyticsResult, $metaAdsResult, $googleAdsResult);
         return $this->calculateAvgWithComparisonResult($finalResultShop, $countDay);
     }
@@ -236,6 +237,9 @@ class ShopResult
                     'art' => $item['art'],
                 ];
             } else {
+                $response['summary']['summary']['art'] += $item['art'];
+                $response['summary']['summary']['value'] += $item['value'];
+
                 if ($response['summary']['minValueLast30Day']['value'] > $item['value'] | $response['summary']['minValueLast30Day']['value'] === null) {
                     $response['summary']['minValueLast30Day']['value'] = $item['value'];
                 }
@@ -259,8 +263,18 @@ class ShopResult
         return $response;
     }
 
-    public function getResult(array $dates, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
+    private function setNotSummaryResultIdByCountry(Collection $countries) : void {
+
+        foreach ($countries as $country) {
+            if ($country['result-summary'] === false) {
+                $this->notSummaryResultId[] = $country->shop;
+            }
+        }
+    }
+
+    public function getResult(array $dates, array $analyticsResult, array $metaAdsResult, array $googleAdsResult, Collection $countries) : array {
         $this->downloadResponseApiShop($dates['ranges']);
+        $this->setNotSummaryResultIdByCountry($countries);
         //dodać od razu ilosć dni w adwords api
         return $this->resultShopSales($dates['count'], $dates['current'], $analyticsResult, $metaAdsResult, $googleAdsResult);
     }

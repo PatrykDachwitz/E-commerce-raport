@@ -11,12 +11,12 @@ use App\Services\Report\ReportDaily\AdwordsResult;
 use App\Services\Report\ReportDaily\ShopResult;
 use App\Services\Report\ResultDay;
 use App\Services\ShopSales;
-use Database\Seeders\ComparisonDayJuneCountry;
+use Database\Seeders\ResultDayJuneCountry;
 use Illuminate\Support\Facades\Http;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
-    seed(ComparisonDayJuneCountry::class);
+    seed(ResultDayJuneCountry::class);
 });
 // Do ogarniećia jest średnai i mozłiwośc dodanie google i fb PRzetestować co sięstanie jeśl iejst kraj za durzo do któego nei ma api co jeśłi nei ma wartosći shop api w db
 // tu nie ma podsuomwnia w analytcs i sprawdzić czy srednai jest z ostatnich 30 dni
@@ -577,6 +577,146 @@ test('Verification work services Report result Day with good response api', func
             ]
         ],
         [
+            "country" => "B2B",
+            "shop" => [
+                "shopSales" => [
+                    "value" => 100,
+                    "art" => 50
+                ],
+                "avgComparison" => [
+                    "value" => -1561,
+                    "art" => 0
+                ],
+                "avgLast30Day" => [
+                    "value" => 1661,
+                    "art" => 50
+                ],
+                "minValueLast30Day" => [
+                    "value" => 100,
+                    "art" => 24
+                ],
+                "maxValueLast30Day" => [
+                    "value" => 1980,
+                    "art" => 55
+                ],
+                "costShare" => [
+                    "value" => 0
+                ],
+                "comparisonClickToCost" => [
+                    "value" => 50
+                ]
+            ],
+            "global" => [
+                'countClick' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ]
+            ],
+            "costFacebook" => [
+                "percentDaysPassedInCurrentMonth" => [
+                    'value' => 66.67
+                ],
+                'cost' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 0
+                ],
+                'budgetMonth' => [
+                    'value' => 0
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 0
+                ],
+            ],
+            "facebook" => [
+                'countClick' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ]
+            ],
+            "costGoogle" => [
+                "percentDaysPassedInCurrentMonth" => [
+                    'value' => 66.67
+                ],
+                'cost' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ],
+                'costFromBeginningMonth' => [
+                    'value' => 0
+                ],
+                'budgetMonth' => [
+                    'value' => 0
+                ],
+                'percentCostFromBeginningMonth' => [
+                    'value' => 0
+                ],
+            ],
+            "google" => [
+                'countClick' => [
+                    'value' => 0
+                ],
+                'avgComparison' => [
+                    'value' => 0
+                ],
+                'avgLast30Day' => [
+                    'value' => 0
+                ],
+                'minValueLast30Day' => [
+                    'value' => 0
+                ],
+                'maxValueLast30Day' => [
+                    'value' => 0
+                ]
+            ]
+        ],
+        [
             "country" => "summary",
             "shop" => [
                 "shopSales" => [
@@ -600,7 +740,7 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 1190
                 ],
                 "costShare" => [
-                    "value" => 0.29
+                    "value" => 0.3
                 ],
                 "comparisonClickToCost" => [
                     "value" => 1.77

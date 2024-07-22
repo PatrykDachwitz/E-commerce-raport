@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ComparisonDayJuneCountry extends Seeder
+class ResultDayJuneCountry extends Seeder
 {
     /**
      * Run the database seeds.
@@ -42,7 +42,12 @@ class ComparisonDayJuneCountry extends Seeder
                 'name' => 'Irlandia',
                 'shop' => 4,
                 "active" => false
-            ]
+            ],
+            [
+                'name' => 'B2B',
+                'shop' => 5,
+                "result-summary" => false
+            ],
         ];
 
         DB::table('countries')->truncate();
