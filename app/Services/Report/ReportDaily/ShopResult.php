@@ -104,7 +104,6 @@ class ShopResult
         $art = 0;
         $value = 0;
 
-
         foreach ($data as $idShop => $item) {
             if (!in_array($idShop, $this->notSummaryResultId)) {
                 $art += $item['item'];
@@ -267,7 +266,7 @@ class ShopResult
 
         foreach ($countries as $country) {
             if ($country['result-summary'] === false) {
-                $this->notSummaryResultId[] = $country->shop;
+                $this->notSummaryResultId[] = $country->id;
             }
         }
     }

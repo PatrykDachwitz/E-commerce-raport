@@ -48,6 +48,16 @@ class ResultDayJuneCountry extends Seeder
                 'shop' => 5,
                 "result-summary" => false
             ],
+            [
+                'name' => 'Salon B2B',
+                'shop' => 101,
+                "result-summary" => false
+            ],
+            [
+                'name' => 'Projekty B2B',
+                'shop' => 102,
+                "result-summary" => false
+            ],
         ];
 
         DB::table('countries')->truncate();

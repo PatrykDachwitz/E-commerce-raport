@@ -305,6 +305,18 @@ dataset('shopResponseForOneDay', function () {
       "price_netto": 3123.93,
       "price_brutto": 100,
       "items": "50"
+    },
+    "101": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 100,
+      "items": "50"
+    },
+    "102": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 100,
+      "items": "50"
     }
   },
   "start": "2024-05-06 00:00:00",
@@ -347,6 +359,18 @@ dataset('shopResponseForSecondDay', function () {
       "price_netto": 3123.93,
       "price_brutto": 1000,
       "items": "24"
+    },
+    "101": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 1000,
+      "items": "24"
+    },
+    "102": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 1000,
+      "items": "24"
     }
   },
   "start": "2024-05-06 00:00:00",
@@ -385,6 +409,18 @@ dataset('shopResponseForThreeDay', function () {
       "items": "12"
     },
     "5": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 1980,
+      "items": "55"
+    },
+    "101": {
+      "count": 10,
+      "price_netto": 3123.93,
+      "price_brutto": 1980,
+      "items": "55"
+    },
+    "102": {
       "count": 10,
       "price_netto": 3123.93,
       "price_brutto": 1980,
