@@ -21,8 +21,8 @@ const { data, error } = getContentReport(`${apiUrl}${route.path}`);
             <div class="report__header report__header--double report__header--global">{{ data.data.names.avgResultMonthCurrentYear }}</div>
             <div class="report__header report__header--double report__header--global">{{ data.data.names.avgResultMonthPreviousYear }}</div>
             <div class="report__header report__header--double report__header--global">{{ lang['comparison'] }}</div>
-            <div class="report__header report__header--double report__header--facebook">{{ data.data.names.resultsFromBeginnerPreviousMonthCurrentYear }}</div>
             <div class="report__header report__header--double report__header--facebook">{{ data.data.names.resultsFromBeginnerMonthCurrentYear }}</div>
+            <div class="report__header report__header--double report__header--facebook">{{ data.data.names.resultsFromBeginnerPreviousMonthCurrentYear }}</div>
             <div class="report__header report__header--double report__header--facebook">{{ lang['comparison'] }}</div>
         </div>
 
@@ -65,14 +65,14 @@ const { data, error } = getContentReport(`${apiUrl}${route.path}`);
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['value']) }} Eur</div>
-                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['art']) }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
-                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['value']) }} Eur</div>
-                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['art']) }} Szt</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['value']) }} Eur</div>
+                    <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerPreviousMonthCurrentYear['art']) }} Szt</div>
                 </div>
             </div>
             <div class="report__col d-flex flex-column">
