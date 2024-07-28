@@ -72,12 +72,13 @@ class MetaAdsApi extends AdwordsApi
             }
 
             $this->setDataPerDate(intval($data['spend']), intval($data['clicks']), $this->dateRanges[$key]['start']);
+            $convertResponse = $this->convertForResponseDataRanges($key, intval($data['spend']), intval($data['clicks']));
+            $structureResponse['dataByRangesWithoutCurrent'][$convertResponse['date']] = $convertResponse['data'];
             if ($key === "current") {
                 $structureResponse['click']['current'] = intval($data['clicks']);
                 $structureResponse['budget']['current'] = intval($data['spend']);
             } else {
-
-                $structureResponse['click']['summaryWithoutCurrent'] += intval($data['clicks']);
+               $structureResponse['click']['summaryWithoutCurrent'] += intval($data['clicks']);
                 $structureResponse['budget']['summaryWithoutCurrent'] += intval($data['spend']);
                 $structureResponse['click']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['clicks']), 'click');
                 $structureResponse['budget']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['spend']), 'budget');

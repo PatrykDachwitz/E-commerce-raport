@@ -3,11 +3,17 @@ declare(strict_types=1);
 namespace App\Services\Adwords;
 
 use App\Models\Country;
+use App\Services\Connection\GoogleRefreshToken;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use function Laravel\Prompts\select;
 
 class GoogleAdwordsApi extends AdwordsApi
 {
+    use GoogleRefreshToken;
+
+    const NAME_CONFIG_CREDENTIALS = "api.pathGoogleAdwordsCredentials";
+    CONST NAME_CONFIG_TOKEN = "api.pathGoogleAdwordsToken";
     protected string $budgetNameColumn = "google_daily_budget";
     protected string $nameAdwordsColumn = "google";
     private string $loginCustomerId;
@@ -26,18 +32,11 @@ class GoogleAdwordsApi extends AdwordsApi
         return json_encode($query);
     }
 
-    private function getAccessToken() : string {
-        $pathToken = config('api.pathGoogleAdwordsToken');
-        $contentToken = file_get_contents($pathToken);
-
-        return json_decode($contentToken)->access_token;
-    }
-
     public function connectApi(string $idCompany, string $startDate, string $lastDate) : array|null {
         $bodyQuery = $this->getBodyQuery($startDate, $lastDate);
 
         $response = Http::withHeaders([
-            "Authorization" => "Bearer " . $this->getAccessToken(),
+            "Authorization" => "Bearer " . $this->getAccessToken(self::NAME_CONFIG_CREDENTIALS, self::NAME_CONFIG_TOKEN),
             "Content-Type" => "application/json",
             "developer-token" => $this->developerToken,
             "login-customer-id" => $this->loginCustomerId,
@@ -224,6 +223,9 @@ class GoogleAdwordsApi extends AdwordsApi
 
             $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] = $dataApiGroupByDate['spendMonthlyBudget'];
             foreach ($dataApiGroupByDate['data'] as $key => $data) {
+                $convertResponse = $this->convertForResponseDataRanges($key, $data['cost'], $data['clicks']);
+                $structureResponse['dataByRangesWithoutCurrent'][$convertResponse['date']] = $convertResponse['data'];
+
                 if ($key === "current") {
                     $structureResponse['click']['current'] = $data['clicks'];
                     $structureResponse['budget']['current'] = $data['cost'];
@@ -237,6 +239,8 @@ class GoogleAdwordsApi extends AdwordsApi
                     $structureResponse['budget']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, $data['cost'], 'budget');
                 }
             }
+        } else {
+            $structureResponse['dataByRangesWithoutCurrent'] = $this->getEmptyDataByRangesDate();
         }
         if (is_null($structureResponse['click']['minWithoutCurrent'])) $structureResponse['click']['minWithoutCurrent'] = 0;
         if (is_null($structureResponse['budget']['minWithoutCurrent'])) $structureResponse['budget']['minWithoutCurrent'] = 0;

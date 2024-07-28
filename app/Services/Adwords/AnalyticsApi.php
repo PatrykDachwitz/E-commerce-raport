@@ -3,11 +3,16 @@ declare(strict_types=1);
 namespace App\Services\Adwords;
 
 use App\Models\Country;
+use App\Services\Connection\GoogleRefreshToken;
 use Illuminate\Support\Facades\Http;
 
 class AnalyticsApi
 {
 
+    use GoogleRefreshToken;
+
+    const NAME_CONFIG_CREDENTIALS = "api.pathGoogleCredentials";
+    CONST NAME_CONFIG_TOKEN = "api.pathGoogleToken";
     private string $propertiesCountry, $dateCurrent;
     private array $rangesDate;
     public function setCountry(Country $country) : string {
@@ -15,24 +20,18 @@ class AnalyticsApi
 
         return $this->propertiesCountry;
     }
-    private function getAccessToken() : string {
-        $accessTokenPath = config('api.pathGoogleToken');
-        $contentToken = json_decode(file_get_contents($accessTokenPath));
 
-        return $contentToken->access_token;
-    }
     public function connectApi(string $startDate, string $endDate) {
         $bodyQuery = $this->getDataBodyQuery($startDate, $endDate);
-        $accessToken = $this->getAccessToken();
 
         $response = Http::withHeaders([
-            'Authorization' => "Bearer {$accessToken}",
+            'Authorization' => "Bearer " . $this->getAccessToken(self::NAME_CONFIG_CREDENTIALS, self::NAME_CONFIG_TOKEN),
             'Accept' => "application/json",
             'Content-Type' => "application/json",
         ])
             ->withBody($bodyQuery)
             ->post("https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertiesCountry}:runReport");
-//dodać tu test n 401
+
         return $response->json();
     }
 

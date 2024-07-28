@@ -433,3 +433,199 @@ dataset('shopResponseForThreeDay', function () {
         '
     ];
 });
+
+
+
+
+
+
+dataset('shopReportWeeklyFourthResponse', function () {
+    return [
+        '
+{
+  "confirmed": {
+    "1": {
+      "count": 10,
+      "price_netto": 77076.2609043241,
+      "price_brutto": 99076,
+      "items": "10"
+    },
+    "5": {
+      "count": 11,
+      "price_netto": 60144.35033388984,
+      "price_brutto": 9999987446,
+      "items": "990"
+    },
+    "10": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 980,
+      "items": "190"
+    },
+    "101": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 980,
+      "items": "190"
+    }
+  },
+  "start": "2024-05-06 00:00:00",
+  "stop": "2024-05-29 23:59:59"
+}
+'
+    ];
+});
+
+
+
+
+dataset('shopReportWeeklyThirdResponse', function () {
+    return [
+        '
+{
+  "confirmed": {
+    "1": {
+      "count": 10,
+      "price_netto": 77076.2609043241,
+      "price_brutto": 52315,
+      "items": "120"
+    },
+    "5": {
+      "count": 11,
+      "price_netto": 60144.35033388984,
+      "price_brutto": 4235,
+      "items": "522"
+    },
+    "10": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 12532,
+      "items": "15"
+    },
+    "101": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 180,
+      "items": "24"
+    }
+  },
+  "start": "2024-05-06 00:00:00",
+  "stop": "2024-05-29 23:59:59"
+}
+'
+    ];
+});
+
+
+
+dataset('shopReportWeeklySecondResponse', function () {
+    return [
+        '
+{
+  "confirmed": {
+    "1": {
+      "count": 10,
+      "price_netto": 77076.2609043241,
+      "price_brutto": 21,
+      "items": "21"
+    },
+    "5": {
+      "count": 11,
+      "price_netto": 60144.35033388984,
+      "price_brutto": 414,
+      "items": "2"
+    },
+    "10": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 189,
+      "items": "12"
+    },
+    "101": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 6346,
+      "items": "1"
+    }
+  },
+  "start": "2024-05-06 00:00:00",
+  "stop": "2024-05-29 23:59:59"
+}
+'
+    ];
+});
+
+
+dataset('shopReportWeeklyFirstResponse', function () {
+    return [
+        '
+{
+  "confirmed": {
+    "1": {
+      "count": 10,
+      "price_netto": 77076.2609043241,
+      "price_brutto": 345,
+      "items": "21"
+    },
+    "5": {
+      "count": 11,
+      "price_netto": 60144.35033388984,
+      "price_brutto": 4543514,
+      "items": "32"
+    },
+    "10": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 2189,
+      "items": "142"
+    },
+    "101": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 23555,
+      "items": "13"
+    }
+  },
+  "start": "2024-05-06 00:00:00",
+  "stop": "2024-05-29 23:59:59"
+}
+'
+    ];
+});
+
+dataset('shopReportWeeklyCurrentResponse', function () {
+    return [
+        '
+{
+  "confirmed": {
+    "1": {
+      "count": 10,
+      "price_netto": 77076.2609043241,
+      "price_brutto": 52246,
+      "items": "432"
+    },
+    "5": {
+      "count": 11,
+      "price_netto": 60144.35033388984,
+      "price_brutto": 34662,
+      "items": "3455"
+    },
+    "10": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 62346,
+      "items": "23443"
+    },
+    "101": {
+      "count": 14,
+      "price_netto": 138126.54999999996,
+      "price_brutto": 3463,
+      "items": "133"
+    }
+  },
+  "start": "2024-05-06 00:00:00",
+  "stop": "2024-05-29 23:59:59"
+}
+'
+    ];
+});

@@ -7,8 +7,8 @@ use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
 use App\Services\Connection\Shop;
 use App\Services\Currency\CoursePLN;
-use App\Services\Report\ReportDaily\AdwordsResult;
-use App\Services\Report\ReportDaily\ShopResult;
+use App\Services\Report\Support\AdwordsResult;
+use App\Services\Report\Support\ShopResult;
 use App\Services\Report\ResultDay;
 use App\Services\ShopSales;
 use Database\Seeders\ResultDayJuneCountry;
@@ -204,7 +204,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 361
@@ -250,7 +250,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 586
@@ -345,7 +345,7 @@ test('Verification work services Report result Day with good response api', func
 
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 76
@@ -391,7 +391,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -485,7 +485,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -531,7 +531,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -625,7 +625,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -671,7 +671,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -765,7 +765,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -811,7 +811,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -905,7 +905,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -951,7 +951,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 0
@@ -1046,7 +1046,7 @@ test('Verification work services Report result Day with good response api', func
 
             "costFacebook" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 437
@@ -1092,7 +1092,7 @@ test('Verification work services Report result Day with good response api', func
             ],
             "costGoogle" => [
                 "percentDaysPassedInCurrentMonth" => [
-                    'value' => 66.67
+                    'value' => 66
                 ],
                 'cost' => [
                     'value' => 586

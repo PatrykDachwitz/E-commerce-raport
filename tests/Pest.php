@@ -27,10 +27,16 @@ uses(
 |
 */
 
+
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
+beforeAll(function () {
+    \Illuminate\Support\Facades\Http::fake([
+        'https://oauth2.googleapis.com/token' => \Illuminate\Support\Facades\Http::response("")
+    ]);
+});
 /*
 |--------------------------------------------------------------------------
 | Functions

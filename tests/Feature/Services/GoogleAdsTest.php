@@ -107,6 +107,28 @@ describe('Testing response Google ads services with correct data', function () {
                     "spentBudgetFromBeginningOfMonth" => 4293,
                     "budgetMonthly" => 9300,
                     "percentSpentBudgetMonthlyCurrentDay" => 46,
+                ],
+                "dataByRangesWithoutCurrent" => [
+                    '2024-06-07_2024-06-09' => [
+                        'click' => 579,
+                        'spend' => 3327,
+                    ],
+                    '2024-06-14_2024-06-16' => [
+                        'click' => 0,
+                        'spend' => 0,
+                    ],
+                    '2024-06-21_2024-06-23' => [
+                        'click' => 408,
+                        'spend' => 2122,
+                    ],
+                    '2024-06-28_2024-06-30' => [
+                        'click' => 220,
+                        'spend' => 1109,
+                    ],
+                    'current' => [
+                        'click' => 651,
+                        'spend' => 3294,
+                    ]
                 ]
             ];
 
@@ -328,7 +350,30 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 0,
                 "budgetMonthly" => 9300,
                 "percentSpentBudgetMonthlyCurrentDay" => 0,
-            ]
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-07_2024-06-09' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                '2024-06-14_2024-06-16' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                '2024-06-21_2024-06-23' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                '2024-06-28_2024-06-30' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                'current' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ]
+        ]
+
         ];
 
         $country = Country::find(1);
@@ -389,6 +434,28 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 4293,
                 "budgetMonthly" => 0,
                 "percentSpentBudgetMonthlyCurrentDay" => 100,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-07_2024-06-09' => [
+                    'click' => 579,
+                    'spend' => 3327,
+                ],
+                '2024-06-14_2024-06-16' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                '2024-06-21_2024-06-23' => [
+                    'click' => 408,
+                    'spend' => 2122,
+                ],
+                '2024-06-28_2024-06-30' => [
+                    'click' => 220,
+                    'spend' => 1109,
+                ],
+                'current' => [
+                    'click' => 651,
+                    'spend' => 3294,
+                ]
             ]
         ];
 
@@ -451,6 +518,28 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 999,
                 "budgetMonthly" => 9300,
                 "percentSpentBudgetMonthlyCurrentDay" => 10,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-07_2024-06-09' => [
+                    'click' => 579,
+                    'spend' => 3327,
+                ],
+                '2024-06-14_2024-06-16' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ],
+                '2024-06-21_2024-06-23' => [
+                    'click' => 408,
+                    'spend' => 2122,
+                ],
+                '2024-06-28_2024-06-30' => [
+                    'click' => 220,
+                    'spend' => 1109,
+                ],
+                'current' => [
+                    'click' => 0,
+                    'spend' => 0,
+                ]
             ]
         ];
 

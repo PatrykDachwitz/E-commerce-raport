@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Exception;
 
 ///Jęzeli brak danych to zrami zapisać co jeśl pojawi siębład kodu httpt lub brak wartosci albo dzepsuty plk
-class ResultDay
+class ResultWeekly
 {
 
     private Country $country;
@@ -32,26 +32,6 @@ class ResultDay
         $this->adwordsResult = $adwordsResult;
         $this->shopResult = $shopResult;
         $this->googleAdwordsApi = $googleAdwordsApi;
-    }
-
-    private function createDatesByCountPreviousDay(string $date, int $countPreviousDay = 30) : array {
-        $this->datesReport = [
-            'count' => $countPreviousDay,
-            'current' => $date,
-            'last' => "",
-            'ranges' => [],
-        ];
-        $currentTime = strtotime($date);
-        $this->datesReport['ranges'][] = $date;
-
-        for ($i = 1; $i <= $countPreviousDay; $i++) {
-            $daySubtraction = (24 * 60 * 60) * $i;
-
-            $this->datesReport['ranges'][] = date("Y-m-d", ($currentTime - $daySubtraction));
-            if ($i === $countPreviousDay) $this->datesReport['last'] = date("Y-m-d", ($currentTime - $daySubtraction));
-        }
-
-        return $this->datesReport;
     }
 
     private function returnFormatAnalytics(array|null $dataAnalytics) : array {
@@ -170,8 +150,35 @@ class ResultDay
         return $this->calculateSummaryAnalytics($response);
     }
 
-    public function get(string $date) : array {
-        $this->createDatesByCountPreviousDay($date);
+    private function searchOldestDate(string $date, string $comparisonDate) : string {
+        $comparisonTime = strtotime($comparisonDate);
+        $currentTime = strtotime($date);
+
+        if ($currentTime > $comparisonTime) {
+            return $comparisonDate;
+        } else {
+            return $date;
+        }
+    }
+    private function createRangesDate(array $currentDate, array $otherDate) : array {
+        $this->datesReport = [
+            'count' => count($otherDate),
+            'current' => $currentDate,
+            'last' => $currentDate['start'],
+            'newest' => $currentDate['end'],
+            'rangesWithoutCurrent' => [],
+        ];
+
+        foreach ($otherDate as $key => $date) {
+            $this->datesReport['rangesWithoutCurrent'][$key] = $date;
+            $this->datesReport['last'] = $this->searchOldestDate($date['start'], $this->datesReport['last']);
+        }
+
+        return $this->datesReport;
+    }
+
+    public function get(array $currentDate, array $otherDate) : array {
+        $this->createRangesDate($currentDate, $otherDate);
 
         $completeReport = [];
 
@@ -181,9 +188,10 @@ class ResultDay
             ->active()
             ->get();
 
-        $analyticsResult = $this->getAnalyticsResult($activesCountry);
-        $facebookResults = $this->adwordsResult->getResult($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['last']);
-        $googleResults = $this->adwordsResult->getResult($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['last']);
+        //$analyticsResult = $this->getAnalyticsResult($activesCountry);
+        $facebookResults = $this->adwordsResult->getWithManyRangesDate($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['rangesWithoutCurrent']);
+        dd($facebookResults);
+        $googleResults = $this->adwordsResult->getWithManyRangesDate($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['rangesWithoutCurrent']);
 
         $resultShopApi = $this->shopResult
             ->getResult($this->datesReport, $analyticsResult, $facebookResults, $googleResults, $activesCountry);

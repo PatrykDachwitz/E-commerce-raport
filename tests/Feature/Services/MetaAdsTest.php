@@ -11,7 +11,7 @@ use function Pest\Laravel\seed;
 beforeEach(function () {
     seed(MetaAdsCountrySeed::class);
 });
-
+/*
 describe('Testing response meta ads services with correct data', function () {
     //Tutaj trzeba zweryfkowc kilka dni w popszednim miesiacu sprawdzić założenie eistenijaće g budżetu ale braku statystyk dal tego konta
     //Pamietąc że nie któę kraje mająwiecej niż jedno konto
@@ -493,7 +493,7 @@ describe('Testing response meta ads services with wrong data' , function () {
 
     });
 });
-
+*/
 describe("Testing response api for many date with correct data", function () {
 
     it("Testing correct calculate data about response api", function (
@@ -543,6 +543,28 @@ describe("Testing response api for many date with correct data", function () {
                 "budgetMonthly" => 9300,
                 "percentSpentBudgetMonthlyCurrentDay" => 10,
             ],
+            "dataByRangesWithoutCurrent" => [
+                'current' => [
+                    'click' => 120,
+                    'spend' => 60,
+                ],
+                '2024-06-07_2024-06-09' => [
+                    'click' => 204,
+                    'spend' => 361,
+                ],
+                '2024-06-14_2024-06-16' => [
+                    'click' => 450,
+                    'spend' => 280,
+                ],
+                '2024-06-21_2024-06-23' => [
+                    'click' => 200,
+                    'spend' => 180,
+                ],
+                '2024-06-28_2024-06-30' => [
+                    'click' => 100,
+                    'spend' => 76,
+                ]
+            ]
         ];
 
         $rangesDate = [

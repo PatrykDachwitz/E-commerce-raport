@@ -7,6 +7,7 @@ use App\Models\Country;
 abstract class AdwordsApi
 {
 
+
     protected array $dataPerDate;
     protected int $countDayWithoutCurrent;
     protected array $dateRanges;
@@ -107,6 +108,34 @@ abstract class AdwordsApi
         $this->dateRanges = $dateRanges;
     }
 
+    protected function getEmptyDataByRangesDate() : array {
+        $response = [];
+
+        foreach ($this->dateRanges as $key => $date) {
+            $convertResponse = $this->convertForResponseDataRanges($key, 0, 0);
+
+            $response[$convertResponse['date']] = $convertResponse['data'];
+
+        }
+
+        return $response;
+    }
+
+    protected function convertForResponseDataRanges(string|int $keyDateRanges, int $spend, int $click) : array {
+        if ($keyDateRanges === "current") {
+            $dateRanges = "current";
+        } else {
+            $dateRanges = "{$this->dateRanges[$keyDateRanges]['start']}_{$this->dateRanges[$keyDateRanges]['end']}";
+        }
+
+        return [
+            "date" => $dateRanges,
+            "data" => [
+                'click' => $click,
+                'spend' => $spend,
+            ]
+        ];
+    }
     protected function downloadResponseApi(string $idAccount) : array {
         $dataResponse = [];
 

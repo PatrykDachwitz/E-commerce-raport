@@ -11,7 +11,7 @@ use function Laravel\Prompts\text;
 class CredentialsGoogleAnalytics extends Command
 {
     const URL_TOKEN_API_GOOGLE = "https://oauth2.googleapis.com/token";
-    const URL_AUTH_API_GOOGLE = "https://accounts.google.com/o/oauth2/auth";
+    const URL_AUTH_API_GOOGLE = "https://accounts.google.com/o/oauth2/v2/auth";
     protected string $credentialsPath, $tokenPath;
     /**
      * The name and signature of the console command.
@@ -69,8 +69,6 @@ class CredentialsGoogleAnalytics extends Command
         $params .= "&client_id=" . $this->getClientId();
         $params .= "&redirect_uri=" . $this->getRedirectUrl();
         $params .= "&grant_type=authorization_code";
-        $params .= "&access_type=offline";
-        $params .= "&prompt=consent";
         $params .= "&client_secret=" . $this->getClientSecret();
 
         return $params;
@@ -96,8 +94,8 @@ class CredentialsGoogleAnalytics extends Command
         $url .= "?client_id=" . $this->getClientId();
         $url .= "&redirect_uri=" . $this->getRedirectUrl();
         $url .= "&response_type=code";
+        $url .= "&prompt=consent&access_type=offline";
         $url .= "&scope=https://www.googleapis.com/auth/analytics.readonly+https://www.googleapis.com/auth/analytics";
-        $url .= "&state=state";
 
         return $url;
     }

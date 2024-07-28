@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace App\Services\Report\ReportDaily;
+namespace App\Services\Report\Support;
 
 use App\Models\Country;
 use App\Services\Currency\CoursePLN;

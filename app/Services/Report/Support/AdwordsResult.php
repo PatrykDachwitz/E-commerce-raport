@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace App\Services\Report\ReportDaily;
+namespace App\Services\Report\Support;
 
 use App\Services\Adwords\AdwordsApi;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,6 +15,35 @@ class AdwordsResult
         $finallyData = $data;
 
         foreach ($data as $key => $item) {
+
+            $summary['click']['countClick']['value'] += $item['click']['countClick']['value'];
+            $summary['click']['minValueLast30Day']['value'] += $item['click']['minValueLast30Day']['value'];
+            $summary['click']['maxValueLast30Day']['value'] += $item['click']['maxValueLast30Day']['value'];
+            $summary['budget']['cost']['value'] += $item['budget']['cost']['value'];
+            $summary['budget']['minValueLast30Day']['value'] += $item['budget']['minValueLast30Day']['value'];
+            $summary['budget']['maxValueLast30Day']['value'] += $item['budget']['maxValueLast30Day']['value'];
+            $summary['budget']['costFromBeginningMonth']['value'] += $item['budget']['costFromBeginningMonth']['value'];
+            $summary['budget']['budgetMonth']['value'] += $item['budget']['budgetMonth']['value'];
+            $summary['budget']['summaryWithoutCurrent']['value'] += $item['budget']['summaryWithoutCurrent']['value'];
+            $summary['click']['summaryWithoutCurrent']['value'] += $item['click']['summaryWithoutCurrent']['value'];
+            unset($finallyData[$key]['click']['summaryWithoutCurrent']);
+            unset($finallyData[$key]['budget']['summaryWithoutCurrent']);
+        }
+
+        $finallyData['summary'] = $this->getAvgWithComparisonFacebook($summary);
+        $finallyData['summary']['budget']['percentCostFromBeginningMonth']['value'] = $this->getPercentSendBudgetMonthly($summary);
+
+        return $finallyData;
+    }
+
+    private function calculateSummaryRowNewsetOptionWithManyRow(array $data, string $currentDate) : array {
+
+        $summary = $this->getEmptyStructureResponse($currentDate);
+
+        $finallyData = $data['dataByRangesWithoutCurrent'];
+
+        foreach ($data as $key => $item) {
+
 
             $summary['click']['countClick']['value'] += $item['click']['countClick']['value'];
             $summary['click']['minValueLast30Day']['value'] += $item['click']['minValueLast30Day']['value'];
@@ -193,5 +222,23 @@ class AdwordsResult
         }
 
         return $this->calculateSummaryRow($response, $currentDate);
+    }
+    public function getWithManyRangesDate(Collection $countries, AdwordsApi $adwordsApi, array $currentDate, array $otherDate) : array {
+        $response = [];
+
+        foreach ($countries as $country) {
+
+            if (is_null($country[$adwordsApi->getNameColumnAdwords()])) {
+                $response[$country->id] = $this->getEmptyStructureResponse($currentDate['end']);
+                continue;
+            }
+
+            $adwordsResult = $adwordsApi
+                ->getWithManyRangesDate($currentDate, $otherDate, $country);
+
+            $response[$country->id] = $this->getStructureWithData($adwordsResult, $currentDate['end']);
+        }
+
+        return $this->calculateSummaryRowNewsetOptionWithManyRow($response, $currentDate['end']);
     }
 }
