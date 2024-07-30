@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import comparison from "@/views/report/comparison.vue";
 import daily from "@/views/report/daily.vue";
+import weekly from "@/views/report/weekly.vue";
 
 const routes = [
     {
@@ -19,7 +20,7 @@ const routes = [
             {
                 path: "weekly",
                 name: "weekly",
-                component: daily
+                component: weekly
             },
             {
                 path: "comparison",

@@ -19,6 +19,9 @@ return [
     'avgLast30Day' => "Śr wartość - ostatnie 30 dni",
     'minLast30Day' => "Najniższa wartość Ostatnie 30 dni",
     'maxLast30Day' => "Najwyższa wartość Ostatnie 30 dni",
+    'avgLast4Week' => "Śr wartość - ostatnie  4 weekendy",
+    'minLast4Week' => "Najniższa wartość Ostatnie  4 weekendy",
+    'maxLast4Week' => "Najwyższa wartość Ostatnie 4 weekendy",
     'nameHeader' => [
         'global' => "Global",
         'google' => "Google",

@@ -16,6 +16,7 @@ use PHPUnit\Exception;
 class ResultWeekly
 {
 
+    private array $summaryAnalytics = [];
     private Country $country;
     private MetaAdsApi $metaAdsApi;
     private AdwordsResult $adwordsResult;
@@ -86,47 +87,84 @@ class ResultWeekly
 
     }
 
-    private function calculateSummaryAnalytics(array $resultsAnalytics) : array {
+    private function getMinAndMaxValue() : array {
+        $min = null;
+        $max = null;
 
-        $result = [
+        foreach ($this->summaryAnalytics as $key => $params) {
+            if ($key === "current") continue;
+
+            $click = intval($params['click']);
+            if (is_null($min)) {
+                $min = $click;
+            } elseif ($min > $click) {
+                $min = $click;
+            }
+
+            if (is_null($max)) {
+                $max = $click;
+            } elseif ($click > $max) {
+                $max = $click;
+            }
+
+        }
+        return [
+            'min' => $min,
+            'max' => $max,
+        ];
+    }
+    private function getAvgClickAnalytics() : int {
+        $summary = 0;
+
+        foreach ($this->summaryAnalytics as $key => $params) {
+            if ($key === "current") continue;
+            $summary += intval($params['click']);
+        }
+
+
+        return intval($summary / $this->datesReport['count']);
+    }
+    private function calculateSummaryAnalytics(array $resultsAnalytics) : array {
+        $minMaxValuesClick = $this->getMinAndMaxValue();
+        $avgClick = $this->getAvgClickAnalytics();
+        $currentCountClick = intval($this->summaryAnalytics['current']['click']) ?? 0;
+
+        $summaryResult = [
             'countClick' => [
-                'value' => 0
+                'value' => $currentCountClick
             ],
             'avgComparison' => [
-                'value' => 0
+                'value' => $currentCountClick - $avgClick
             ],
             'avgLast30Day' => [
-                'value' => 0
+                'value' => $avgClick
             ],
             'minValueLast30Day' => [
-                'value' => 0
+                'value' => $minMaxValuesClick['min']
             ],
             'maxValueLast30Day' => [
-                'value' => 0
-            ],
-            'summaryWithoutCurrent' => [
-                'value' => 0
+                'value' => $minMaxValuesClick['max']
             ]
         ];
 
-        foreach ($resultsAnalytics as $key => $resultAnalytics) {
-            $result['countClick']['value'] += $resultAnalytics['countClick']['value'];
-            $result['minValueLast30Day']['value'] += $resultAnalytics['minValueLast30Day']['value'];
-            $result['maxValueLast30Day']['value'] += $resultAnalytics['maxValueLast30Day']['value'];
-            $result['summaryWithoutCurrent']['value'] += $resultAnalytics['summaryWithoutCurrent']['value'];
-            unset($resultsAnalytics[$key]['summaryWithoutCurrent']);
-        }
-
-        $result['avgLast30Day']['value'] = intval($result['summaryWithoutCurrent']['value'] / 30);
-        $result['avgComparison']['value'] = intval($result['countClick']['value'] - $result['avgLast30Day']['value']);
-        unset($result["summaryWithoutCurrent"]);
-
-        $resultsAnalytics['summary'] = $result;
+        $resultsAnalytics['summary'] = $summaryResult;
 
         return $resultsAnalytics;
     }
-    private function getAnalyticsResult(Collection $activesCountry) : array {
-        $currentDate = str_replace("-","", $this->datesReport['current']);
+    private function setSummaryAnalytics(array $data) : void {
+
+        foreach ($data['dataByRangesWithoutCurrent'] as $key => $item) {
+            if (!isset($this->summaryAnalytics[$key])) {
+                $this->summaryAnalytics[$key] = [
+                    'click' => $item['click']
+                ];
+            } else {
+                $this->summaryAnalytics[$key]['click'] += $item['click'];
+            }
+        }
+    }
+    private function getAnalyticsResult(Collection $activesCountry, array $currentDate, array $otherDate) : array {
+        $currentDateConvert = str_replace("-","", $currentDate['end']);
         $response = [];
 
         foreach ($activesCountry as $country) {
@@ -139,11 +177,12 @@ class ResultWeekly
                 ->setCountry($country);
 
             $this->analyticsApi
-                ->setDateCurrent($currentDate);
+                ->setDateCurrent($currentDateConvert);
 
             $resultAnalytics = $this->analyticsApi
-                ->get($this->datesReport['last'], $this->datesReport['current']);
+                ->getWithManyRangesDate($currentDate, $otherDate);
 
+            $this->setSummaryAnalytics($resultAnalytics);
             $response[$country->id] = $this->returnFormatAnalytics($resultAnalytics);
         }
 
@@ -161,22 +200,32 @@ class ResultWeekly
         }
     }
     private function createRangesDate(array $currentDate, array $otherDate) : array {
+
         $this->datesReport = [
             'count' => count($otherDate),
             'current' => $currentDate,
             'last' => $currentDate['start'],
             'newest' => $currentDate['end'],
             'rangesWithoutCurrent' => [],
+            'ranges' => [
+                'current' => $currentDate
+            ],
         ];
 
         foreach ($otherDate as $key => $date) {
             $this->datesReport['rangesWithoutCurrent'][$key] = $date;
+            $this->datesReport['ranges'][$key] = $date;
             $this->datesReport['last'] = $this->searchOldestDate($date['start'], $this->datesReport['last']);
         }
 
         return $this->datesReport;
     }
 
+    private function removeSummaryWithoutCurrent(array $data) : array {
+        if (isset($data['summaryWithoutCurrent'])) unset($data['summaryWithoutCurrent']);
+
+        return $data;
+    }
     public function get(array $currentDate, array $otherDate) : array {
         $this->createRangesDate($currentDate, $otherDate);
 
@@ -188,34 +237,35 @@ class ResultWeekly
             ->active()
             ->get();
 
-        //$analyticsResult = $this->getAnalyticsResult($activesCountry);
+        $analyticsResult = $this->getAnalyticsResult($activesCountry, $this->datesReport['current'], $this->datesReport['rangesWithoutCurrent']);
+
         $facebookResults = $this->adwordsResult->getWithManyRangesDate($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['rangesWithoutCurrent']);
-        dd($facebookResults);
         $googleResults = $this->adwordsResult->getWithManyRangesDate($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['rangesWithoutCurrent']);
 
         $resultShopApi = $this->shopResult
-            ->getResult($this->datesReport, $analyticsResult, $facebookResults, $googleResults, $activesCountry);
+            ->getResultNewset($this->datesReport, $analyticsResult, $facebookResults, $googleResults, $activesCountry);
+//Na przyszłość do usuniećea removeSummaryWithoutCurrent
 
         foreach ($activesCountry as $country) {
             $completeReport[] = [
                 'country' => $country->name,
-                'shop' => $resultShopApi[$country->id],
-                'global' => $analyticsResult[$country->id],
-                'facebook' => $facebookResults[$country->id]['click'],
-                'costFacebook' => $facebookResults[$country->id]['budget'],
-                'google' => $googleResults[$country->id]['click'],
-                'costGoogle' => $googleResults[$country->id]['budget'],
+                'shop' => $this->removeSummaryWithoutCurrent($resultShopApi[$country->id]),
+                'global' => $this->removeSummaryWithoutCurrent($analyticsResult[$country->id]),
+                'facebook' => $this->removeSummaryWithoutCurrent($facebookResults[$country->id]['click']),
+                'costFacebook' => $this->removeSummaryWithoutCurrent($facebookResults[$country->id]['budget']),
+                'google' => $this->removeSummaryWithoutCurrent($googleResults[$country->id]['click']),
+                'costGoogle' => $this->removeSummaryWithoutCurrent($googleResults[$country->id]['budget']),
             ];
         }
 
         $completeReport[] = [
             'country' => "summary",
-            'shop' => $resultShopApi["summary"],
-            'global' => $analyticsResult["summary"],
-            'facebook' => $facebookResults["summary"]['click'],
-            'costFacebook' => $facebookResults["summary"]['budget'],
-            'google' => $googleResults["summary"]['click'],
-            'costGoogle' => $googleResults["summary"]['budget'],
+            'shop' => $this->removeSummaryWithoutCurrent($resultShopApi["summary"]),
+            'global' => $this->removeSummaryWithoutCurrent($analyticsResult["summary"]),
+            'facebook' => $this->removeSummaryWithoutCurrent($facebookResults["summary"]['click']),
+            'costFacebook' => $this->removeSummaryWithoutCurrent($facebookResults["summary"]['budget']),
+            'google' => $this->removeSummaryWithoutCurrent($googleResults["summary"]['click']),
+            'costGoogle' => $this->removeSummaryWithoutCurrent($googleResults["summary"]['budget']),
         ];
 
 

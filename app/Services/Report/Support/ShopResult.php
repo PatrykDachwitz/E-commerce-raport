@@ -58,6 +58,16 @@ class ShopResult
             }
         }
     }
+    private function downloadResponseApiShopNewset(array $dates) : void {
+        $this->responseApiShop = [];
+        foreach ($dates as $key => $date) {
+            try {
+                $this->responseApiShop[$key] = $this->shopSales->getSales($date['start'], $date['end']);
+            } catch (Exception) {
+                $this->responseApiShop[$key] = null;
+            }
+        }
+    }
 
     private function getCostAdwordsInEuro(int|string $idAccount, array $metaAdsResult, array $googleAdsResult) : int {
         $course = $this->coursePLN->getCurrentCourse('EUR');
@@ -76,10 +86,14 @@ class ShopResult
     }
     private function getComparisonClickToCost(int|string $idCountry, array $shopSales, array $analyticsResult) : array {
 
-        if ($analyticsResult[$idCountry]['countClick']['value'] > 0) {
-            $comparisonClickToCost = round($shopSales['art'] / $analyticsResult[$idCountry]['countClick']['value'], 2);
-        } else {
-            $comparisonClickToCost = $shopSales['art'];
+
+        if ($shopSales['art'] > 0 & $analyticsResult[$idCountry]['countClick']['value'] > 0) {
+            $comparisonClickToCost = round(($shopSales['art'] / $analyticsResult[$idCountry]['countClick']['value']) * 100, 2);
+            if ($comparisonClickToCost > 100) $comparisonClickToCost = 100;
+        } elseif ($shopSales['art'] === 0 & $analyticsResult[$idCountry]['countClick']['value'] > 0) {
+            $comparisonClickToCost = 0;
+        }  else {
+            $comparisonClickToCost = "-";
         }
 
 
@@ -90,10 +104,12 @@ class ShopResult
     private function getCostShare(int|string $idCountry, array $shopSales, array $metaAdsResult, array $googleAdsResult) : array {
         $costAdwords = $this->getCostAdwordsInEuro($idCountry, $metaAdsResult, $googleAdsResult);
 
-        if ($shopSales['value'] > 0) {
+        if ($shopSales['value'] > 0 & $costAdwords > 0) {
             $costShare = round(($costAdwords / $shopSales['value']) * 100, 2);
-        } else {
+        } elseif ($shopSales['value'] === 0 & $costAdwords > 0) {
             $costShare = 100;
+        } else {
+            $costShare = "-";
         }
 
         return [
@@ -155,6 +171,48 @@ class ShopResult
         return $this->calculateAvgWithComparisonResult($finalResultShop, $countDay);
     }
 
+
+    private function resultShopSalesNewset(int $countDay, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
+        $finalResultShop = $this->getClearStructureShopResponse();
+        $summaryResultPerDay = [];
+
+        foreach ($this->responseApiShop as $keyDateRange => $response) {
+            $summaryResultPerDay[$keyDateRange] = $this->summaryResultByCountry($response);
+
+            foreach ($response as $idCountry => $resultShop) {
+
+
+                if ($keyDateRange === "current") {
+                    $finalResultShop[$idCountry]['shopSales'] = [
+                        'value' => intval($resultShop['value']),
+                        'art' => intval($resultShop['item']),
+                    ];
+                    $finalResultShop[$idCountry]['costShare'] = $this->getCostShare($idCountry, $finalResultShop[$idCountry]['shopSales'], $metaAdsResult, $googleAdsResult);
+                    $finalResultShop[$idCountry]['comparisonClickToCost'] = $this->getComparisonClickToCost($idCountry, $finalResultShop[$idCountry]['shopSales'], $analyticsResult);
+
+                } else {
+                    $minValue = $this->verificationMinSales($resultShop, $finalResultShop[$idCountry], "minValueLast30Day");
+                    $maxValue = $this->verificationMaxSales($resultShop, $finalResultShop[$idCountry], "maxValueLast30Day");
+
+                    $finalResultShop[$idCountry]['minValueLast30Day'] = $minValue;
+                    $finalResultShop[$idCountry]['maxValueLast30Day'] = $maxValue;
+
+                    if (!isset($finalResultShop[$idCountry]['summary'])) {
+                        $finalResultShop[$idCountry]['summary']['value'] = $resultShop['value'];
+                        $finalResultShop[$idCountry]['summary']['art'] = $resultShop['item'];
+                    } else {
+                        $finalResultShop[$idCountry]['summary']['value'] += $resultShop['value'];
+                        $finalResultShop[$idCountry]['summary']['art'] += $resultShop['item'];
+                    }
+                }
+            }
+        }
+
+        $finalResultShop = $this->calculateSummaryResultNewset($summaryResultPerDay, $finalResultShop, $analyticsResult, $metaAdsResult, $googleAdsResult);
+        return $this->calculateAvgWithComparisonResult($finalResultShop, $countDay);
+    }
+
+
     private function verificationMaxSales($newSalesValue, array $currentValue, string $nameArray) : array {
         if (!isset($currentValue[$nameArray])) return [
             "art" => $newSalesValue['item'],
@@ -207,6 +265,7 @@ class ShopResult
         $responseCalculatedWithResult = $result;
 
         foreach ($result as $key => $data) {
+
             $avgArt = intval($data["summary"]['art'] / $countDay);
             $avgValue = intval($data["summary"]['value'] / $countDay);
             unset($responseCalculatedWithResult[$key]['summary']);
@@ -262,6 +321,43 @@ class ShopResult
         return $response;
     }
 
+
+    private function calculateSummaryResultNewset(array $data, array $currentResult, array $analyticsResult, array $metaAdsResult, array $googleAdsResult) : array {
+        $response = $currentResult;
+
+        foreach ($data as $keyDate => $item) {
+            if ($keyDate === "current") {
+                $response['summary']['shopSales'] = [
+                    'value' => $item['value'],
+                    'art' => $item['art'],
+                ];
+            } else {
+                $response['summary']['summary']['art'] += $item['art'];
+                $response['summary']['summary']['value'] += $item['value'];
+
+                if ($response['summary']['minValueLast30Day']['value'] > $item['value'] | $response['summary']['minValueLast30Day']['value'] === null) {
+                    $response['summary']['minValueLast30Day']['value'] = $item['value'];
+                }
+                if ($response['summary']['minValueLast30Day']['art'] > $item['art'] | $response['summary']['minValueLast30Day']['art'] === null) {
+                    $response['summary']['minValueLast30Day']['art'] = $item['art'];
+                }
+
+                if ($response['summary']['maxValueLast30Day']['value'] < $item['value']) {
+                    $response['summary']['maxValueLast30Day']['value'] = $item['value'];
+                }
+                if ($response['summary']['maxValueLast30Day']['art'] < $item['art']) {
+                    $response['summary']['maxValueLast30Day']['art'] = $item['art'];
+                }
+            }
+        }
+
+
+        $response['summary']['costShare'] = $this->getCostShare('summary', $response['summary']['shopSales'], $metaAdsResult, $googleAdsResult);
+        $response['summary']['comparisonClickToCost'] = $this->getComparisonClickToCost('summary', $response['summary']['shopSales'], $analyticsResult);
+
+        return $response;
+    }
+
     private function setNotSummaryResultIdByCountry(Collection $countries) : void {
 
         foreach ($countries as $country) {
@@ -276,5 +372,11 @@ class ShopResult
         $this->setNotSummaryResultIdByCountry($countries);
         //dodać od razu ilosć dni w adwords api
         return $this->resultShopSales($dates['count'], $dates['current'], $analyticsResult, $metaAdsResult, $googleAdsResult);
+    }
+    public function getResultNewset(array $dates, array $analyticsResult, array $metaAdsResult, array $googleAdsResult, Collection $countries) : array {
+        $this->downloadResponseApiShopNewset($dates['ranges']);
+        $this->setNotSummaryResultIdByCountry($countries);
+        //dodać od razu ilosć dni w adwords api
+        return $this->resultShopSalesNewset($dates['count'], $analyticsResult, $metaAdsResult, $googleAdsResult);
     }
 }

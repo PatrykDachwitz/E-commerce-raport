@@ -11,6 +11,7 @@ class AnalyticsApi
 
     use GoogleRefreshToken;
 
+    private array $clickToRangesDate = [];
     const NAME_CONFIG_CREDENTIALS = "api.pathGoogleCredentials";
     CONST NAME_CONFIG_TOKEN = "api.pathGoogleToken";
     private string $propertiesCountry, $dateCurrent;
@@ -224,12 +225,24 @@ class AnalyticsApi
         return $this->completeDataRangesWhenNotHaveDataApi($response);
     }
 
+    private function getDateByKeyDateRanges(int $key) : string {
+        return "{$this->rangesDate[$key]['start']}_{$this->rangesDate[$key]['end']}";
+    }
+    private function setClickToRangesDate(string|int $key, int|string|null $click) {
+
+        if ($key !== "current") {
+            $keyRanges = $this->getDateByKeyDateRanges($key);
+            $this->clickToRangesDate[$keyRanges]['click'] = $click;
+        } else {
+            $this->clickToRangesDate['current']['click'] = $click;
+        }
+    }
     private function calculateDataGroupResponse(array $data) : array {
 
         $responseParams = $this->getStructureNeedData();
 
         foreach ($data as $key => $item) {
-
+            $this->setClickToRangesDate($key, $item);
             if ($key === "current") {
                 $responseParams['current'] = $item;
             } else {
@@ -258,6 +271,15 @@ class AnalyticsApi
         return $responseParams;
     }
 
+    private function setClickToRangesEmptyResponse(array $otherRangeDates) : void {
+        $this->clickToRangesDate["current"]['click'] = 0;
+
+        foreach ($otherRangeDates as $date) {
+            $keyName = "{$date['start']}_{$date['end']}";
+            $this->clickToRangesDate[$keyName]['click'] = 0;
+        }
+    }
+
     public function getWithManyRangesDate(array $currentRangeDate, array $otherRangeDates) : array {
         $date = $this->getNewestAndOldestDate($currentRangeDate, $otherRangeDates);
 
@@ -274,8 +296,10 @@ class AnalyticsApi
             $calculateData = $this->getStructureNeedData(false);
             $calculateData['avg'] = 0;
             $calculateData['avgWithoutCurrent'] = 0;
+            $this->setClickToRangesEmptyResponse($otherRangeDates);
         }
 
+        $calculateData['dataByRangesWithoutCurrent'] = $this->clickToRangesDate;
         return $calculateData;
     }
 

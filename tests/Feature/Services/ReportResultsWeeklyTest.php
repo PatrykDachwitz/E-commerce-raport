@@ -820,6 +820,7 @@ it('Verification response Weekly report with current data', function(
     string $adwordsGoogleReportWeeklyPolandResponse,
     string $adwordsGoogleReportWeeklyGermanyResponse,
     string $adwordsGoogleReportWeeklyRomaniaResponse,
+    string $responseNbp,
 ) {
     Http::fake([
         "https://googleads.googleapis.com/v17/customers/123321321/googleAds:searchStream" => Http::response($adwordsGoogleReportWeeklyPolandResponse),
@@ -846,6 +847,8 @@ it('Verification response Weekly report with current data', function(
         "https://analyticsdata.googleapis.com/v1beta/properties/123545:runReport" => Http::response($analyticsReportWeeklyPolandResponse),
         "https://analyticsdata.googleapis.com/v1beta/properties/12354775:runReport" => Http::response($analyticsReportWeeklyGermanyResponse),
         "https://analyticsdata.googleapis.com/v1beta/properties/123547756:runReport" => Http::response($analyticsReportWeeklyRomaniaResponse),
+
+        "http://api.nbp.pl/api/exchangerates/tables/A/" => Http::response($responseNbp),
     ]);
     $rangesDate = [
         "start" => "2024-07-05",
@@ -894,10 +897,10 @@ it('Verification response Weekly report with current data', function(
                     "art" => 120
                 ],
                 "costShare" => [
-                    "value" => 1.61
+                    "value" => 0.38
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 7.49
+                    "value" => 1.18
                 ]
             ],
             "global" => [
@@ -1034,10 +1037,10 @@ it('Verification response Weekly report with current data', function(
                     "art" => 990
                 ],
                 "costShare" => [
-                    "value" => 5.81
+                    "value" => 1.35
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 7.49
+                    "value" => 7.50
                 ]
             ],
             "global" => [
@@ -1174,10 +1177,10 @@ it('Verification response Weekly report with current data', function(
                     "art" => 190
                 ],
                 "costShare" => [
-                    "value" => 2.44
+                    "value" => 0.57
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 52.14
+                    "value" => 52.15
                 ]
             ],
             "global" => [
@@ -1314,7 +1317,7 @@ it('Verification response Weekly report with current data', function(
                     "art" => 190
                 ],
                 "costShare" => [
-                    "value" => '-'
+                    "value" => "-"
                 ],
                 "comparisonClickToCost" => [
                     "value" => '-'
@@ -1438,12 +1441,12 @@ it('Verification response Weekly report with current data', function(
                     "art" => 27330
                 ],
                 "avgComparison" => [
-                    "value" => -2501034325,
-                    "art" => 26754
+                    "value" => -2501026560,
+                    "art" => 26811
                 ],
                 "avgLast30Day" => [
-                    "value" => 2501183579,
-                    "art" => 576
+                    "value" => 2501175814,
+                    "art" => 519
                 ],
                 "minValueLast30Day" => [
                     "value" => 624,
@@ -1454,10 +1457,10 @@ it('Verification response Weekly report with current data', function(
                     "art" => 1190
                 ],
                 "costShare" => [
-                    "value" => 2.93
+                    "value" => 0.68
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 21.42
+                    "value" => 21.43
                 ]
             ],
             "global" => [
@@ -1607,4 +1610,5 @@ it('Verification response Weekly report with current data', function(
     'analyticsReportWeeklyRomaniaResponse',
     'adwordsGoogleReportWeeklyPolandResponse',
     'adwordsGoogleReportWeeklyGermanyResponse',
-    'adwordsGoogleReportWeeklyRomaniaResponse');
+    'adwordsGoogleReportWeeklyRomaniaResponse',
+    'responseNbpApi');

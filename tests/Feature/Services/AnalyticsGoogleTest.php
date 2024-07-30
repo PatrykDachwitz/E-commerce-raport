@@ -131,7 +131,7 @@ describe('Test services with query in 200 status', function () {
     })->with('properties-account', 'analyticsResponseWithoutRows');
 });
 
-describe('Testng version for several between ranges date ', function () {
+describe('Testng version for several between ranges date', function () {
 
     it("Verification result for correct data", function (string $propertiesAccount, string $responseApi) {
         $country = Country::factory()->create([
@@ -171,7 +171,26 @@ describe('Testng version for several between ranges date ', function () {
 
         $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
 
+        $dataByRanges = [
+            '2024-06-07_2024-06-09' => [
+                'click' => 1265,
+            ],
+            '2024-06-14_2024-06-16' => [
+                'click' => 3697,
+            ],
+            '2024-06-21_2024-06-23' => [
+                'click' => 10926,
+            ],
+            '2024-06-28_2024-06-30' => [
+                'click' => 71151,
+            ],
+            'current' => [
+                'click' => 790,
+            ]
+        ];
 
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
         expect($responseData)
             ->toHaveKeys([
                 'current',
@@ -241,6 +260,26 @@ describe('Testng version for several between ranges date ', function () {
 
         $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
 
+        $dataByRanges = [
+            '2024-06-07_2024-06-09' => [
+                'click' => 0,
+            ],
+            '2024-06-14_2024-06-16' => [
+                'click' => 3697,
+            ],
+            '2024-06-21_2024-06-23' => [
+                'click' => 4692,
+            ],
+            '2024-06-28_2024-06-30' => [
+                'click' => 71151,
+            ],
+            'current' => [
+                'click' => 790,
+            ]
+        ];
+
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
 
         expect($responseData)
             ->toHaveKeys([
@@ -310,7 +349,26 @@ describe('Testng version for several between ranges date ', function () {
         $analytics->setDateCurrent("20240614");
 
         $responseData = $analytics->getWithManyRangesDate($rangesDate, $rangesOtherDate);
+        $dataByRanges = [
+            '2024-06-07_2024-06-09' => [
+                'click' => 1265,
+            ],
+            '2024-06-14_2024-06-16' => [
+                'click' => 3697,
+            ],
+            '2024-06-21_2024-06-23' => [
+                'click' => 10926,
+            ],
+            '2024-06-28_2024-06-30' => [
+                'click' => 71151,
+            ],
+            'current' => [
+                'click' => 0,
+            ]
+        ];
 
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
 
         expect($responseData)
             ->toHaveKeys([
@@ -394,6 +452,26 @@ describe('Testng version for several between ranges date ', function () {
                 "maxWithoutCurrent",
             ]);
 
+        $dataByRanges = [
+            '2024-06-07_2024-06-09' => [
+                'click' => 0,
+            ],
+            '2024-06-14_2024-06-16' => [
+                'click' => 0,
+            ],
+            '2024-06-21_2024-06-23' => [
+                'click' => 0,
+            ],
+            '2024-06-28_2024-06-30' => [
+                'click' => 0,
+            ],
+            'current' => [
+                'click' => 0,
+            ]
+        ];
+
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
         expect($responseData['current'])
             ->toBe(0);
         expect($responseData['min'])

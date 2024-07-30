@@ -11,7 +11,7 @@ use function Pest\Laravel\seed;
 beforeEach(function () {
     seed(MetaAdsCountrySeed::class);
 });
-/*
+
 describe('Testing response meta ads services with correct data', function () {
     //Tutaj trzeba zweryfkowc kilka dni w popszednim miesiacu sprawdzić założenie eistenijaće g budżetu ale braku statystyk dal tego konta
     //Pamietąc że nie któę kraje mająwiecej niż jedno konto
@@ -493,7 +493,7 @@ describe('Testing response meta ads services with wrong data' , function () {
 
     });
 });
-*/
+
 describe("Testing response api for many date with correct data", function () {
 
     it("Testing correct calculate data about response api", function (

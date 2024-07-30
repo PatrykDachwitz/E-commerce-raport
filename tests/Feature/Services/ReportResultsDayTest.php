@@ -35,6 +35,7 @@ test('Verification work services Report result Day with good response api', func
     string $germanyResponseApi,
     string $metaResponsePolandResultDay,
     string $metaResponseUKResultDay,
+    string $responseNbp,
 ) {
     $date = "2024-06-20";
     Http::fake([
@@ -137,6 +138,9 @@ test('Verification work services Report result Day with good response api', func
         "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($metaCurrentDateResponseApi),
         "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-20" => Http::response($metaResponsePolandResultDay),
         "https://graph.facebook.com/v20.0/act_123123145/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-20" => Http::response($metaResponseUKResultDay),
+
+
+        "http://api.nbp.pl/api/exchangerates/tables/A/" => Http::response($responseNbp),
         ]);
 
     $reportDay = new ResultDay(
@@ -182,7 +186,7 @@ test('Verification work services Report result Day with good response api', func
                     "value" => 0.29
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 2.42
+                    "value" => 100
                 ]
             ],
             "global" => [
@@ -322,7 +326,7 @@ test('Verification work services Report result Day with good response api', func
                     "value" => 1.11
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 1.2
+                    "value" => 100
                 ]
             ],
             "global" => [
@@ -460,10 +464,10 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 290
                 ],
                 "costShare" => [
-                    "value" => 0
+                    "value" => "-"
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 5
+                    "value" => "-"
                 ]
             ],
             "global" => [
@@ -600,10 +604,10 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 55
                 ],
                 "costShare" => [
-                    "value" => 0
+                    "value" => "-"
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 50
+                    "value" => "-"
                 ]
             ],
             "global" => [
@@ -740,10 +744,10 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 55
                 ],
                 "costShare" => [
-                    "value" => 0
+                    "value" => "-"
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 50
+                    "value" => "-"
                 ]
             ],
             "global" => [
@@ -880,10 +884,10 @@ test('Verification work services Report result Day with good response api', func
                     "art" => 55
                 ],
                 "costShare" => [
-                    "value" => 0
+                    "value" => "-"
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 50
+                    "value" => "-"
                 ]
             ],
             "global" => [
@@ -1023,7 +1027,7 @@ test('Verification work services Report result Day with good response api', func
                     "value" => 0.29
                 ],
                 "comparisonClickToCost" => [
-                    "value" => 1.77
+                    "value" => 100
                 ]
             ],
             "global" => [
@@ -1146,4 +1150,4 @@ test('Verification work services Report result Day with good response api', func
     )
         ->toMatchArray($expectResult);
 
-})->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay", "metaAdsTemplateDataForCurrentDay", "metaAdsTemplateDataForOneDay", "metaAdsTemplateDataForSecondDay", "metaAdsTemplateDataForThirdDay", "metaAdsTemplateDataForFourthDay", "polandResponseApi", "germanyResponseApi", "metaResponsePolandResultDay", "metaResponseUKResultDay");
+})->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay", "metaAdsTemplateDataForCurrentDay", "metaAdsTemplateDataForOneDay", "metaAdsTemplateDataForSecondDay", "metaAdsTemplateDataForThirdDay", "metaAdsTemplateDataForFourthDay", "polandResponseApi", "germanyResponseApi", "metaResponsePolandResultDay", "metaResponseUKResultDay", 'responseNbpApi');
