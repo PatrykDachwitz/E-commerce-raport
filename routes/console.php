@@ -1,23 +1,27 @@
 <?php
 
+use App\Console\Commands\ReportComparisonDay;
+use App\Console\Commands\ReportResultDay;
+use App\Console\Commands\ReportWeeklyDay;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-
-
+use Illuminate\Support\Facades\Schedule;
+/*
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})->purpose('Display an inspiring quote')->hourly();
+*/
 $date = date("Y-m-d", strtotime("-1 day"));
 $timezone = "Europe/Warsaw";
-Artisan::command('report:result-day {date}', function (){})
-    ->schedule([$date])
+Schedule::command(ReportResultDay::class, [$date])
     ->timezone($timezone)
     ->dailyAt('6:30');
 
-Artisan::command('report:comparison-day {date}', function (){})
-    ->schedule([$date])
+Schedule::command(ReportComparisonDay::class, [$date])
     ->timezone($timezone)
     ->dailyAt('6:20');
 
-Artisan::command('report:weekly-day {date}', function (){})
-    ->schedule([$date])
+Schedule::command(ReportWeeklyDay::class, [$date])
     ->timezone($timezone)
     ->dailyAt('6:50')
     ->mondays();
