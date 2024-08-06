@@ -178,27 +178,38 @@ class GoogleAdwordsApi extends AdwordsApi
             "data" => $this->addNoBuildRangesByDate($response)
         ];
     }
+
     protected function calculateResultApi(Country $country, string $currentDate, string $lastDate) : array {
         $dataResponseApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
         $structureResponse = $this->getStructureResponse();
         $structureResponse = $this->verificationNumberReturnedRows($dataResponseApi, $structureResponse, $currentDate);
 
         if (!is_null($dataResponseApi)){
+
+
         foreach ($dataResponseApi as $key => $data) {
+            $cost = $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
+            $click = intval($data['metrics']['clicks']);
+            $formatData = [
+                'click' => $click,
+                'spend' => $cost,
+            ];
 
             if ($this->isCurrentTimeInRange($data['segments']['date'])) {
-                $structureResponse['click']['current'] += intval($data['metrics']['clicks']);
-                $structureResponse['budget']['current'] += $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
-                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
+                $structureResponse['dataByRangesWithoutCurrent']["current"] = $formatData;
+                $structureResponse['click']['current'] += $click;
+                $structureResponse['budget']['current'] += $cost;
+                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $cost;
             } elseif($this->isRangesDate($data['segments']['date'])) {
-                $structureResponse['click']['summaryWithoutCurrent'] += intval($data['metrics']['clicks']);
-                $structureResponse['budget']['summaryWithoutCurrent'] += $this->calculateCurrentSpendBudget($data['metrics']['costMicros']);
-                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->addSpendBudgetCurrentMonth($data['segments']['date'], $this->calculateCurrentSpendBudget($data['metrics']['costMicros']));
+                $structureResponse['dataByRangesWithoutCurrent']["{$data['segments']['date']}_{$data['segments']['date']}"] = $formatData;
+                $structureResponse['click']['summaryWithoutCurrent'] += $click;
+                $structureResponse['budget']['summaryWithoutCurrent'] += $cost;
+                $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] += $this->addSpendBudgetCurrentMonth($data['segments']['date'], $cost);
 
-                $structureResponse['click']['minWithoutCurrent'] = $this->getMinValue($structureResponse, intval($data['metrics']['clicks']), 'click');
-                $structureResponse['budget']['minWithoutCurrent'] = $this->getMinValue($structureResponse, $this->calculateCurrentSpendBudget($data['metrics']['costMicros']), 'budget');
-                $structureResponse['click']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, intval($data['metrics']['clicks']), 'click');
-                $structureResponse['budget']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, $this->calculateCurrentSpendBudget($data['metrics']['costMicros']), 'budget');
+                $structureResponse['click']['minWithoutCurrent'] = $this->getMinValue($structureResponse, $click, 'click');
+                $structureResponse['budget']['minWithoutCurrent'] = $this->getMinValue($structureResponse, $cost, 'budget');
+                $structureResponse['click']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, $click, 'click');
+                $structureResponse['budget']['maxWithoutCurrent'] = $this->getMaxValue($structureResponse, $cost, 'budget');
             }
         }}
 
@@ -207,6 +218,7 @@ class GoogleAdwordsApi extends AdwordsApi
         if (is_null($structureResponse['click']['maxWithoutCurrent'])) $structureResponse['click']['maxWithoutCurrent'] = 0;
         if (is_null($structureResponse['budget']['maxWithoutCurrent'])) $structureResponse['budget']['maxWithoutCurrent'] = 0;
 
+        $structureResponse['dataByRangesWithoutCurrent'] = $this->getEmptyDataForNotIssetRangesDate($structureResponse['dataByRangesWithoutCurrent'] ?? []);
         $structureResponse['budget']['budgetMonthly'] = $this->getMonthlyBudget();
         $structureResponse['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($structureResponse['budget']);
 
@@ -240,7 +252,7 @@ class GoogleAdwordsApi extends AdwordsApi
                 }
             }
         } else {
-            $structureResponse['dataByRangesWithoutCurrent'] = $this->getEmptyDataByRangesDate();
+            $structureResponse['dataByRangesWithoutCurrent'] = $this->getEmptyDataForNotIssetRangesDate();
         }
         if (is_null($structureResponse['click']['minWithoutCurrent'])) $structureResponse['click']['minWithoutCurrent'] = 0;
         if (is_null($structureResponse['budget']['minWithoutCurrent'])) $structureResponse['budget']['minWithoutCurrent'] = 0;
@@ -271,7 +283,7 @@ class GoogleAdwordsApi extends AdwordsApi
         $this->country = $country;
 
 
-        $resultApi = $this->calculateResultApiManyDatesRanges($country, $currentDate['start'], $rangesOtherDate[count($rangesOtherDate) - 1]['end']);
+        $resultApi = $this->calculateResultApiManyDatesRanges($country, $currentDate['end'], $rangesOtherDate[count($rangesOtherDate) - 1]['start']);
 
         return $this->calculateAvgWithComparison($resultApi);
     }

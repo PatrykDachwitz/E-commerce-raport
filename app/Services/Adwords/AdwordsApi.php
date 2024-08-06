@@ -108,23 +108,37 @@ abstract class AdwordsApi
         $this->dateRanges = $dateRanges;
     }
 
-    protected function getEmptyDataByRangesDate() : array {
-        $response = [];
+    protected function getEmptyDataForNotIssetRangesDate(array|null $existData = []) : array {
 
         foreach ($this->dateRanges as $key => $date) {
-            $convertResponse = $this->convertForResponseDataRanges($key, 0, 0);
+            if ($key === "current") {
+                if(!isset($existData["current"])) {
+                    $existData["current"] = [
+                        'click' => 0,
+                        'spend' => 0,
+                    ];
+                }
 
-            $response[$convertResponse['date']] = $convertResponse['data'];
-
+            } else {
+                $rangesName = "{$date['start']}_{$date['end']}";
+                if(!isset($existData[$rangesName])) {
+                    $existData[$rangesName] = [
+                        'click' => 0,
+                        'spend' => 0,
+                    ];
+                }
+            }
         }
 
-        return $response;
+        return $existData;
     }
 
     protected function convertForResponseDataRanges(string|int $keyDateRanges, int $spend, int $click) : array {
+
         if ($keyDateRanges === "current") {
             $dateRanges = "current";
         } else {
+
             $dateRanges = "{$this->dateRanges[$keyDateRanges]['start']}_{$this->dateRanges[$keyDateRanges]['end']}";
         }
 

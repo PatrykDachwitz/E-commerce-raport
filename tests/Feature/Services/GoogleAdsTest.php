@@ -44,6 +44,43 @@ describe('Testing response Google ads services with correct data', function () {
                 "spentBudgetFromBeginningOfMonth" => 6566,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 72,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 204,
+                    'spend'=>1061
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 220,
+                    'spend'=>1109
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 206,
+                    'spend'=>1164
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 167,
+                    'spend'=>999
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 152,
+                    'spend'=>881
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 148,
+                    'spend'=>735
+                ],
+
+                'current' =>[
+                    'click' => 147,
+                    'spend'=>617
+                ],
+
             ]
         ];
 
@@ -172,6 +209,43 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 0,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 0,
+            ],
+            'dataByRangesWithoutCurrent' => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                'current' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
             ]
         ];
 
@@ -212,6 +286,43 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 5949,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 66,
+            ],
+            'dataByRangesWithoutCurrent' => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 204,
+                    'spend'=>1061
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 220,
+                    'spend'=>1109
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 206,
+                    'spend'=>1164
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 167,
+                    'spend'=>999
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 152,
+                    'spend'=>881
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 148,
+                    'spend'=>735
+                ],
+
+                'current' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
             ]
         ];
 
@@ -252,6 +363,42 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 3577,
                 "budgetMonthly" => 9000,
                 "percentSpentBudgetMonthlyCurrentDay" => 39,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 204,
+                    'spend'=>1061
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 206,
+                    'spend'=>1164
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 0,
+                    'spend'=>0
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 148,
+                    'spend'=>735
+                ],
+
+                'current' =>[
+                    'click' => 147,
+                    'spend'=>617
+                ],
             ]
         ];
 
@@ -291,6 +438,42 @@ describe('Testing google adwords api when data is deficit', function () {
                 "spentBudgetFromBeginningOfMonth" => 6566,
                 "budgetMonthly" => 0,
                 "percentSpentBudgetMonthlyCurrentDay" => 100,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 204,
+                    'spend'=>1061
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 220,
+                    'spend'=>1109
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 206,
+                    'spend'=>1164
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 167,
+                    'spend'=>999
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 152,
+                    'spend'=>881
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 148,
+                    'spend'=>735
+                ],
+
+                'current' =>[
+                    'click' => 147,
+                    'spend'=>617
+                ],
             ]
         ];
 
