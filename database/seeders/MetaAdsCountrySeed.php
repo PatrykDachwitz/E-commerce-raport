@@ -36,6 +36,21 @@ class MetaAdsCountrySeed extends Seeder
                 "facebook" => "123123123",
                 "facebook_daily_budget" => 1902,
                 "facebook_budget_currency" => "EUR",
+            ],
+            [
+                'name' => 'Polska',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "facebook" => "123123123",
+                "facebook_daily_budget" => 300,
+                "facebook_budget_currency" => "RON",
+            ],
+            [
+                'name' => 'Polska',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "facebook" => "123123123;1231231231",
+                "facebook_daily_budget" => 300,
             ]
         ];
 

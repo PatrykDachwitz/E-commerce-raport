@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
+
     seed(GoogleAdsCountrySeed::class);
 });
 
@@ -732,5 +733,91 @@ describe('Testing google adwords api when data is deficit', function () {
 
     })
         ->with('googleAdwordsResponseApiJuneDeficitCurrentDate');
+
+});
+
+
+
+describe("Testing various with 2 google ads account in 1 country", function () {
+
+    it("Testing correct calculate data about response api", function (
+        string $currentDateResponseApi,
+        string $googleAdwordsResponseApiPerCampaign,
+    ) {
+
+        Http::fake([
+            "https://googleads.googleapis.com/v17/customers/123321321/googleAds:searchStream" => Http::response($currentDateResponseApi),
+            "https://googleads.googleapis.com/v17/customers/12342141/googleAds:searchStream" => Http::response($googleAdwordsResponseApiPerCampaign),
+        ]);
+
+
+
+        $googleAds = new GoogleAdwordsApi();
+
+        $metaData = [
+            'click' => [
+                'current' => 272,
+                "summaryWithoutCurrent" => 2918,
+                "avgWithoutCurrent" => 486,
+                "avgComparisonWithoutCurrent" => -214,
+                "minWithoutCurrent" => 179,
+                "maxWithoutCurrent" => 1397,
+            ],
+            "budget" => [
+                'current' => 640,
+                "avgComparisonWithoutCurrent" => -44864,
+                "summaryWithoutCurrent" => 273029,
+                "avgWithoutCurrent" => 45504,
+                "minWithoutCurrent" => 736,
+                "maxWithoutCurrent" => 236324,
+                "spentBudgetFromBeginningOfMonth" => 273669,
+                "budgetMonthly" => 9000,
+                "percentSpentBudgetMonthlyCurrentDay" => 3040,
+            ],
+            "dataByRangesWithoutCurrent" => [
+                '2024-06-01_2024-06-01' =>[
+                    'click' => 327,
+                    'spend'=>1613
+                ],
+
+                '2024-06-02_2024-06-02' =>[
+                    'click' => 234,
+                    'spend'=>3461
+                ],
+
+                '2024-06-03_2024-06-03' =>[
+                    'click' => 420,
+                    'spend'=>24689
+                ],
+
+                '2024-06-04_2024-06-04' =>[
+                    'click' => 179,
+                    'spend'=>236324
+                ],
+
+                '2024-06-05_2024-06-05' =>[
+                    'click' => 1397,
+                    'spend'=>6206
+                ],
+
+                '2024-06-06_2024-06-06' =>[
+                    'click' => 361,
+                    'spend'=>736
+                ],
+
+                'current' =>[
+                    'click' => 272,
+                    'spend'=>640
+                ],
+
+            ]
+        ];
+
+        $country = Country::find(4);
+        expect($googleAds->get("2024-06-07", "2024-06-01", $country))
+            ->toMatchArray($metaData);
+
+    })
+        ->with('googleAdwordsResponseApi', 'googleAdwordsResponseApiPerCampaign');
 
 });

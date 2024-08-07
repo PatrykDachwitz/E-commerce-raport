@@ -21,6 +21,7 @@ class Country extends Model
         "google_daily_budget" => "integer",
         "facebook_budget_currency" => "string",
         "google_budget_currency" => "string",
+        "google_additional_campaign" => "string",
         "result-summary" => "bool"
     ];
 
@@ -36,6 +37,7 @@ class Country extends Model
         "facebook_budget_currency",
         "google_budget_currency",
         "result-summary",
+        "google_additional_campaign",
     ];
 
     public function scopeActive() {

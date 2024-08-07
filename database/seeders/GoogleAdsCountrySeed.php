@@ -36,6 +36,14 @@ class GoogleAdsCountrySeed extends Seeder
                 "google" => "52432432",
                 "google_daily_budget" => 1902,
                 "facebook_budget_currency" => "EUR",
+            ],
+            [
+                'name' => 'Polska',
+                'shop' => 1,
+                "analytics" => 123123123123,
+                "google" => "123321321",
+                "google_daily_budget" => 300,
+                "google_additional_campaign" => "12342141;1524,2312"
             ]
         ];
 

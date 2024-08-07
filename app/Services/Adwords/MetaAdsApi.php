@@ -42,6 +42,33 @@ class MetaAdsApi extends AdwordsApi
         }
     }
 
+    protected function getSpendBudgetInCurrentMonth(Country $country, string $dateCurrent) : int {
+        $currentYearWithMonth = date("Y-m", strtotime($dateCurrent));
+        $startDay = "{$currentYearWithMonth}-01";
+
+        $accountsId = $this->getAccountsId($country[$this->nameAdwordsColumn]);
+        $spendMonthly = 0;
+
+        foreach ($accountsId as $id) {
+            $responseApi = $this->connectApi($startDay, $dateCurrent, $id);
+
+            if (!is_null($responseApi)) {
+                $spendMonthly += intval($responseApi['spend']);
+            }
+        }
+
+        return $spendMonthly;
+    }
+
+    private function getAccountsId(string $idAccount) : array {
+        if (strstr($idAccount, ";")) {
+            $accountsId = explode(";", $idAccount);
+        } else {
+            $accountsId = [$idAccount];
+        }
+
+        return $accountsId;
+    }
     private function conversionCostToDefaultCurrencies(string $currency, array $data ) : array {
         $valueCurrency = $this->coursePLN->getCurrentCourse($currency);
         $data['budget']['current'] = intval($data['budget']['current'] * $valueCurrency);
@@ -49,8 +76,33 @@ class MetaAdsApi extends AdwordsApi
         $data['budget']['minWithoutCurrent'] = intval($data['budget']['minWithoutCurrent'] * $valueCurrency);
         $data['budget']['maxWithoutCurrent'] = intval($data['budget']['maxWithoutCurrent'] * $valueCurrency);
         $data['budget']['spentBudgetFromBeginningOfMonth'] = intval($data['budget']['spentBudgetFromBeginningOfMonth'] * $valueCurrency);
+        foreach ($data['dataByRangesWithoutCurrent'] as $key => $item) {
+            $data['dataByRangesWithoutCurrent'][$key]['spend'] = intval($data['dataByRangesWithoutCurrent'][$key]['spend'] * $valueCurrency);
+        }
 
         return $data;
+    }
+
+    protected function downloadResponseApi(string $idAccount) : array {
+        $dataResponse = [];
+
+        $accountsId = $this->getAccountsId($idAccount);
+
+        foreach ($this->dateRanges as $key => $date) {
+
+            foreach ($accountsId as $id) {
+                $responseDataApi = $this->connectApi($date['start'], $date['end'], $id);
+
+                if (!isset($dataResponse[$key])) {
+                    $dataResponse[$key] = $responseDataApi;
+                } elseif(isset($dataResponse[$key]) & !is_null($responseDataApi)) {
+
+                    $dataResponse[$key]['clicks'] += $responseDataApi['clicks'];
+                    $dataResponse[$key]['spend'] += $responseDataApi['spend'];
+                }
+            }
+        }
+        return $dataResponse;
     }
 
     protected function calculateResultApi(Country $country, string $currentDate, string $lastDate) : array {
@@ -92,7 +144,7 @@ class MetaAdsApi extends AdwordsApi
         if (is_null($structureResponse['click']['maxWithoutCurrent'])) $structureResponse['click']['maxWithoutCurrent'] = 0;
         if (is_null($structureResponse['budget']['maxWithoutCurrent'])) $structureResponse['budget']['maxWithoutCurrent'] = 0;
 
-
+        $structureResponse['dataByRangesWithoutCurrent'] = $this->getEmptyDataForNotIssetRangesDate($structureResponse['dataByRangesWithoutCurrent'] ?? []);
         $structureResponse['budget']['spentBudgetFromBeginningOfMonth'] = $this->getSpendBudgetInCurrentMonth($country, $this->dateRanges['current']['end']);
         $structureResponse['budget']['budgetMonthly'] = $this->getMonthlyBudget();
         $structureResponse['budget']['percentSpentBudgetMonthlyCurrentDay'] = $this->getPercentSpendMonthlyBudget($structureResponse['budget']);

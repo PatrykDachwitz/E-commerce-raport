@@ -24,16 +24,30 @@ class GoogleAdwordsApi extends AdwordsApi
         $this->developerToken = env('DEVELOPER_TOKEN_GOOGLE');
     }
 
-    private function getBodyQuery(string $startDate, string $lastDate) : string {
+    private function getBodyQueryAccountVariant(string $startDate, string $lastDate) : string {
         $query = [
-            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date FROM customer WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
+            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date,  FROM customer WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
+        ];
+
+        return json_encode($query);
+    }
+    private function getBodyQueryCampaignVariant(string $startDate, string $lastDate) : string {
+        $query = [
+            "query" => "SELECT campaign.name, metrics.clicks, metrics.cost_micros, segments.date FROM campaign WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
         ];
 
         return json_encode($query);
     }
 
-    public function connectApi(string $idCompany, string $startDate, string $lastDate) : array|null {
-        $bodyQuery = $this->getBodyQuery($startDate, $lastDate);
+    public function connectApi(string $idCompany, string $startDate, string $lastDate, bool $perCampaign = true) : array|null {
+
+        if ($perCampaign === true) {
+            $bodyQuery = $this->getBodyQueryAccountVariant($startDate, $lastDate);
+        } else {
+            $bodyQuery = $this->getBodyQueryCampaignVariant($startDate, $lastDate);
+        }
+
+
 
         $response = Http::withHeaders([
             "Authorization" => "Bearer " . $this->getAccessToken(self::NAME_CONFIG_CREDENTIALS, self::NAME_CONFIG_TOKEN),
@@ -43,6 +57,7 @@ class GoogleAdwordsApi extends AdwordsApi
         ])
             ->withBody($bodyQuery)
             ->post("https://googleads.googleapis.com/v17/customers/{$idCompany}/googleAds:searchStream");
+
 
         try {
             return $response->json()[0]['results'];
@@ -179,8 +194,57 @@ class GoogleAdwordsApi extends AdwordsApi
         ];
     }
 
+    private function getAccountWithIdCampaign(string $googleAdditionalCampaign) : array {
+        $account = explode(";", $googleAdditionalCampaign);
+        $idCampaigns = explode(",", $account[1]);
+
+        return [
+            "account" => $account[0],
+            "campaigns" => $idCampaigns
+        ];
+    }
+
+    private function getIdCampaign(string $name) : string {
+        $nameConvert = explode("/campaigns/", $name);
+
+        return $nameConvert[1];
+    }
+    private function mergeResultApiWithAdditional(array $mainResponse, array $additional, array $availableIdCampaigns) : array {
+
+        foreach ($additional as $data) {
+            $id = $this->getIdCampaign($data['campaign']['resourceName']);
+
+            if (in_array($id, $availableIdCampaigns)) {
+                $dateSearch = $data['segments']['date'];
+
+                foreach ($mainResponse as $key => $mainData) {
+                    if ($mainData['segments']['date'] === $dateSearch) {
+                        $mainResponse[$key]['metrics']['clicks'] = intval($mainResponse[$key]['metrics']['clicks']) + intval($data['metrics']['clicks']);
+                        $mainResponse[$key]['metrics']['costMicros'] = intval($mainResponse[$key]['metrics']['costMicros']) + intval($data['metrics']['costMicros']);
+                    }
+                }
+            }
+        }
+
+        return $mainResponse;
+    }
+    private function downloadResultApi(Country $country, string $currentDate, string $lastDate) : array|null {
+        $resultApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
+
+        if (!is_null($country->google_additional_campaign)) {
+            $accountInfo = $this->getAccountWithIdCampaign($country->google_additional_campaign);
+            $additionalResultApi = $this->connectApi($accountInfo['account'], $currentDate, $lastDate, false);
+          //  dump("additional");
+           // dump($additionalResultApi);
+            if (!is_null($additionalResultApi)) {
+                $resultApi = $this->mergeResultApiWithAdditional($resultApi, $additionalResultApi, $accountInfo['campaigns']);
+            }
+        }
+
+        return $resultApi;
+    }
     protected function calculateResultApi(Country $country, string $currentDate, string $lastDate) : array {
-        $dataResponseApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
+        $dataResponseApi = $this->downloadResultApi($country, $currentDate, $lastDate);
         $structureResponse = $this->getStructureResponse();
         $structureResponse = $this->verificationNumberReturnedRows($dataResponseApi, $structureResponse, $currentDate);
 
@@ -227,7 +291,7 @@ class GoogleAdwordsApi extends AdwordsApi
 
 
     protected function calculateResultApiManyDatesRanges(Country $country, string $currentDate, string $lastDate) : array {
-        $dataResponseApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
+        $dataResponseApi = $this->downloadResultApi($country, $currentDate, $lastDate);
         $structureResponse = $this->getStructureResponse();
 
         if (!is_null($dataResponseApi)) {

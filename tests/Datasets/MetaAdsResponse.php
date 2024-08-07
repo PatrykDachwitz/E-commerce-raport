@@ -363,3 +363,80 @@ dataset('facebookReportWeeklyFourthResponse', function () {
 '
     ];
 });
+
+
+dataset('metaAdsTemplateDataForCurrentDayForVariantDoubleAccount', function () {
+    return [
+        '{
+  "data":
+  [
+    {
+      "clicks":"150",
+      "spend":"42",
+      "date_start":"2024-06-21",
+      "date_stop":"2024-06-24"
+    }
+  ],
+  "paging":
+  {
+    "cursors":
+    {
+      "before":"MAZDZD",
+      "after":"MAZDZD"
+    }
+  }
+}
+'
+    ];
+});
+
+
+dataset('metaAdsTemplateDataForOneDayForVariantDoubleAccount', function () {
+    return [
+        '{
+  "data":
+  [
+    {
+      "clicks":"102",
+      "spend":"80",
+      "date_start":"2024-06-21",
+      "date_stop":"2024-06-24"
+    }
+  ],
+  "paging":
+  {
+    "cursors":
+    {
+      "before":"MAZDZD",
+      "after":"MAZDZD"
+    }
+  }
+}
+'
+    ];
+});
+
+dataset('metaAdsTemplateDataForSecondDayForVariantDoubleAccount', function () {
+    return [
+        '{
+  "data":
+  [
+    {
+      "clicks":"123",
+      "spend":"10",
+      "date_start":"2024-06-21",
+      "date_stop":"2024-06-24"
+    }
+  ],
+  "paging":
+  {
+    "cursors":
+    {
+      "before":"MAZDZD",
+      "after":"MAZDZD"
+    }
+  }
+}
+'
+    ];
+});

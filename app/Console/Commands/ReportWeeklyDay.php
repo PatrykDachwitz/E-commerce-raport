@@ -99,7 +99,7 @@ class ReportWeeklyDay extends Command
         $resultReportWeekly = $this->resultWeekly
             ->get($rangesDate['current'], $rangesDate['other']);
 
-        if (Storage::put( "{$this->path}{$rangesDate['current']['start']}.json", json_encode($resultReportWeekly))) {
+        if (Storage::put( "{$this->path}{$rangesDate['current']['end']}.json", json_encode($resultReportWeekly))) {
             $this->info(__('command.saveFileSuccess'));
             return 0;
         } else {

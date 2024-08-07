@@ -979,3 +979,214 @@ dataset('adwordsGoogleReportWeeklyRomaniaResponse', function () {
   }]
   '];
 });
+
+
+dataset("googleAdwordsResponseApiPerCampaign", function () {
+    return [
+        '[
+
+  {
+    "results": [
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/2312",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "62",
+          "costMicros": "130000000"
+        },
+        "segments": {
+          "date": "2024-06-01"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "61",
+          "costMicros": "422000000"
+        },
+        "segments": {
+          "date": "2024-06-01"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "14",
+          "costMicros": "2352000000"
+        },
+        "segments": {
+          "date": "2024-06-02"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "214",
+          "costMicros": "23525000000"
+        },
+        "segments": {
+          "date": "2024-06-03"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "12",
+          "costMicros": "235325000000"
+        },
+        "segments": {
+          "date": "2024-06-04"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "1245",
+          "costMicros": "5325000000"
+        },
+        "segments": {
+          "date": "2024-06-05"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "213",
+          "costMicros": "1000000"
+        },
+        "segments": {
+          "date": "2024-06-06"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/1524",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "125",
+          "costMicros": "23000000"
+        },
+        "segments": {
+          "date": "2024-06-07"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "61",
+          "costMicros": "276000000"
+        },
+        "segments": {
+          "date": "2024-06-01"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "14",
+          "costMicros": "2352000000"
+        },
+        "segments": {
+          "date": "2024-06-02"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "214",
+          "costMicros": "23525000000"
+        },
+        "segments": {
+          "date": "2024-06-03"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "12",
+          "costMicros": "235325000000"
+        },
+        "segments": {
+          "date": "2024-06-04"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "1245",
+          "costMicros": "5325000000"
+        },
+        "segments": {
+          "date": "2024-06-05"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "213",
+          "costMicros": "1000000"
+        },
+        "segments": {
+          "date": "2024-06-06"
+        }
+      },
+      {
+        "campaign": {
+          "resourceName": "customers/12342141/campaigns/321",
+          "name": "Test "
+        },
+        "metrics": {
+          "clicks": "125",
+          "costMicros": "23000000"
+        },
+        "segments": {
+          "date": "2024-06-07"
+        }
+      }
+    ],
+    "fieldMask": "metrics.clicks,metrics.costMicros,segments.date",
+    "requestId": "V_YzUHhkv35zqntpPk9byg",
+    "queryResourceConsumption": "322"
+  }]
+        '
+    ];
+});
