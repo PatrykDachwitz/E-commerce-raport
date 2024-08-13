@@ -26,7 +26,7 @@ class GoogleAdwordsApi extends AdwordsApi
 
     private function getBodyQueryAccountVariant(string $startDate, string $lastDate) : string {
         $query = [
-            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date,  FROM customer WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
+            "query" => "SELECT metrics.clicks, metrics.cost_micros, segments.date  FROM customer WHERE segments.date >= '{$lastDate}' AND segments.date <= '{$startDate}'"
         ];
 
         return json_encode($query);
@@ -209,18 +209,53 @@ class GoogleAdwordsApi extends AdwordsApi
 
         return $nameConvert[1];
     }
-    private function mergeResultApiWithAdditional(array $mainResponse, array $additional, array $availableIdCampaigns) : array {
+    private function mergeResultApiWithAdditional(array|null $mainResponse, array $additional, array $availableIdCampaigns) : array {
 
-        foreach ($additional as $data) {
-            $id = $this->getIdCampaign($data['campaign']['resourceName']);
 
-            if (in_array($id, $availableIdCampaigns)) {
+        if (is_null($mainResponse)) {
+            foreach ($additional as $data) {
+                $id = $this->getIdCampaign($data['campaign']['resourceName']);
                 $dateSearch = $data['segments']['date'];
 
-                foreach ($mainResponse as $key => $mainData) {
-                    if ($mainData['segments']['date'] === $dateSearch) {
-                        $mainResponse[$key]['metrics']['clicks'] = intval($mainResponse[$key]['metrics']['clicks']) + intval($data['metrics']['clicks']);
-                        $mainResponse[$key]['metrics']['costMicros'] = intval($mainResponse[$key]['metrics']['costMicros']) + intval($data['metrics']['costMicros']);
+                if (in_array($id, $availableIdCampaigns)) {
+                    $isset = false;
+                    if (is_null($mainResponse)) {
+                        $mainResponse[] = $data;
+                        $isset = true;
+                    }
+                    else {
+                        foreach ($mainResponse as $key => $item) {
+                            if ($item['segments']['date'] === $dateSearch) {
+                                $isset = true;
+                                $mainResponse[$key]['metrics']['clicks'] = intval($mainResponse[$key]['metrics']['clicks']) + intval($data['metrics']['clicks']);
+                                $mainResponse[$key]['metrics']['costMicros'] = intval($mainResponse[$key]['metrics']['costMicros']) + intval($data['metrics']['costMicros']);
+                            }
+                        }
+                    }
+
+                    if ($isset === false) $mainResponse[] = $data;
+                }
+
+
+            }
+          //  dd($mainResponse);
+        } else {
+
+            foreach ($additional as $data) {
+                $id = $this->getIdCampaign($data['campaign']['resourceName']);
+
+                if (in_array($id, $availableIdCampaigns)) {
+                    $dateSearch = $data['segments']['date'];
+
+                    if (is_null($mainResponse)) {
+                       } else {
+                        foreach ($mainResponse as $key => $mainData) {
+                            if ($mainData['segments']['date'] === $dateSearch) {
+                                $mainResponse[$key]['metrics']['clicks'] = intval($mainResponse[$key]['metrics']['clicks']) + intval($data['metrics']['clicks']);
+                                $mainResponse[$key]['metrics']['costMicros'] = intval($mainResponse[$key]['metrics']['costMicros']) + intval($data['metrics']['costMicros']);
+                            }
+                        }//$this->isCurrentTimeInRange($data['segments']['date'])
+
                     }
                 }
             }
@@ -230,7 +265,7 @@ class GoogleAdwordsApi extends AdwordsApi
     }
     private function downloadResultApi(Country $country, string $currentDate, string $lastDate) : array|null {
         $resultApi = $this->connectApi($country[$this->nameAdwordsColumn], $currentDate, $lastDate);
-
+       // dd($resultApi);
         if (!is_null($country->google_additional_campaign)) {
             $accountInfo = $this->getAccountWithIdCampaign($country->google_additional_campaign);
             $additionalResultApi = $this->connectApi($accountInfo['account'], $currentDate, $lastDate, false);

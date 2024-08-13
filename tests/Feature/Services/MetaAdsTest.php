@@ -1836,7 +1836,7 @@ describe("Testing response api for many date with correct data", function () {
 
 
 describe('Testing variant country with 2 account', function () {
-    it("Testing correct calculate with cost conversion", function (
+    it("Testing correct calculate", function (
         string $currentDateResponseApi,
         string $oneDayResponseApi,
         string $secondDayResponseApi,
@@ -2016,4 +2016,475 @@ describe('Testing variant country with 2 account', function () {
             ->toMatchArray($metaData);
 
     })->with('metaAdsTemplateDataForCurrentDay', 'metaAdsTemplateDataForOneDay', 'metaAdsTemplateDataForSecondDay', 'responseNbpApi', "metaAdsTemplateDataForJuneResponseApi", 'metaAdsTemplateDataForCurrentDayForVariantDoubleAccount', 'metaAdsTemplateDataForOneDayForVariantDoubleAccount', 'metaAdsTemplateDataForSecondDayForVariantDoubleAccount');
+
+    it("Testing calculate for empty response", function () {
+
+        Http::fake([
+            "http://api.nbp.pl/api/exchangerates/tables/A/" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+        ]);
+
+
+        $dataPerDates = [
+            "2024-05-22"=> ['click'=>0,'cost'=>0],
+            "2024-05-23"=> ['click'=>0,'cost'=>0],
+            "2024-05-24"=> ['click'=>0,'cost'=>0],
+            "2024-05-25"=> ['click'=>0,'cost'=>0],
+            "2024-05-26"=> ['click'=>0,'cost'=>0],
+            "2024-05-27"=> ['click'=>0,'cost'=>0],
+            "2024-05-28"=> ['click'=>0,'cost'=>0],
+            "2024-05-29"=> ['click'=>0,'cost'=>0],
+            "2024-05-30"=> ['click'=>0,'cost'=>0],
+            "2024-05-31"=> ['click'=>0,'cost'=>0],
+            "2024-06-01"=> ['click'=>0,'cost'=>0],
+            "2024-06-02"=> ['click'=>0,'cost'=>0],
+            "2024-06-03"=> ['click'=>0,'cost'=>0],
+            "2024-06-04"=> ['click'=>0,'cost'=>0],
+            "2024-06-05"=> ['click'=>0,'cost'=>0],
+            "2024-06-06"=> ['click'=>0,'cost'=>0],
+            "2024-06-07"=> ['click'=>0,'cost'=>0],
+            "2024-06-08"=> ['click'=>0,'cost'=>0],
+            "2024-06-09"=> ['click'=>0,'cost'=>0],
+            "2024-06-10"=> ['click'=>0,'cost'=>0],
+            "2024-06-11"=> ['click'=>0,'cost'=>0],
+            "2024-06-12"=> ['click'=>0,'cost'=>0],
+            "2024-06-13"=> ['click'=>0,'cost'=>0],
+            "2024-06-14"=> ['click'=>0,'cost'=>0],
+            "2024-06-15"=> ['click'=>0,'cost'=>0],
+            "2024-06-16"=> ['click'=>0,'cost'=>0],
+            "2024-06-17"=> ['click'=>0,'cost'=>0],
+            "2024-06-18"=> ['click'=>0,'cost'=>0],
+            "2024-06-19"=> ['click'=>0,'cost'=>0],
+            "2024-06-20"=> ['click'=>0,'cost'=>0],
+            "2024-06-21"=> ['click'=>0,'cost'=>0]
+        ];
+
+
+        $metaAds = new MetaAdsApi(new CoursePLN());
+
+        $metaData = [
+            'click' => [
+                'current' => 0,
+                "summaryWithoutCurrent" => 0,
+                "avgWithoutCurrent" => 0,
+                "avgComparisonWithoutCurrent" => 0,
+                "minWithoutCurrent" => 0,
+                "maxWithoutCurrent" => 0,
+            ],
+            "budget" => [
+                'current' => 0,
+                "avgComparisonWithoutCurrent" => 0,
+                "summaryWithoutCurrent" => 0,
+                "avgWithoutCurrent" => 0,
+                "minWithoutCurrent" => 0,
+                "maxWithoutCurrent" => 0,
+                "spentBudgetFromBeginningOfMonth" => 0,
+                "budgetMonthly" => 9000,
+                "percentSpentBudgetMonthlyCurrentDay" => 0,
+            ],
+            "dates" => $dataPerDates,
+            "dataByRangesWithoutCurrent" => [
+                "2024-05-22_2024-05-22"=> ['click'=>0,'spend'=>0],
+                "2024-05-23_2024-05-23"=> ['click'=>0,'spend'=>0],
+                "2024-05-24_2024-05-24"=> ['click'=>0,'spend'=>0],
+                "2024-05-25_2024-05-25"=> ['click'=>0,'spend'=>0],
+                "2024-05-26_2024-05-26"=> ['click'=>0,'spend'=>0],
+                "2024-05-27_2024-05-27"=> ['click'=>0,'spend'=>0],
+                "2024-05-28_2024-05-28"=> ['click'=>0,'spend'=>0],
+                "2024-05-29_2024-05-29"=> ['click'=>0,'spend'=>0],
+                "2024-05-30_2024-05-30"=> ['click'=>0,'spend'=>0],
+                "2024-05-31_2024-05-31"=> ['click'=>0,'spend'=>0],
+                "2024-06-01_2024-06-01"=> ['click'=>0,'spend'=>0],
+                "2024-06-02_2024-06-02"=> ['click'=>0,'spend'=>0],
+                "2024-06-03_2024-06-03"=> ['click'=>0,'spend'=>0],
+                "2024-06-04_2024-06-04"=> ['click'=>0,'spend'=>0],
+                "2024-06-05_2024-06-05"=> ['click'=>0,'spend'=>0],
+                "2024-06-06_2024-06-06"=> ['click'=>0,'spend'=>0],
+                "2024-06-07_2024-06-07"=> ['click'=>0,'spend'=>0],
+                "2024-06-08_2024-06-08"=> ['click'=>0,'spend'=>0],
+                "2024-06-09_2024-06-09"=> ['click'=>0,'spend'=>0],
+                "2024-06-10_2024-06-10"=> ['click'=>0,'spend'=>0],
+                "2024-06-11_2024-06-11"=> ['click'=>0,'spend'=>0],
+                "2024-06-12_2024-06-12"=> ['click'=>0,'spend'=>0],
+                "2024-06-13_2024-06-13"=> ['click'=>0,'spend'=>0],
+                "2024-06-14_2024-06-14"=> ['click'=>0,'spend'=>0],
+                "2024-06-15_2024-06-15"=> ['click'=>0,'spend'=>0],
+                "2024-06-16_2024-06-16"=> ['click'=>0,'spend'=>0],
+                "2024-06-17_2024-06-17"=> ['click'=>0,'spend'=>0],
+                "2024-06-18_2024-06-18"=> ['click'=>0,'spend'=>0],
+                "2024-06-19_2024-06-19"=> ['click'=>0,'spend'=>0],
+                "2024-06-20_2024-06-20"=> ['click'=>0,'spend'=>0],
+                "current"=> ['click'=>0,'spend'=>0]
+            ]
+        ];
+
+        $country = Country::find(5);
+        expect($metaAds->get("2024-06-21", "2024-05-22", $country))
+            ->toMatchArray($metaData);
+
+    });
+
+    it("Testing calculate with empty data for subaccount", function (
+        string $currentDateResponseApi,
+        string $oneDayResponseApi,
+        string $secondDayResponseApi,
+        string $responseNbp,
+        string $summarySpendBudgetMeta,
+    ) {
+
+        Http::fake([
+            "http://api.nbp.pl/api/exchangerates/tables/A/" => Http::response($responseNbp),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response($secondDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response($oneDayResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response($currentDateResponseApi),
+            "https://graph.facebook.com/v20.0/act_123123123/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-21" => Http::response($summarySpendBudgetMeta),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-22&time_range%5Buntil%5D=2024-05-22" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-23&time_range%5Buntil%5D=2024-05-23" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-24&time_range%5Buntil%5D=2024-05-24" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-25&time_range%5Buntil%5D=2024-05-25" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-26&time_range%5Buntil%5D=2024-05-26" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-27&time_range%5Buntil%5D=2024-05-27" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-28&time_range%5Buntil%5D=2024-05-28" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-29&time_range%5Buntil%5D=2024-05-29" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-30&time_range%5Buntil%5D=2024-05-30" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-05-31&time_range%5Buntil%5D=2024-05-31" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-01&time_range%5Buntil%5D=2024-06-01" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-02&time_range%5Buntil%5D=2024-06-02" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-03&time_range%5Buntil%5D=2024-06-03" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-04&time_range%5Buntil%5D=2024-06-04" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-05&time_range%5Buntil%5D=2024-06-05" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-06&time_range%5Buntil%5D=2024-06-06" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-07&time_range%5Buntil%5D=2024-06-07" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-08&time_range%5Buntil%5D=2024-06-08" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-09&time_range%5Buntil%5D=2024-06-09" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-10&time_range%5Buntil%5D=2024-06-10" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-11&time_range%5Buntil%5D=2024-06-11" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-12&time_range%5Buntil%5D=2024-06-12" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-13&time_range%5Buntil%5D=2024-06-13" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-14&time_range%5Buntil%5D=2024-06-14" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-15&time_range%5Buntil%5D=2024-06-15" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-16&time_range%5Buntil%5D=2024-06-16" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-17&time_range%5Buntil%5D=2024-06-17" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-18&time_range%5Buntil%5D=2024-06-18" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-19&time_range%5Buntil%5D=2024-06-19" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-20&time_range%5Buntil%5D=2024-06-20" => Http::response(""),
+            "https://graph.facebook.com/v20.0/act_1231231231/insights?fields=clicks,spend&action_attribution_windows=%5B'7d_click','1d_view'%5D&time_range%5Bsince%5D=2024-06-21&time_range%5Buntil%5D=2024-06-21" => Http::response(""),
+        ]);
+
+
+        $dataPerDates = [
+            "2024-05-22"=> ['click'=>200,'cost'=>180],
+            "2024-05-23"=> ['click'=>450,'cost'=>280],
+            "2024-05-24"=> ['click'=>200,'cost'=>180],
+            "2024-05-25"=> ['click'=>450,'cost'=>280],
+            "2024-05-26"=> ['click'=>200,'cost'=>180],
+            "2024-05-27"=> ['click'=>450,'cost'=>280],
+            "2024-05-28"=> ['click'=>200,'cost'=>180],
+            "2024-05-29"=> ['click'=>450,'cost'=>280],
+            "2024-05-30"=> ['click'=>200,'cost'=>180],
+            "2024-05-31"=> ['click'=>450,'cost'=>280],
+            "2024-06-01"=> ['click'=>200,'cost'=>180],
+            "2024-06-02"=> ['click'=>450,'cost'=>280],
+            "2024-06-03"=> ['click'=>200,'cost'=>180],
+            "2024-06-04"=> ['click'=>450,'cost'=>280],
+            "2024-06-05"=> ['click'=>200,'cost'=>180],
+            "2024-06-06"=> ['click'=>450,'cost'=>280],
+            "2024-06-07"=> ['click'=>200,'cost'=>180],
+            "2024-06-08"=> ['click'=>450,'cost'=>280],
+            "2024-06-09"=> ['click'=>200,'cost'=>180],
+            "2024-06-10"=> ['click'=>450,'cost'=>280],
+            "2024-06-11"=> ['click'=>200,'cost'=>180],
+            "2024-06-12"=> ['click'=>450,'cost'=>280],
+            "2024-06-13"=> ['click'=>200,'cost'=>180],
+            "2024-06-14"=> ['click'=>450,'cost'=>280],
+            "2024-06-15"=> ['click'=>200,'cost'=>180],
+            "2024-06-16"=> ['click'=>450,'cost'=>280],
+            "2024-06-17"=> ['click'=>200,'cost'=>180],
+            "2024-06-18"=> ['click'=>450,'cost'=>280],
+            "2024-06-19"=> ['click'=>200,'cost'=>180],
+            "2024-06-20"=> ['click'=>450,'cost'=>280],
+            "2024-06-21"=> ['click'=>204,'cost'=>361]
+        ];
+
+
+        $metaAds = new MetaAdsApi(new CoursePLN());
+
+        $metaData = [
+            'click' => [
+                'current' => 204,
+                "summaryWithoutCurrent" => 9750,
+                "avgWithoutCurrent" => 325,
+                "avgComparisonWithoutCurrent" => -121,
+                "minWithoutCurrent" => 200,
+                "maxWithoutCurrent" => 450,
+            ],
+            "budget" => [
+                'current' => 361,
+                "avgComparisonWithoutCurrent" => 131,
+                "summaryWithoutCurrent" => 6900,
+                "avgWithoutCurrent" => 230,
+                "minWithoutCurrent" => 180,
+                "maxWithoutCurrent" => 280,
+                "spentBudgetFromBeginningOfMonth" => 4961,
+                "budgetMonthly" => 0,
+                "percentSpentBudgetMonthlyCurrentDay" => 100,
+            ],
+            "dates" => $dataPerDates,
+            "dataByRangesWithoutCurrent" => [
+                "2024-05-22_2024-05-22" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-05-23_2024-05-23" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-05-24_2024-05-24" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-05-25_2024-05-25" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-05-26_2024-05-26" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-05-27_2024-05-27" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-05-28_2024-05-28" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-05-29_2024-05-29" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-05-30_2024-05-30" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-05-31_2024-05-31" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-01_2024-06-01" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-02_2024-06-02" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-03_2024-06-03" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-04_2024-06-04" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-05_2024-06-05" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-06_2024-06-06" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-07_2024-06-07" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-08_2024-06-08" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-09_2024-06-09" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-10_2024-06-10" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-11_2024-06-11" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-12_2024-06-12" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-13_2024-06-13" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-14_2024-06-14" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-15_2024-06-15" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-16_2024-06-16" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-17_2024-06-17" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-18_2024-06-18" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "2024-06-19_2024-06-19" =>
+                    [
+                        'click' => 200,
+                        'spend' => 180
+                    ],
+                "2024-06-20_2024-06-20" =>
+                    [
+                        'click' => 450,
+                        'spend' => 280
+                    ],
+                "current" =>
+                    [
+                        'click' => 204,
+                        'spend' => 361
+                    ]
+            ]
+        ];
+
+        $country = Country::find(6);
+        expect($metaAds->get("2024-06-21", "2024-05-22", $country))
+            ->toMatchArray($metaData);
+
+    })->with('metaAdsTemplateDataForCurrentDay', 'metaAdsTemplateDataForOneDay', 'metaAdsTemplateDataForSecondDay', 'responseNbpApi', 'metaAdsTemplateDataForJuneResponseApi');
+
 });
