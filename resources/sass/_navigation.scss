@@ -1,19 +1,38 @@
 .navigation {
     z-index: 10;
+    position: relative;
     background-color: $dark;
-    border-right: 2px solid $grey;
+    @media (min-width: 768px) {
+        border-right: 2px solid $grey;
+    }
     &__logo {
 
     }
     &__header {
-        text-transform: uppercase;
-        color: $grey-dark;
-        font-weight: 600;
-        letter-spacing: 1.3px;
-        font-size: 1em;
+        @media (max-width: 768px) {
+            border-bottom: 1px solid $grey;
+        }
+
     }
+
+    &__menu {
+        @media (max-width: 768px) {
+            position: absolute;
+            min-width: 100%;
+            background-color: $dark;
+            z-index: 15 !important;
+        }
+    }
+
     &__list {
         list-style: none;
+        &--header {
+            text-transform: uppercase;
+            color: $grey-dark;
+            font-weight: 600;
+            letter-spacing: 1.3px;
+            font-size: 1em;
+        }
     }
     &__subsection {
         color: $white;

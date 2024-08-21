@@ -9,7 +9,7 @@
     <title>{{ config('app.name') }}</title>
 </head>
 <body>
-<div id="app" class="dashboard d-flex"></div>
+<div id="app" class="dashboard d-flex flex-column flex-md-row"></div>
 
 <div style="display: none" data-lang-content>
 @json(__('content'))

@@ -3,7 +3,15 @@ export function changePositionTableHeader(classTarget, scrollYTargetClass, first
     const targetElement = document.querySelector(`.${classTarget}`);
     const targetElementHeight = targetElement.offsetHeight;
     const parentElement = targetElement.parentElement;
-    const menuWidth = document.querySelector("#app > nav").offsetWidth;
+    const menu = {
+        width: 0
+    }
+
+    if (window.screen.width > 768) {
+        menu.width = document.querySelector("#app > nav").offsetWidth;
+    }
+
+
     let additionalSizeInLeftReport = 0;
     parentElement.addEventListener('scroll', e => {
 
@@ -22,18 +30,16 @@ export function changePositionTableHeader(classTarget, scrollYTargetClass, first
         }
 
         if (parentElement.scrollLeft > 0) {
-            if (parentElement.scrollLeft > menuWidth) {
-                console.log("test1");
-                let newWidth = parentElement.scrollLeft - menuWidth;
+            if (parentElement.scrollLeft > menu.width) {
+
+                let newWidth = parentElement.scrollLeft - menu.width;
                 targetElement.style.left = `-${newWidth}px`;
             } else {
-                console.log('test3');
-                let newWidth = menuWidth - (parentElement.scrollLeft);
+                let newWidth = menu.width - (parentElement.scrollLeft);
                 targetElement.style.left = `${newWidth}px`;
             }
         } else {
-            console.log("test4")
-            targetElement.style.left = `${menuWidth}px`;
+            targetElement.style.left = `${menu.width}px`;
         }
     })
 }

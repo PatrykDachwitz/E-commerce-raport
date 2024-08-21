@@ -20,7 +20,10 @@ body {
         overflow-x: hidden;
     }
     &__navigation {
-        flex: 220px 0;
+        @media only screen and (min-width: 768px) {
+            flex: 220px 0;
+        }
+
     }
     &__header {
         flex: 50px 0;
