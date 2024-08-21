@@ -8,6 +8,7 @@ use App\Services\Adwords\MetaAdsApi;
 use App\Services\Connection\Shop;
 use App\Services\Currency\CoursePLN;
 use App\Services\Report\Support\AdwordsResult;
+use App\Services\Report\Support\AnalyticsResult;
 use App\Services\Report\Support\ShopResult;
 use App\Services\Report\ResultDay;
 use App\Services\ShopSales;
@@ -145,7 +146,7 @@ test('Verification work services Report result Day with good response api', func
 
     $reportDay = new ResultDay(
         new Country(),
-        new AnalyticsApi(),
+        new AnalyticsResult(new AnalyticsApi()),
         new MetaAdsApi(new CoursePLN()),
         new AdwordsResult(),
         new ShopResult(
@@ -200,7 +201,7 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 3704
                 ],
                 'minValueLast30Day' => [
-                    'value' => 9
+                    'value' => 0
                 ],
                 'maxValueLast30Day' => [
                     'value' => 100000
@@ -340,7 +341,7 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 64
                 ],
                 'minValueLast30Day' => [
-                    'value' => 12
+                    'value' => 0
                 ],
                 'maxValueLast30Day' => [
                     'value' => 1900
@@ -1041,10 +1042,10 @@ test('Verification work services Report result Day with good response api', func
                     'value' => 3768
                 ],
                 'minValueLast30Day' => [
-                    'value' => 21
+                    'value' => 0
                 ],
                 'maxValueLast30Day' => [
-                    'value' => 101900
+                    'value' => 100012
                 ]
             ],
 
@@ -1142,6 +1143,8 @@ test('Verification work services Report result Day with good response api', func
             ]
         ]
     ];
+
+
 
 
     expect(

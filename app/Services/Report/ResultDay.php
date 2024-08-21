@@ -7,12 +7,9 @@ use App\Services\Adwords\AnalyticsApi;
 use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
 use App\Services\Report\Support\AdwordsResult;
+use App\Services\Report\Support\AnalyticsResult;
 use App\Services\Report\Support\ShopResult;
-use App\Services\ShopSales;
-use Illuminate\Database\Eloquent\Collection;
-use PHPUnit\Exception;
 
-///Jęzeli brak danych to zrami zapisać co jeśl pojawi siębład kodu httpt lub brak wartosci albo dzepsuty plk
 class ResultDay
 {
 
@@ -20,14 +17,14 @@ class ResultDay
     private MetaAdsApi $metaAdsApi;
     private AdwordsResult $adwordsResult;
     private array $datesReport;
-    private AnalyticsApi $analyticsApi;
+    private AnalyticsResult $analyticsResult;
     private ShopResult $shopResult;
     private GoogleAdwordsApi $googleAdwordsApi;
 
-    public function __construct(Country $country, AnalyticsApi $analyticsApi, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi)
+    public function __construct(Country $country, AnalyticsResult $analyticsResult, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi)
     {
         $this->country = $country;
-        $this->analyticsApi = $analyticsApi;
+        $this->analyticsResult = $analyticsResult;
         $this->metaAdsApi = $metaAdsApi;
         $this->adwordsResult = $adwordsResult;
         $this->shopResult = $shopResult;
@@ -54,122 +51,6 @@ class ResultDay
         return $this->datesReport;
     }
 
-    private function returnFormatAnalytics(array|null $dataAnalytics) : array {
-        if (is_null($dataAnalytics)) {
-            return [
-                'countClick' => [
-                    'value' => 0
-                ],
-                'avgComparison' => [
-                    'value' => 0
-                ],
-                'avgLast30Day' => [
-                    'value' => 0
-                ],
-                'minValueLast30Day' => [
-                    'value' => 0
-                ],
-                'maxValueLast30Day' => [
-                    'value' => 0
-                ],
-                'summaryWithoutCurrent' => [
-                    'value' => 0
-                ]
-            ];
-
-        } else {
-
-            $avg = intval($dataAnalytics['avgWithoutCurrent']);
-
-            return [
-                'countClick' => [
-                    'value' => intval($dataAnalytics['current'])
-                ],
-                'avgComparison' => [
-                    'value' => intval($dataAnalytics['current']) - $avg
-                ],
-                'avgLast30Day' => [
-                    'value' => $avg
-                ],
-                'minValueLast30Day' => [
-                    'value' => intval($dataAnalytics['minWithoutCurrent'])
-                ],
-                'maxValueLast30Day' => [
-                    'value' => intval($dataAnalytics['maxWithoutCurrent'])
-                ],
-                'summaryWithoutCurrent' => [
-                    'value' => intval($dataAnalytics['summaryWithoutCurrent'])
-                ]
-            ];
-
-        }
-
-    }
-
-    private function calculateSummaryAnalytics(array $resultsAnalytics) : array {
-
-        $result = [
-            'countClick' => [
-                'value' => 0
-            ],
-            'avgComparison' => [
-                'value' => 0
-            ],
-            'avgLast30Day' => [
-                'value' => 0
-            ],
-            'minValueLast30Day' => [
-                'value' => 0
-            ],
-            'maxValueLast30Day' => [
-                'value' => 0
-            ],
-            'summaryWithoutCurrent' => [
-                'value' => 0
-            ]
-        ];
-
-        foreach ($resultsAnalytics as $key => $resultAnalytics) {
-            $result['countClick']['value'] += $resultAnalytics['countClick']['value'];
-            $result['minValueLast30Day']['value'] += $resultAnalytics['minValueLast30Day']['value'];
-            $result['maxValueLast30Day']['value'] += $resultAnalytics['maxValueLast30Day']['value'];
-            $result['summaryWithoutCurrent']['value'] += $resultAnalytics['summaryWithoutCurrent']['value'];
-            unset($resultsAnalytics[$key]['summaryWithoutCurrent']);
-        }
-
-        $result['avgLast30Day']['value'] = intval($result['summaryWithoutCurrent']['value'] / 30);
-        $result['avgComparison']['value'] = intval($result['countClick']['value'] - $result['avgLast30Day']['value']);
-        unset($result["summaryWithoutCurrent"]);
-
-        $resultsAnalytics['summary'] = $result;
-
-        return $resultsAnalytics;
-    }
-    private function getAnalyticsResult(Collection $activesCountry) : array {
-        $currentDate = str_replace("-","", $this->datesReport['current']);
-        $response = [];
-
-        foreach ($activesCountry as $country) {
-
-            if (is_null($country->analytics)) {
-                $response[$country->id] = $this->returnFormatAnalytics(null);
-                continue;
-            }
-            $this->analyticsApi
-                ->setCountry($country);
-
-            $this->analyticsApi
-                ->setDateCurrent($currentDate);
-
-            $resultAnalytics = $this->analyticsApi
-                ->get($this->datesReport['last'], $this->datesReport['current']);
-
-            $response[$country->id] = $this->returnFormatAnalytics($resultAnalytics);
-        }
-
-        return $this->calculateSummaryAnalytics($response);
-    }
-
     public function get(string $date) : array {
         $this->createDatesByCountPreviousDay($date);
 
@@ -181,7 +62,8 @@ class ResultDay
             ->active()
             ->get();
 
-        $analyticsResult = $this->getAnalyticsResult($activesCountry);
+        $analyticsResult = $this->analyticsResult->get($activesCountry, $this->datesReport);
+
         $facebookResults = $this->adwordsResult->getResult($activesCountry, $this->metaAdsApi, $this->datesReport['current'], $this->datesReport['last']);
         $googleResults = $this->adwordsResult->getResult($activesCountry, $this->googleAdwordsApi, $this->datesReport['current'], $this->datesReport['last']);
 

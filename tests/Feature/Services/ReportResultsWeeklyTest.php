@@ -9,6 +9,7 @@ use App\Services\Adwords\MetaAdsApi;
 use App\Services\Connection\Shop;
 use App\Services\Currency\CoursePLN;
 use App\Services\Report\Support\AdwordsResult;
+use App\Services\Report\Support\AnalyticsResult;
 use App\Services\Report\Support\ShopResult;
 use App\Services\Report\ResultWeekly;
 use App\Services\ShopSales;
@@ -1577,7 +1578,7 @@ it('Verification response Weekly report with current data', function(
 
      $reportWeekly = new ResultWeekly(
          new Country(),
-         new AnalyticsApi(),
+         new AnalyticsResult(new AnalyticsApi()),
          new MetaAdsApi(new CoursePLN()),
          new AdwordsResult(),
          new ShopResult(

@@ -27,6 +27,23 @@ describe('Test services with query in 200 status', function () {
         $responseData = $analytics->get("2024-06-11", "2024-06-14");
 
 
+        $dataByRanges = [
+            '2024-06-11_2024-06-11' => [
+                'click' => 10,
+            ],
+            '2024-06-12_2024-06-12' => [
+                'click' => 1011,
+            ],
+            '2024-06-13_2024-06-13' => [
+                'click' => 101,
+            ],
+            'current' => [
+                'click' => 2,
+            ]
+        ];
+
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
         expect($responseData)
             ->toHaveKeys([
                 'current',
@@ -53,6 +70,72 @@ describe('Test services with query in 200 status', function () {
             ->toBe(374);
         expect($responseData['minWithoutCurrent'])
             ->toBe(10);
+        expect($responseData['maxWithoutCurrent'])
+            ->toBe(1011);
+
+    })->with('properties-account', 'analyticsResponse');
+
+    it("Verification of correct segregation of the number of clicks for One Country with deficited data", function (string $propertiesAccount, string $responseApi) {
+        $country = Country::factory()->create([
+            'analytics' => $propertiesAccount
+        ]);
+
+        Http::fake([
+            "https://analyticsdata.googleapis.com/v1beta/properties/{$propertiesAccount}:runReport" => Http::response($responseApi)
+        ]);
+        $analytics = new AnalyticsApi();
+        $analytics->setCountry($country);
+        $analytics->setDateCurrent("20240614");
+
+        $responseData = $analytics->get("2024-06-10", "2024-06-14");
+
+
+        $dataByRanges = [
+            '2024-06-10_2024-06-10' => [
+                'click' => 0,
+            ],
+            '2024-06-11_2024-06-11' => [
+                'click' => 10,
+            ],
+            '2024-06-12_2024-06-12' => [
+                'click' => 1011,
+            ],
+            '2024-06-13_2024-06-13' => [
+                'click' => 101,
+            ],
+            'current' => [
+                'click' => 2,
+            ]
+        ];
+
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
+        expect($responseData)
+            ->toHaveKeys([
+                'current',
+                "min",
+                "avg",
+                "max",
+                "summaryWithoutCurrent",
+                "avgWithoutCurrent",
+                "minWithoutCurrent",
+                "maxWithoutCurrent",
+            ]);
+
+        expect($responseData['current'])
+            ->toBe(2);
+        expect($responseData['min'])
+            ->toBe(0);
+        expect($responseData['max'])
+            ->toBe(1011);
+        expect($responseData['avg'])
+            ->toBe(224);
+        expect($responseData['summaryWithoutCurrent'])
+            ->toBe(1122);
+        expect($responseData['avgWithoutCurrent'])
+            ->toBe(280);
+        expect($responseData['minWithoutCurrent'])
+            ->toBe(0);
         expect($responseData['maxWithoutCurrent'])
             ->toBe(1011);
 
@@ -99,6 +182,20 @@ describe('Test services with query in 200 status', function () {
         $responseData = $analytics->get("2024-06-12", "2024-06-14");
 
 
+        $dataByRanges = [
+            '2024-06-12_2024-06-12' => [
+                'click' => 0,
+            ],
+            '2024-06-13_2024-06-13' => [
+                'click' => 0,
+            ],
+            'current' => [
+                'click' => 0,
+            ]
+        ];
+
+        expect($responseData['dataByRangesWithoutCurrent'])
+            ->toMatchArray($dataByRanges);
         expect($responseData)
             ->toHaveKeys([
                 'current',

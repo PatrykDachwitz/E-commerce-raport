@@ -69,68 +69,30 @@ class AnalyticsApi
             'minWithoutCurrent' => $rowExists ? null : 0,
         ];
     }
-    private function calculateData(array $data) : array {
 
-        $responseParams = $this->getStructureNeedData();
 
-        foreach ($data['rows'] as $row) {
+    public function get(string $startDate, string $currentDay) : array {
 
-            $valueEvent = intval($row['metricValues'][0]['value']);
-            $responseParams['count'] += $valueEvent;
+        $responseApi = $this->connectApi($startDate, $currentDay);
+        $this->setRangesDateBetween($currentDay, $startDate);
 
-            if ($row['dimensionValues'][0]['value'] === $this->dateCurrent) {
-                $responseParams['current'] = $valueEvent;
-            } else {
-                $responseParams['summaryWithoutCurrent'] += $valueEvent;
-                if (is_null($responseParams['minWithoutCurrent']) | $responseParams['minWithoutCurrent'] > $valueEvent) {
-                    $responseParams['minWithoutCurrent'] = $valueEvent;
-                }
-
-                if (is_null($responseParams['maxWithoutCurrent']) | $responseParams['maxWithoutCurrent'] < $valueEvent) {
-                    $responseParams['maxWithoutCurrent'] = $valueEvent;
-                }
-            }
-
-            if (is_null($responseParams['min']) | $responseParams['min'] > $valueEvent) {
-                $responseParams['min'] = $valueEvent;
-            }
-
-            if (is_null($responseParams['max']) | $responseParams['max'] < $valueEvent) {
-                $responseParams['max'] = $valueEvent;
-            }
-        }
-
-        return $responseParams;
-    }
-
-    private function getCountDayInDate(string $startDate, string $endDate, int $addDay) : int {
-        $startTime = strtotime($startDate);
-        $endTime = strtotime($endDate);
-
-        return intval(($endTime - $startTime) / (60 * 60 * 24) + $addDay);
-    }
-
-    private function avg(int|float $count, string $startDate, string $endDate, bool $withCurrentDay = false) : int | float {
-        if (!$withCurrentDay) $addDay = 0;
-        else $addDay = 1;
-
-        $countDay = $this->getCountDayInDate($startDate, $endDate, $addDay);
-
-        if ($count === 0 | is_null($count)) return 0;
-        else return ($count / $countDay);
-    }
-    public function get(string $startDate, string $endDate) : array {
-        $responseApi = $this->connectApi($startDate, $endDate);
-
-        if (!isset($responseApi['rows'])) {
-            $calculateData = $this->getStructureNeedData(false);
+        if (isset($responseApi['rows'])) {
+            $groupResponseApi = $this->groupResultApiByRangesDate($responseApi);
+            $calculateData = $this->calculateDataGroupResponse($groupResponseApi);
+            $countRows = count($this->rangesDate);
+            $calculateData['avg'] = intval(($calculateData['summaryWithoutCurrent'] + $calculateData['current']) / $countRows);
+            //-1 Count because is avg without date ranges "current"
+            $calculateData['avgWithoutCurrent'] = intval($calculateData['summaryWithoutCurrent'] / ($countRows - 1));
         } else {
-            $calculateData = $this->calculateData($responseApi);
+
+            $calculateData = $this->getStructureNeedData(false);
+            $calculateData['avg'] = 0;
+            $calculateData['avgWithoutCurrent'] = 0;
+            $this->setClickToRangesEmptyResponse();
         }
 
-        $calculateData['avg'] = $this->avg($calculateData['count'], $startDate, $endDate, true);
-        $calculateData['avgWithoutCurrent'] = $this->avg($calculateData['summaryWithoutCurrent'], $startDate, $endDate);
 
+        $calculateData['dataByRangesWithoutCurrent'] = $this->clickToRangesDate;
         return $calculateData;
     }
 
@@ -189,12 +151,31 @@ class AnalyticsApi
 
         return $responseKey;
     }
-    private function setRangesDate(array $currentDate, array $otherRangesDate) : void {
+    private function setRangesDateByRanges(array $currentDate, array $otherRangesDate) : void {
 
         $this->rangesDate = array_merge([
             "current" => $currentDate
         ], $otherRangesDate);
+    }
 
+    private function setRangesDateBetween(string $currentDate, string $firstDay) : void {
+        $this->rangesDate = [];
+        $oneDayInSecond = 24 * 60 * 60;
+        $currentReportTime = strtotime($currentDate);
+
+        for ($time = strtotime($firstDay); $time < $currentReportTime; $time += $oneDayInSecond) {
+            $date = date("Y-m-d", $time);
+
+            $this->rangesDate[] = [
+                'start' => $date,
+                'end' => $date
+            ];
+        }
+
+        $this->rangesDate['current'] = [
+            'start' => $currentDate,
+            'end' => $currentDate
+        ];
     }
 
     private function completeDataRangesWhenNotHaveDataApi(array $data) :array {
@@ -206,24 +187,27 @@ class AnalyticsApi
 
         return $data;
     }
-    private function groupResultApiByRangesDate(array $data, array $currentDate, array $otherDate) : array {
+    private function groupResultApiByRangesDate(array $data) : array {
         $response = [];
-        $this->setRangesDate($currentDate, $otherDate);
 
         foreach ($data['rows'] as $row) {
-            $keyDate = $this->getKeyRangesDate($row['dimensionValues'][0]['value']);
+
+            $date = $row['dimensionValues'][0]['value'];
+            $click = intval($row['metricValues'][0]['value']);
+            $keyDate = $this->getKeyRangesDate($date);
 
             if(is_null($keyDate)) continue;
 
             if (!isset($response[$keyDate])) {
-                $response[$keyDate] = intval($row['metricValues'][0]['value']);
+                $response[$keyDate] = $click;
             } else {
-                $response[$keyDate] += intval($row['metricValues'][0]['value']);
+                $response[$keyDate] += $click;
             }
         }
 
         return $this->completeDataRangesWhenNotHaveDataApi($response);
     }
+
 
     private function getDateByKeyDateRanges(int $key) : string {
         return "{$this->rangesDate[$key]['start']}_{$this->rangesDate[$key]['end']}";
@@ -271,10 +255,11 @@ class AnalyticsApi
         return $responseParams;
     }
 
-    private function setClickToRangesEmptyResponse(array $otherRangeDates) : void {
+    private function setClickToRangesEmptyResponse() : void {
         $this->clickToRangesDate["current"]['click'] = 0;
 
-        foreach ($otherRangeDates as $date) {
+        foreach ($this->rangesDate as $key => $date) {
+            if ($key === "current") continue;
             $keyName = "{$date['start']}_{$date['end']}";
             $this->clickToRangesDate[$keyName]['click'] = 0;
         }
@@ -282,11 +267,11 @@ class AnalyticsApi
 
     public function getWithManyRangesDate(array $currentRangeDate, array $otherRangeDates) : array {
         $date = $this->getNewestAndOldestDate($currentRangeDate, $otherRangeDates);
-
         $responseApi = $this->connectApi($date['oldest'], $date['newest']);
+        $this->setRangesDateByRanges($currentRangeDate, $otherRangeDates);
 
         if (isset($responseApi['rows'])) {
-            $groupResponseApi = $this->groupResultApiByRangesDate($responseApi, $currentRangeDate, $otherRangeDates);
+            $groupResponseApi = $this->groupResultApiByRangesDate($responseApi);
             $calculateData = $this->calculateDataGroupResponse($groupResponseApi);
             $countRows = count($this->rangesDate);
             $calculateData['avg'] = intval(($calculateData['summaryWithoutCurrent'] + $calculateData['current']) / $countRows);
@@ -296,7 +281,7 @@ class AnalyticsApi
             $calculateData = $this->getStructureNeedData(false);
             $calculateData['avg'] = 0;
             $calculateData['avgWithoutCurrent'] = 0;
-            $this->setClickToRangesEmptyResponse($otherRangeDates);
+            $this->setClickToRangesEmptyResponse();
         }
 
         $calculateData['dataByRangesWithoutCurrent'] = $this->clickToRangesDate;
