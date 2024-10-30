@@ -20,6 +20,8 @@ class UserPolicy
     public function checkSuperAdmin(User $user) : bool {
         return $user->super_admin;
     }
+
+
     public function viewAny(User $user): bool
     {
         //
@@ -30,7 +32,8 @@ class UserPolicy
      */
     public function view(User $user, user $model): bool
     {
-        //
+        if ($user->super_admin === true || $user->id === $model->id) return true;
+        else return false;
     }
 
     /**

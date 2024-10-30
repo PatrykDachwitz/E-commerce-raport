@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreRequest;
+use App\Models\User;
 use App\Repository\UserRepository as UserRepositoryInterface;
 use App\Repository\Eloquent\UserRepository;
 use Illuminate\Http\Request;
@@ -52,9 +53,16 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        $userSearch = $this->user
+            ->show($id);
+
+        if (Gate::denies('view', $userSearch)) abort(403);
+
+        return response([
+            'data' => $userSearch
+        ]);
     }
 
     /**

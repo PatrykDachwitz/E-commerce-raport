@@ -31,4 +31,10 @@ class UserRepository implements \App\Repository\UserRepository
         return $this->user
             ->destroy($id);
     }
+
+    public function show(int $id)
+    {
+        return $this->user
+            ->findOrFail($id);
+    }
 }

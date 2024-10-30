@@ -183,13 +183,35 @@ describe('Test create user expected Success', function () {
 
 
 describe('User index route', function () {
-   it('Expected list isset User', function () {
+    it('Expected list isset User without super admin permission expected success', function () {
       $users = User::factory()
           ->count(10)
           ->create()
           ->toArray();
 
-      $user = User::factory()->make();
+      $user = User::factory()->make([
+          'super_admin' => false
+      ]);
+
+      $response = actingAs($user)
+       ->getJson(route('user.index'));
+
+      $response->assertOk();
+
+      expect($response->json('data'))
+          ->toMatchArray($users);
+
+   });
+
+    it('Expected list isset User with super admin permission expected success', function () {
+      $users = User::factory()
+          ->count(10)
+          ->create()
+          ->toArray();
+
+      $user = User::factory()->make([
+          'super_admin' => true
+      ]);
 
       $response = actingAs($user)
        ->getJson(route('user.index'));
@@ -292,6 +314,88 @@ describe('User delete route', function () {
         $response->assertStatus(403);
 
         assertDatabaseHas('users', $user);
+
+    });
+
+});
+
+describe('Testing show user route', function () {
+
+    it('Show self details expected success', function () {
+        $user = User::factory()
+            ->create([
+                'super_admin' => false
+            ]);
+
+        $response = actingAs($user)
+            ->getJson(route('user.show', $user->id));
+
+        $response->assertOk();
+
+        expect($response->json('data'))
+            ->toMatchArray($user->toArray());
+    });
+
+
+    it('Show other user without super admin permission expected error 403', function () {
+        $user = User::factory()
+            ->create()
+            ->toArray();
+
+        $userActing = User::factory()
+            ->create([
+                'super_admin' => false
+            ]);
+
+        $response = actingAs($userActing)
+            ->getJson(route('user.show', $user['id']));
+
+        $response->assertStatus(403);
+
+    });
+
+
+    it('Show other user with super admin permission expected success', function () {
+        $user = User::factory()
+            ->create()
+            ->toArray();
+
+        $userActing = User::factory()
+            ->create([
+                'super_admin' => true
+            ]);
+
+        $response = actingAs($userActing)
+            ->getJson(route('user.show', $user['id']));
+
+        $response->assertOk();
+
+        expect($response->json('data'))
+            ->toMatchArray($user);
+    });
+
+    it('Show other user not log in user expected error 401', function () {
+        $user = User::factory()
+            ->create();
+
+
+        $response = getJson(route('user.show', $user->id));
+
+        $response->assertStatus(401);
+
+    });
+
+    it('Show not isset user expected error 404', function () {
+        $user = User::factory()
+            ->create([
+                'super_admin' => true
+            ]);
+
+
+        $response = actingAs($user)
+        ->getJson(route('user.show', ($user->id + 10)));
+
+        $response->assertStatus(404);
 
     });
 

@@ -9,4 +9,6 @@ interface UserRepository
     public function index();
 
     public function destroy(int $id);
+
+    public function show(int $id);
 }
