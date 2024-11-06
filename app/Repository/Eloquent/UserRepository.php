@@ -37,4 +37,18 @@ class UserRepository implements \App\Repository\UserRepository
         return $this->user
             ->findOrFail($id);
     }
+
+    public function update(int $id, array $data)
+    {
+        return $this->user
+            ->where('id', $id)
+            ->update($data);
+    }
+
+    public function setSuperAdmin(int $id, bool $superAdmin) {
+        $user = $this->user->findOrFail($id);
+        $user->super_admin = $superAdmin;
+
+        return $user->save();
+    }
 }

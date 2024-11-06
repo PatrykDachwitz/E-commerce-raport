@@ -7,8 +7,14 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+Route::put('user/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
+    ->middleware('auth:sanctum')
+    ->name('user.superAdmin');
+
 Route::apiResource('user', UserController::class)
     ->middleware('auth:sanctum');
+
 
 Route::group([
     'prefix' => 'report',

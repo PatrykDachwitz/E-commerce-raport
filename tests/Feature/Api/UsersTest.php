@@ -9,6 +9,7 @@ use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 
@@ -399,4 +400,267 @@ describe('Testing show user route', function () {
 
     });
 
+});
+
+describe('Testing update user info', function () {
+
+    it('Update other user not log in user expected error 401', function () {
+        $user = User::factory()
+            ->create();
+
+
+        $response = getJson(route('user.update', ['user' => 1]), ['name' => 'test']);
+
+        $response->assertStatus(401);
+
+    });
+
+    it('Update data self profile expend success', function () {
+        $user = User::factory()
+            ->create([
+                'id' => 10,
+                'super_admin' => false
+            ]);
+        $userExpectData = [
+            'id' => 10,
+            'name' => "test",
+            'email' => "test@wp.pl"
+        ];
+
+        assertDatabaseMissing('users', $userExpectData);
+        /*
+         * 'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'super_admin' => false,
+         */
+
+        $response = actingAs($user)
+            ->putJson(route('user.update', [
+                'user' => 10
+            ]), $userExpectData);
+
+        $response->assertOk();
+        assertDatabaseHas('users', $userExpectData);
+
+    });
+    it('Update data other user without super admin permission expend error http code 403', function () {
+        $user = User::factory()
+            ->create([
+                'id' => 1,
+                'super_admin' => false
+            ]);
+
+        User::factory()->create([
+            'id' => 3
+        ]);
+
+        actingAs($user)
+            ->putJson(route('user.update', [
+                'user' => 3
+            ]), [
+                'name' => "test"
+             ])->assertStatus(403);
+
+    });
+    it('Update data other user with super admin permission expend success', function () {
+        $user = User::factory()
+            ->create([
+                'id' => 1,
+                'super_admin' => true
+            ]);
+        User::factory()->create([
+            'id' => 10
+        ]);
+
+        $userExpectData = [
+            'id' => 10,
+            'name' => "test",
+            'email' => "test@wp.pl"
+        ];
+
+        assertDatabaseMissing('users', $userExpectData);
+        /*
+         * 'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'super_admin' => false,
+         */
+
+        $response = actingAs($user)
+            ->putJson(route('user.update', [
+                'user' => 10
+            ]), $userExpectData);
+
+        $response->assertOk();
+        assertDatabaseHas('users', $userExpectData);
+
+    });
+
+    it('Update super admin status for user with super admin permission expend success, but not update super admin', function () {
+        $user = User::factory()
+            ->create([
+                'id' => 1,
+                'super_admin' => true
+            ]);
+        User::factory()->create([
+            'id' => 10
+        ]);
+
+        $userExpectData = [
+            'id' => 10,
+            'super_admin' => false
+        ];
+
+        $userExpectDataUpdate = [
+            'id' => 10,
+            'super_admin' => true
+        ];
+
+        $response = actingAs($user)
+            ->putJson(route('user.update', [
+                'user' => 10
+            ]), $userExpectDataUpdate);
+
+        $response->assertOk();
+        assertDatabaseHas('users', $userExpectData);
+
+    });
+
+
+    it('Update super admin status self without super admin permission expend success, but not update super admin', function () {
+        $user = User::factory()
+            ->create([
+                'id' => 1,
+                'super_admin' => false
+            ]);
+
+        $userExpectData = [
+            'id' => 1,
+            'super_admin' => false
+        ];
+
+        $userExpectDataUpdate = [
+            'id' => 1,
+            'super_admin' => true
+        ];
+
+        $response = actingAs($user)
+            ->putJson(route('user.update', [
+                'user' => 1
+            ]), $userExpectDataUpdate);
+
+        $response->assertOk();
+        assertDatabaseHas('users', $userExpectData);
+
+    });
+
+});
+
+describe('Test update super admin permission', function () {
+   it('Update status super admin not log in user expected error 401', function () {
+       putJson(route('user.superAdmin', [
+           'user' => 1
+       ]))->assertStatus(401);
+   });
+
+   it('Update self status super admin not super admin permission expected error', function () {
+       $user = User::factory()
+           ->create([
+               'id' => 1,
+               'super_admin' => false
+           ]);
+
+       actingAs($user)
+           ->putJson(route('user.superAdmin', [
+               'user' => 1
+           ]), [
+               'super_admin' => true
+           ])
+           ->assertStatus(403);
+
+       assertDatabaseHas('users', [
+           'id' => 1,
+           'super_admin' => false
+       ]);
+   });
+
+   it('Update self status super admin with super admin permission expected success', function () {
+       $user = User::factory()
+           ->create([
+               'id' => 1,
+               'super_admin' => true
+           ]);
+
+       actingAs($user)
+           ->putJson(route('user.superAdmin', [
+               'user' => 1
+           ]), [
+               'super_admin' => true
+           ])
+           ->assertOk();
+
+       assertDatabaseHas('users', [
+           'id' => 1,
+           'super_admin' => true
+       ]);
+   });
+
+   it('Update other user status super admin without super admin permission expected error', function () {
+       $user = User::factory()
+           ->create([
+               'id' => 1,
+               'super_admin' => false
+           ]);
+
+       User::factory()
+           ->create([
+               'id' => 2,
+               'super_admin' => false
+           ]);
+
+       actingAs($user)
+           ->putJson(route('user.superAdmin', [
+               'user' => 2
+           ]), [
+               'super_admin' => true
+           ])
+           ->assertStatus(403);
+
+       assertDatabaseHas('users', [
+           'id' => 2,
+           'super_admin' => false
+       ]);
+   });
+
+   it('Update other user status super admin with super admin permission expected success', function () {
+       $user = User::factory()
+           ->create([
+               'id' => 1,
+               'super_admin' => true
+           ]);
+
+       User::factory()
+           ->create([
+               'id' => 2,
+               'super_admin' => false
+           ]);
+
+
+       actingAs($user)
+           ->putJson(route('user.superAdmin', [
+               'user' => 2
+           ]), [
+               'super_admin' => true
+           ])->assertOk();
+
+       assertDatabaseHas('users', [
+           'id' => 2,
+           'super_admin' => true
+       ]);
+   });
 });
