@@ -2,6 +2,7 @@
 declare(strict_types=1);
 return [
     'dashboard' => "Dashboard",
+    'logOut' => "Wyloguj się",
     'setting' => "Ustawienia",
     'schedule' => "Harmonogram",
     'countryAvailability' => "Dostępność krajów",

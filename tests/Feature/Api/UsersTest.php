@@ -13,7 +13,7 @@ use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 
-describe('Test create user expected Success', function () {
+describe('Test create user', function () {
     it('Test create user not log in expected error', function () {
        $testUser = [
          'name' => "Patryk test",
@@ -181,7 +181,6 @@ describe('Test create user expected Success', function () {
         assertDatabaseMissing('users', $testUser);
     })->with('userinputsname');
 });
-
 
 describe('User index route', function () {
     it('Expected list isset User without super admin permission expected success', function () {

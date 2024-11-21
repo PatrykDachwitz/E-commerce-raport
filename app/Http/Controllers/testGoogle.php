@@ -14,7 +14,7 @@ class testGoogle extends Controller
     public function __invoke(GoogleAdwordsApi $adwordsApi)
     {
 
-
+        return view('login');
     }
 
 }

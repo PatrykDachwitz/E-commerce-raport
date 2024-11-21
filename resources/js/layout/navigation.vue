@@ -1,5 +1,6 @@
 <script setup>
 import {inject, ref} from "vue";
+import {logOut} from "@/utils/logOut.js";
 
 const lang = inject('lang');
 const menuActive = ref(false);
@@ -12,6 +13,8 @@ function changeActiveMenu() {
     }
 }
 
+const logOutUrl = inject('logOutUrl');
+const loginUrl = inject('loginUrl');
 </script>
 
 <template>
@@ -34,7 +37,7 @@ function changeActiveMenu() {
         </div>
 
 
-        <div class="navigation__menu px-3 py-4 py-md-0 my-4 my-0" :class="[menuActive === false ? 'd-none' : '']">
+        <div class="navigation__menu px-3 py-4 py-md-0 my-4 my-0 d-md-block" :class="[menuActive === false ? 'd-none' : '']">
             <span class="navigation__list--header">{{ lang['dashboard'] }}</span>
             <ul class="navigation__list ps-2">
                 <li class="my-1">
@@ -54,7 +57,13 @@ function changeActiveMenu() {
                 <li class="navigation__subsection my-1">{{ lang['schedule'] }}</li>
                 <li class="navigation__subsection my-1">{{ lang['users'] }}</li>
             </ul>
+
+            <div>
+                <span class="navigation__list--header" @click="logOut(logOutUrl, loginUrl)">{{ lang['logOut'] }}</span>
+            </div>
         </div>
+
+
     </nav>
 </template>
 

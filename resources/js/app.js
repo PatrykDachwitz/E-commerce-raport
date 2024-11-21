@@ -9,10 +9,13 @@ import {createApp, ref} from 'vue';
 import Dashboard from "@/layout/Dashboard.vue";
 import {languages} from "@/utils/languages.js";
 import {router} from "@/setting/router.js";
+import {getUrlByData} from "@/utils/getUrlByData.js";
 
 createApp(Dashboard)
     .use(router)
     .provide('lang', ref(languages()))
+    .provide('logOutUrl', getUrlByData('data-logout-url'))
+    .provide('loginUrl', getUrlByData('data-login-url'))
     .provide('apiUrl', import.meta.env.VITE_API_PREFIX)
     .mount("#app")
 /**

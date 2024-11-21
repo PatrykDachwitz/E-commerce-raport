@@ -16,5 +16,12 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'logIn' => "Zaloguj się",
+    'mail' => "E-mail",
+    'templateEmail' => "liam.johnson@gmail.com",
+    'passwordName' => "Hasło",
+    'templatePassword' => "Hasło",
+    'errorDataLogin' => "Podany e-mail lub hasło jest niepoprawne.",
+    'ecommerceLogin' => "E-commerce analytics - Logowanie",
 
 ];
