@@ -1,14 +1,14 @@
 <script setup>
 import {inject, onMounted} from "vue";
 import {useRoute} from "vue-router";
-import {getContentReport} from "@/utils/getContentReport.js";
+import {getContent} from "@/utils/getContent.js";
 import {insertSpace} from "../../utils/insertSpace.js";
 
 const apiUrl = inject('apiUrl');
 const route = useRoute();
 const lang = inject('lang');
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}`);
+const { data, error } = getContent(`${apiUrl}${route.path}`);
 
 </script>
 

@@ -2,12 +2,18 @@ import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import comparison from "@/views/report/comparison.vue";
 import daily from "@/views/report/daily.vue";
 import weekly from "@/views/report/weekly.vue";
+import show from "@/views/element/show.vue";
+
 
 const routes = [
     {
       path: "/",
       name: "home",
       component: {}
+    }, {
+        path: "/users",
+        name: "users",
+        component: show
     },
     {
         path: "/report",

@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::put('user/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
+Route::put('users/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
     ->middleware('auth:sanctum')
     ->name('user.superAdmin');
 
-Route::apiResource('user', UserController::class)
-    ->middleware('auth:sanctum');
+Route::apiResource('users', UserController::class);
+  //  ->middleware('auth:sanctum');
 
 
 Route::group([

@@ -55,7 +55,9 @@ const loginUrl = inject('loginUrl');
             <ul class="navigation__list ps-2">
                 <li class="navigation__subsection my-1">{{ lang['countryAvailability'] }}</li>
                 <li class="navigation__subsection my-1">{{ lang['schedule'] }}</li>
-                <li class="navigation__subsection my-1">{{ lang['users'] }}</li>
+                <li class="navigation__subsection my-1">
+                    <router-link class="navigation__subsection" :to="{name: 'users'}">{{ lang['users'] }}</router-link>
+                </li>
             </ul>
 
             <div>

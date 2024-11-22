@@ -9,7 +9,7 @@ class LoginController extends Controller
 {
     public function view() {
         if (Auth::check()) {
-            return view('dashboard');
+            return view('index');
         } else {
             return view('login');
         }

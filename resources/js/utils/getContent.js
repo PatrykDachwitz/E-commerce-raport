@@ -1,6 +1,6 @@
 import {ref, watchEffect} from "vue";
 
-export function getContentReport(url) {
+export function getContent(url) {
     const data = ref(null);
     watchEffect(() => {
         data.value = null;

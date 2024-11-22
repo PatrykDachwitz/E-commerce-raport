@@ -13,7 +13,7 @@
 <div id="app" class="dashboard d-flex flex-column flex-md-row"></div>
 
 <div style="display: none" data-logout-url>{{ route('logOut') }}</div>
-<div style="display: none" data-login-url>{{ route('login.get') }}</div>
+<div style="display: none" data-login-url>{{ route('login') }}</div>
 <div style="display: none" data-lang-content>
 @json(__('content'))
 </div>

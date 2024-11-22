@@ -1,6 +1,6 @@
 <script setup>
 
-import {getContentReport} from "@/utils/getContentReport.js";
+import {getContent} from "@/utils/getContent.js";
 import {useRoute} from "vue-router";
 import {inject, onMounted} from "vue";
 import DailyShopResult from "@/components/report/dailyShopResult.vue";
@@ -15,7 +15,7 @@ const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
-const { data, error } = getContentReport(`${apiUrl}${route.path}`);
+const { data, error } = getContent(`${apiUrl}${route.path}`);
 
 const nameHeaderResult = [
   'global',

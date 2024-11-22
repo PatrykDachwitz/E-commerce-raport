@@ -24,16 +24,16 @@
         <div >
             <label for="validationEmail" class="form-label">@lang("auth.mail")</label>
             <input type="email" class="form-control rounded-0" id="validationEmail" name="email" value="{{ old('email', '') }}" placeholder="@lang('auth.templateEmail')" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
         </div>
+
+        @error('email')
+            <span class="text-danger">{{$message}}</span>
+        @enderror
+
         <div class="mt-2">
             <label for="validationPassword" class="form-label">@lang("auth.passwordName")</label>
             <input type="password" class="form-control rounded-0" name="password" id="validationPassword" value="{{ old('password', '') }}" placeholder="@lang('auth.templatePassword')" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
+
         </div>
 
         <div class="col-12 mt-2">
