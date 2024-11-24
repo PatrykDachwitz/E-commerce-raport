@@ -15,7 +15,7 @@ const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
-const { data, error } = getContent(`${apiUrl}${route.path}`);
+const { data, error } = getContent(`${apiUrl}${route.path}`, false);
 
 const nameHeaderResult = [
   'global',
@@ -83,7 +83,7 @@ onMounted(() => {
             </template>
         </div>
 
-        <div class="report__content d-flex flex-column" v-if="data !== null">
+        <div class="report__content d-flex flex-column" v-if="data !== null & data !== undefined">
             <template v-for="(result, key) in data.data">
                 <div class="report__row  d-flex" :class="[key === 0 ? 'report__row--first' : null]">
 

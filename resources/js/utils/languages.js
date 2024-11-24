@@ -1,5 +1,5 @@
-export function languages() {
-    const langContainer = document.querySelector('[data-lang-content]');
+export function languages(dataNameElement) {
+    const langContainer = document.querySelector(`[${dataNameElement}]`);
 
     return JSON.parse(langContainer.innerText);
 }

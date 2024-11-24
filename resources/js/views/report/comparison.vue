@@ -8,13 +8,13 @@ const apiUrl = inject('apiUrl');
 const route = useRoute();
 const lang = inject('lang');
 
-const { data, error } = getContent(`${apiUrl}${route.path}`);
+const { data, error } = getContent(`${apiUrl}${route.path}`, false);
 
 </script>
 
 <template>
     <div class="report d-flex flex-column">
-        <div class="report__row--header d-flex" v-if="data !== null">
+        <div class="report__row--header d-flex" v-if="data !== null & data !== undefined">
             <div class="report__header report__header--double report__header--google">{{ data.data.names.resultsFromBeginnerMonthCurrentYear ?? "" }}</div>
             <div class="report__header report__header--double report__header--google">{{ data.data.names.resultsFromBeginnerMonthPreviousYear }}</div>
             <div class="report__header report__header--double report__header--google">{{ lang['comparison'] }}</div>
@@ -26,7 +26,7 @@ const { data, error } = getContent(`${apiUrl}${route.path}`);
             <div class="report__header report__header--double report__header--facebook">{{ lang['comparison'] }}</div>
         </div>
 
-        <div class="report__content d-flex" v-if="data !== null">
+        <div class="report__content d-flex" v-if="data !== null & data !== undefined">
             <div class="report__col d-flex flex-column">
                 <div class="report__row">
                     <div class="report__value">{{ insertSpace(data.data.resultsFromBeginnerMonthCurrentYear['value']) }} Eur</div>

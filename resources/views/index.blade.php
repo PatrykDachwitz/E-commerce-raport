@@ -16,6 +16,8 @@
 <div style="display: none" data-login-url>{{ route('login') }}</div>
 <div style="display: none" data-lang-content>
 @json(__('content'))
+</div><div style="display: none" data-lang-communicates>
+@json(__('communicates'))
 </div>
 </body>
 @vite([

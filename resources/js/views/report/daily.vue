@@ -2,7 +2,7 @@
 
 import {getContent} from "@/utils/getContent.js";
 import {useRoute} from "vue-router";
-import {inject, onMounted} from "vue";
+import {inject, onMounted, watch} from "vue";
 import DailyShopResult from "@/components/report/dailyShopResult.vue";
 import DailyAdwordsResult from "@/components/report/dailyAdwordsResult.vue";
 import DailyCost from "@/components/report/dailyCost.vue";
@@ -15,7 +15,8 @@ const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
-const { data, error } = getContent(`${apiUrl}${route.path}`);
+const { data } = getContent(`${apiUrl}${route.path}`, false);
+
 
 const nameHeaderResult = [
   'global',
@@ -27,10 +28,12 @@ const nameHeaderCost = [
   'facebook',
 ];
 
+
 onMounted(() => {
     changePositionTableHeader('report__row--header', "report", 'report__row--first');
     changePositionCountryName('report__value--country-name', 'report__content', "report", 'report__col--active-col-country');
 })
+
 
 
 
@@ -83,7 +86,7 @@ onMounted(() => {
             </template>
         </div>
 
-        <div class="report__content d-flex flex-column" v-if="data !== null">
+        <div class="report__content d-flex flex-column" v-if="data !== null & data !== undefined">
             <template v-for="(result, key) in data.data">
                 <div class="report__row  d-flex" :class="[key === 0 ? 'report__row--first' : null]">
 
@@ -100,6 +103,7 @@ onMounted(() => {
                 </div>
 
             </template>
+
         </div>
 
     </div>

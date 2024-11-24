@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-12 mt-2">
-            <button class="btn btn-dark" type="submit">@lang("auth.logIn")</button>
+            <button class="btn btn-dark pointer" type="submit">@lang("auth.logIn")</button>
         </div>
     </form>
 </div>

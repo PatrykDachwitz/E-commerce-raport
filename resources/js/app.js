@@ -5,18 +5,21 @@
  */
 
 import './bootstrap';
-import {createApp, ref} from 'vue';
+import {createApp, provide, ref} from 'vue';
 import Dashboard from "@/layout/Dashboard.vue";
 import {languages} from "@/utils/languages.js";
 import {router} from "@/setting/router.js";
 import {getUrlByData} from "@/utils/getUrlByData.js";
+const communicates = ref([]);
+
 
 createApp(Dashboard)
     .use(router)
-    .provide('lang', ref(languages()))
+    .provide('lang', ref(languages('data-lang-content')))
     .provide('logOutUrl', getUrlByData('data-logout-url'))
     .provide('loginUrl', getUrlByData('data-login-url'))
     .provide('apiUrl', import.meta.env.VITE_API_PREFIX)
+    .provide('communicates', communicates)
     .mount("#app")
 /**
  * The following block of code may be used to automatically register your

@@ -61,7 +61,7 @@ const loginUrl = inject('loginUrl');
             </ul>
 
             <div>
-                <span class="navigation__list--header" @click="logOut(logOutUrl, loginUrl)">{{ lang['logOut'] }}</span>
+                <span class="navigation__list--header pointer" @click="logOut(logOutUrl, loginUrl)">{{ lang['logOut'] }}</span>
             </div>
         </div>
 

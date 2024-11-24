@@ -1,13 +1,14 @@
 <script setup>
-import {inject, onMounted} from "vue";
+import {inject, onMounted, provide, ref} from "vue";
 import Navigation from "@/layout/navigation.vue";
+import Comunicate from "@/components/comunicate.vue";
 
 const lang = inject('lang');
-
 
 </script>
 
 <template>
+    <comunicate></comunicate>
     <navigation></navigation>
     <section class="dashboard__content d-flex flex-column">
         <div class="dashboard__header bg-dark d-flex justify-content-between align-items-center">
