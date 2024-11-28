@@ -2,6 +2,7 @@
 import {useRoute} from "vue-router";
 import {getForm} from "@/utils/getForm.js";
 
+
 const route = useRoute();
 const nameRoute = route.params.target;
 

@@ -1,6 +1,9 @@
 <script setup>
-import {useRoute} from "vue-router";
+import {inject, ref} from "vue";
+import User from "@/components/form/user.vue";
+import user from "@/components/form/user.vue";
 import {getForm} from "@/utils/getForm.js";
+import {useRoute} from "vue-router";
 
 const route = useRoute();
 const nameRoute = route.params.target;

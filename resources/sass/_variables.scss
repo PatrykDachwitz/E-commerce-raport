@@ -14,3 +14,10 @@ $red: #cf4647;
 $black-light: #2a363b;
 $yellow: #fff9e0;
 $selectColor: #9f9f9f;
+
+.form-select {
+    border-color: $black-light !important;
+}
+.form-control {
+    border-color: $black-light !important;
+}

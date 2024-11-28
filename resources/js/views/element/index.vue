@@ -5,8 +5,10 @@ import {getContent} from "@/utils/getContent.js";
 
 const router = useRouter();
 const apiUrl = inject('apiUrl') + router.currentRoute.value.fullPath;
+const nameRoute = router.currentRoute.value.params.target;
 
-const { data, error } = getContent(`${apiUrl}`);
+
+const { data, error } = getContent(`${apiUrl}`, false);
 
 </script>
 
@@ -17,7 +19,7 @@ const { data, error } = getContent(`${apiUrl}`);
         <div>
             <img width="20" height="20" src="/assets/banned.png" alt="Banned user"/>
             <img class="mx-2" width="20" height="20" src="/assets/superAdmin.png" alt="Super admin permission"/>
-            <img width="20" height="20" src="/assets/edit.png" alt="Edit user"/>
+            <router-link :to="{name: 'universal_edit', params: {target: nameRoute, id: item.id}}"><img width="20" height="20" src="/assets/edit.png" alt="Edit element"/></router-link>
         </div>
     </div>
 </div>

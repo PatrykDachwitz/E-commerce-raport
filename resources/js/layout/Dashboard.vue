@@ -12,11 +12,10 @@ const lang = inject('lang');
     <navigation></navigation>
     <section class="dashboard__content d-flex flex-column">
         <div class="dashboard__header bg-dark d-flex justify-content-between align-items-center">
-            <div class="dashboard__header--tittle pb-2">
-                <span class="ps-3"></span>
-                <div>
+            <div class="dashboard__header--tittle py-1 d-flex align-items-center justify-content-between px-3">
+                <router-view name="sideBar">
 
-                </div>
+                </router-view>
             </div>
         </div>
         <div class="dashboard__container">
