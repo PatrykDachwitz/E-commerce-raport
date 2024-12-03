@@ -12,8 +12,8 @@ Route::put('users/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
     ->middleware('auth:sanctum')
     ->name('user.superAdmin');
 
-Route::apiResource('users', UserController::class);
-  //  ->middleware('auth:sanctum');
+Route::apiResource('users', UserController::class)
+    ->middleware('auth:sanctum');
 
 
 Route::group([

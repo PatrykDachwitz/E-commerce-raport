@@ -53,4 +53,16 @@ return [
     "editAndSave" => "Edycja i Zapis",
     "templateFullName" => "Liam Johnson",
     'templateEmail' => "liam.johnson@gmail.com",
+    'universal_index' => [
+        'users' => 'Lista użytkowników'
+    ],
+    'universal_create' => [
+        'users' => 'Nowy użytkownik'
+    ],
+    'universal_show' => [
+        'users' => 'Dane użytkownika'
+    ],
+    'universal_edit' => [
+        'users' => 'Edytuj użytkownika'
+    ],
 ];

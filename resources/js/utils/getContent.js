@@ -1,4 +1,6 @@
 import {inject, ref, watchEffect} from "vue";
+import {getCSRFToken} from "@/utils/getCSRFToken.js";
+import {setCommunicate} from "@/utils/setCommunicate.js";
 
 
 export function getContent(url, setSuccessCommunicate = true) {
@@ -9,7 +11,13 @@ export function getContent(url, setSuccessCommunicate = true) {
      watchEffect(() => {
         data.value = null;
 
-         fetch(url)
+         fetch(url,
+             {
+                 headers: {
+                     'X-CSRF-Token': getCSRFToken(),
+                     Accept: 'application/json'
+                 }
+             })
             .then(response => {
 
                 if (response.status >= 200 && response.status < 300) {
@@ -33,17 +41,5 @@ export function getContent(url, setSuccessCommunicate = true) {
 }
 
 
-function setCommunicate(communicates, code) {
 
-    let nextIdNumber = 1;
-
-    if (communicates.length > 0) {
-        nextIdNumber = communicates[communicates.length - 1].id + 1;
-    }
-
-    return {
-        id: nextIdNumber,
-        code: code,
-    };
-}
 
