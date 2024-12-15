@@ -1,17 +1,18 @@
 <?php
 declare(strict_types=1);
 
+use App\Models\User;
 use Database\Seeders\ComparisonDayJuneCountry;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
+use function Pest\Laravel\getJson;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
     seed(ComparisonDayJuneCountry::class);
 });
-
-//Dodać weryfiakcję co jeśli nie ma pliku czy tu nie ma zanych wtecz dat czy cuś i asseracia daty czy coś ddodać summary
 
 describe('verification correct url api', function () {
     it('report daily url work', function () {
@@ -189,8 +190,10 @@ describe('verification correct url api', function () {
         Storage::disk()
             ->put(config('report.containerReportResultDay') . "2024-06-20.json", json_encode($expectResult));
 
-        get(route('report.daily') . "?date=2024-06-20")
-        ->assertOk();
+        $user = User::factory()->create();
+        actingAs($user)
+            ->get(route('report.daily') . "?date=2024-06-20")
+            ->assertOk();
     });
     it('report daily name isn`t change', function () {
         $uriPathByNameRoute = route('report.daily', null, false);
@@ -827,7 +830,9 @@ describe('verification format and count response data', function () {
            ],
        ];
 
-       get(route('report.daily') . "?date=2024-06-20")
+       $user = User::factory()->create();
+       actingAs($user)
+           ->get(route('report.daily') . "?date=2024-06-20")
            ->assertJsonStructure(
                [
                    'data' => [
@@ -1033,8 +1038,11 @@ describe('verification format and count response data', function () {
        Storage::disk()
            ->put(config('report.containerReportResultDay') . "2024-06-20.json", json_encode($expectResult));
 
-       $response = get(route('report.daily') . "?date=2024-06-20")
-           ->json('data');
+       $user = User::factory()->create();
+
+       $response = actingAs($user)
+                        ->get(route('report.daily') . "?date=2024-06-20")
+                        ->json('data');
 
        expect($response)
            ->toMatchArray($expectResult);
@@ -1092,10 +1100,21 @@ describe('verification format and count response data', function () {
         Storage::disk()
             ->put(config('report.containerReportResultDay') . "{$lastDay}.json", json_encode($expectResult));
 
-        $responseApi = get(route('report.daily'))
+        $user = User::factory()->create();
+        $responseApi = actingAs($user)
+            ->get(route('report.daily'))
             ->json('data');
 
         expect($responseApi)
             ->toMatchArray($expectResult);
     });
+});
+
+it('Test available response api for not log in user expected error with http code 401', function () {
+
+    Storage::fake();
+
+    getJson(route('report.daily'))
+        ->assertStatus(401);
+
 });

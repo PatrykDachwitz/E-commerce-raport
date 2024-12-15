@@ -21,10 +21,12 @@ Route::group([
     'as' => 'report.',
 ], function () {
     Route::get('daily', DailyController::class)
-        ->name('daily');
+        ->name('daily')
+        ->middleware('auth:sanctum');
     Route::get('weekly', WeeklyController::class)
         ->name('weekly');
 
     Route::get('comparison', ComparisonController::class)
-        ->name('comparison');
+        ->name('comparison')
+        ->middleware('auth:sanctum');
 });

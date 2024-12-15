@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
+use function Pest\Laravel\getJson;
 
 describe('Verification url api', function () {
     it('test front path to current path', function () {
@@ -15,6 +18,8 @@ describe('Verification url api', function () {
     });
 
     it('Verification status api', function () {
+        $user = User::factory()->create();
+
         $expectArray = [
             "resultsFromBeginnerMonthCurrentYear" => [
                 "value" => 2247,
@@ -58,13 +63,16 @@ describe('Verification url api', function () {
         Storage::disk()
             ->put(config('report.containerReportComparisonDay') . "2024-06-20.json", json_encode($expectArray));
 
-        get(route('report.comparison') . "?date=2024-06-20")
+        actingAs($user)
+            ->get(route('report.comparison') . "?date=2024-06-20")
             ->assertOk();
     });
 });
 
 describe('test format and structure response api', function () {
    it('Verification structure response', function () {
+       $user = User::factory()->create();
+
        $expectArray = [
            "resultsFromBeginnerMonthCurrentYear" => [
                "value" => 2247,
@@ -114,7 +122,8 @@ describe('test format and structure response api', function () {
            'art'
        ];
 
-       get(route('report.comparison') . "?date=2024-06-20")
+       actingAs($user)
+           ->get(route('report.comparison') . "?date=2024-06-20")
            ->assertJsonStructure([
                'data' => [
                    'names' => [
@@ -137,6 +146,8 @@ describe('test format and structure response api', function () {
    });
 
    it('Verification data response api for 2024-06-20 date', function () {
+       $user = User::factory()->create();
+
        $expectNames = [
            "names" => [
                'resultsFromBeginnerMonthCurrentYear' => "1-20 " . __("month.6") . " 2024",
@@ -189,7 +200,8 @@ describe('test format and structure response api', function () {
        Storage::disk()
            ->put(config('report.containerReportComparisonDay') . "2024-06-20.json", json_encode($expectArray));
 
-       $response = get(route('report.comparison') . "?date=2024-06-20")
+       $response = actingAs($user)
+           ->get(route('report.comparison') . "?date=2024-06-20")
            ->json("data");
 
        expect($response)
@@ -198,6 +210,7 @@ describe('test format and structure response api', function () {
    });
 
    it('Verification data response api for empty input date', function () {
+       $user = User::factory()->create();
        $expectNames = [
            "names" => [
                'resultsFromBeginnerMonthCurrentYear' => "1-20 " . __("month.6") . " 2024",
@@ -252,11 +265,21 @@ describe('test format and structure response api', function () {
        Storage::disk()
            ->put(config('report.containerReportComparisonDay') . "{$lastDayDate}.json", json_encode($expectArray));
 
-       $response = get(route('report.comparison'))
+       $response = actingAs($user)
+           ->get(route('report.comparison'))
            ->json("data");
 
        expect($response)
            ->toMatchArray(array_merge($expectArray, $expectNames));
 
    });
+});
+
+it('Test available response api for not log in user expected error with http code 401', function () {
+
+    Storage::fake();
+
+    getJson(route('report.comparison'))
+        ->assertStatus(401);
+
 });
