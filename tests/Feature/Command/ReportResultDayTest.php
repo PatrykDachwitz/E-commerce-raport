@@ -1,25 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use App\Models\Country;
-use App\Services\Adwords\AnalyticsApi;
-use App\Services\Adwords\GoogleAdwordsApi;
-use App\Services\Adwords\MetaAdsApi;
-use App\Services\Connection\Shop;
-use App\Services\Currency\CoursePLN;
-use App\Services\Report\Support\AdwordsResult;
-use App\Services\Report\Support\AnalyticsResult;
-use App\Services\Report\Support\ShopResult;
-use App\Services\Report\ResultDay;
-use App\Services\ShopSales;
 use Database\Seeders\ResultDayJuneCountry;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\artisan;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
     seed(ResultDayJuneCountry::class);
 });
-test('Verification work services Report result Day with good response api', function (
+
+
+it('Verification correct working command generation result day report with correct response api', function (
     string $shopResponseOneVariant,
     string $shopResponseSecondVariant,
     string $shopResponseThreeVariant,
@@ -36,7 +29,10 @@ test('Verification work services Report result Day with good response api', func
     string $metaResponseUKResultDay,
     string $responseNbp,
 ) {
-    $date = "2024-06-20";
+
+    $startDay = "2024-06-20";
+    Storage::fake();
+
     Http::fake([
         "https://googleads.googleapis.com/v17/customers/123321321/googleAds:searchStream" => Http::response($polandResponseApi),
         "https://googleads.googleapis.com/v17/customers/52432432/googleAds:searchStream" => Http::response($germanyResponseApi),
@@ -141,21 +137,6 @@ test('Verification work services Report result Day with good response api', func
 
         "http://api.nbp.pl/api/exchangerates/tables/A/" => Http::response($responseNbp),
     ]);
-
-    $reportDay = new ResultDay(
-        new Country(),
-        new AnalyticsResult(new AnalyticsApi()),
-        new MetaAdsApi(new CoursePLN()),
-        new AdwordsResult(),
-        new ShopResult(
-            new ShopSales(
-                new Shop(),
-                new Country()
-            ),
-            new CoursePLN()
-        ),
-        new GoogleAdwordsApi()
-    );
 
     $expectResult = [
         [
@@ -1142,10 +1123,41 @@ test('Verification work services Report result Day with good response api', func
         ]
     ];
 
-    expect(
-        $reportDay
-            ->get($date)
-    )
+    artisan('report:result-day', [
+        "date" => $startDay
+    ])
+        ->expectsOutput(__("command.saveFileSuccess"))
+        ->assertOk();
+
+    Storage::disk()
+        ->assertExists(config('report.containerReportResultDay') . "{$startDay}.json");
+
+    $valueSavedInFile = json_decode(Storage::disk()
+        ->get(config('report.containerReportResultDay') . "{$startDay}.json"), true);
+
+
+    expect($valueSavedInFile)
         ->toMatchArray($expectResult);
 
 })->with('shopResponseForOneDay', 'shopResponseForSecondDay', 'shopResponseForThreeDay', "analyticsPolandReportDay", "analyticsEnglandReportDay", "metaAdsTemplateDataForCurrentDay", "metaAdsTemplateDataForOneDay", "metaAdsTemplateDataForSecondDay", "metaAdsTemplateDataForThirdDay", "metaAdsTemplateDataForFourthDay", "polandResponseApi", "germanyResponseApi", "metaResponsePolandResultDay", "metaResponseUKResultDay", 'responseNbpApi');
+
+it('Verification correct valid date format', function () {
+    Storage::fake();
+    Http::fake([
+        config('api.shop') . "?start=2024-06-01&end=2024-06-20" => Http::response(""),
+        config('api.shop') . "?start=2023-06-01&end=2023-06-20" => Http::response(""),
+        config('api.shop') . "?start=2023-06-01&end=2023-06-30" => Http::response(""),
+        config('api.shop') . "?start=2024-05-01&end=2024-05-20" => Http::response(""),
+    ]);
+
+    $startDay = "202423";
+
+    artisan('report:comparison-day', [
+        "date" => $startDay
+    ])
+        ->expectsOutput(__("command.wrongFormatDate"))
+        ->assertFailed();
+
+    Storage::disk()
+        ->assertMissing(config('report.containerReportComparisonDay') . "{$startDay}.json");
+});

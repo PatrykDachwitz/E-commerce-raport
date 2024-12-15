@@ -14,7 +14,7 @@ beforeEach(function () {
 //Dodać weryfiakcję co jeśli nie ma pliku czy tu nie ma zanych wtecz dat czy cuś i asseracia daty czy coś ddodać summary
 
 describe('verification correct url api', function () {
- /*   it('report daily url work', function () {
+    it('report daily url work', function () {
         $expectResult = [
             [
                 "country" => "Polska",
@@ -213,6 +213,12 @@ describe('verification format and count response data', function () {
                        "value" => 77076,
                        "art" => 242
                    ],
+                   "costShare" => [
+                       "value" => -19800
+                   ],
+                   "comparisonClickToCost" => [
+                       "value" => -19800
+                   ],
                    "avgComparison" => [
                        "value" => -19800,
                        "art" => 183
@@ -246,6 +252,99 @@ describe('verification format and count response data', function () {
                    'maxValueLast30Day' => [
                        'value' => 100000
                    ]
+               ],
+
+               "costFacebook" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 437
+                   ],
+                   'avgComparison' => [
+                       'value' => -13
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 450
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 240
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 641
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 9202
+                   ],
+                   'budgetMonth' => [
+                       'value' => 27000
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 34
+                   ],
+               ],
+               "facebook" => [
+                   'countClick' => [
+                       'value' => 304
+                   ],
+                   'avgComparison' => [
+                       'value' => -269
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 573
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 320
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 900
+                   ]
+               ],
+               "costGoogle" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 586
+                   ],
+                   'avgComparison' => [
+                       'value' => -880
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 1466
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 11671
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 20756
+                   ],
+                   'budgetMonth' => [
+                       'value' => 32250
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 64
+                   ],
+               ],
+               "google" => [
+                   'countClick' => [
+                       'value' => 1213
+                   ],
+                   'avgComparison' => [
+                       'value' => 301
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 912
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 20777
+                   ]
                ]
            ],
            [
@@ -254,6 +353,12 @@ describe('verification format and count response data', function () {
                    "shopSales" => [
                        "value" => 1535,
                        "art" => 147
+                   ],
+                   "costShare" => [
+                       "value" => -19800
+                   ],
+                   "comparisonClickToCost" => [
+                       "value" => -19800
                    ],
                    "avgComparison" => [
                        "value" => -7666655866,
@@ -288,6 +393,99 @@ describe('verification format and count response data', function () {
                    'maxValueLast30Day' => [
                        'value' => 1900
                    ]
+               ],
+
+               "costFacebook" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 437
+                   ],
+                   'avgComparison' => [
+                       'value' => -13
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 450
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 240
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 641
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 9202
+                   ],
+                   'budgetMonth' => [
+                       'value' => 27000
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 34
+                   ],
+               ],
+               "facebook" => [
+                   'countClick' => [
+                       'value' => 304
+                   ],
+                   'avgComparison' => [
+                       'value' => -269
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 573
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 320
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 900
+                   ]
+               ],
+               "costGoogle" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 586
+                   ],
+                   'avgComparison' => [
+                       'value' => -880
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 1466
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 11671
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 20756
+                   ],
+                   'budgetMonth' => [
+                       'value' => 32250
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 64
+                   ],
+               ],
+               "google" => [
+                   'countClick' => [
+                       'value' => 1213
+                   ],
+                   'avgComparison' => [
+                       'value' => 301
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 912
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 20777
+                   ]
                ]
            ],
            [
@@ -296,6 +494,12 @@ describe('verification format and count response data', function () {
                    "shopSales" => [
                        "value" => 2224,
                        "art" => 5
+                   ],
+                   "costShare" => [
+                       "value" => -19800
+                   ],
+                   "comparisonClickToCost" => [
+                       "value" => -19800
                    ],
                    "avgComparison" => [
                        "value" => -182918,
@@ -330,6 +534,99 @@ describe('verification format and count response data', function () {
                    'maxValueLast30Day' => [
                        'value' => 0
                    ]
+               ],
+
+               "costFacebook" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 437
+                   ],
+                   'avgComparison' => [
+                       'value' => -13
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 450
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 240
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 641
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 9202
+                   ],
+                   'budgetMonth' => [
+                       'value' => 27000
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 34
+                   ],
+               ],
+               "facebook" => [
+                   'countClick' => [
+                       'value' => 304
+                   ],
+                   'avgComparison' => [
+                       'value' => -269
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 573
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 320
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 900
+                   ]
+               ],
+               "costGoogle" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 586
+                   ],
+                   'avgComparison' => [
+                       'value' => -880
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 1466
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 11671
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 20756
+                   ],
+                   'budgetMonth' => [
+                       'value' => 32250
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 64
+                   ],
+               ],
+               "google" => [
+                   'countClick' => [
+                       'value' => 1213
+                   ],
+                   'avgComparison' => [
+                       'value' => 301
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 912
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 20777
+                   ]
                ]
            ],
            [
@@ -338,6 +635,12 @@ describe('verification format and count response data', function () {
                    "shopSales" => [
                        "value" => 80836,
                        "art" => 394
+                   ],
+                   "costShare" => [
+                       "value" => -19800
+                   ],
+                   "comparisonClickToCost" => [
+                       "value" => -19800
                    ],
                    "avgComparison" => [
                        "value" => -7666858583,
@@ -371,6 +674,99 @@ describe('verification format and count response data', function () {
                    ],
                    'maxValueLast30Day' => [
                        'value' => 101900
+                   ]
+               ],
+
+               "costFacebook" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 437
+                   ],
+                   'avgComparison' => [
+                       'value' => -13
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 450
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 240
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 641
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 9202
+                   ],
+                   'budgetMonth' => [
+                       'value' => 27000
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 34
+                   ],
+               ],
+               "facebook" => [
+                   'countClick' => [
+                       'value' => 304
+                   ],
+                   'avgComparison' => [
+                       'value' => -269
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 573
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 320
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 900
+                   ]
+               ],
+               "costGoogle" => [
+                   "percentDaysPassedInCurrentMonth" => [
+                       'value' => 66
+                   ],
+                   'cost' => [
+                       'value' => 586
+                   ],
+                   'avgComparison' => [
+                       'value' => -880
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 1466
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 11671
+                   ],
+                   'costFromBeginningMonth' => [
+                       'value' => 20756
+                   ],
+                   'budgetMonth' => [
+                       'value' => 32250
+                   ],
+                   'percentCostFromBeginningMonth' => [
+                       'value' => 64
+                   ],
+               ],
+               "google" => [
+                   'countClick' => [
+                       'value' => 1213
+                   ],
+                   'avgComparison' => [
+                       'value' => 301
+                   ],
+                   'avgLast30Day' => [
+                       'value' => 912
+                   ],
+                   'minValueLast30Day' => [
+                       'value' => 0
+                   ],
+                   'maxValueLast30Day' => [
+                       'value' => 20777
                    ]
                ]
            ]
@@ -426,6 +822,9 @@ describe('verification format and count response data', function () {
            'percentCostFromBeginningMonth' => [
                'value'
            ],
+           'percentDaysPassedInCurrentMonth' => [
+               'value'
+           ],
        ];
 
        get(route('report.daily') . "?date=2024-06-20")
@@ -436,13 +835,19 @@ describe('verification format and count response data', function () {
                            'country',
                            'shop' => [
                                'shopSales' => $structureValueAndArt,
-                               'avgComparison' => $structureValueAndArt,
-                               'avgLast30Day' => $structureValueAndArt,
+                               'costShare' => [
+                                   'value'
+                               ],
+                               'comparisonClickToCost' => [
+                                   'value'
+                               ],
                                'minValueLast30Day' => $structureValueAndArt,
                                'maxValueLast30Day' => $structureValueAndArt,
+                               'avgLast30Day' => $structureValueAndArt,
+                               'avgComparison' => $structureValueAndArt,
                            ],
                            'global' => $structureStatistic,
-                           /*'google' => $structureStatistic,
+                           'google' => $structureStatistic,
                            'facebook' => $structureStatistic,
                            'costGoogle' => $structureStatisticCost,
                            'costFacebook' => $structureStatisticCost,
@@ -633,7 +1038,7 @@ describe('verification format and count response data', function () {
 
        expect($response)
            ->toMatchArray($expectResult);
-   });*/
+   });
 
     it('Verification correct response for empty date input', function () {
 

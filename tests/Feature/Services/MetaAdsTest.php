@@ -13,10 +13,6 @@ beforeEach(function () {
 });
 
 describe('Testing response meta ads services with correct data', function () {
-    //Tutaj trzeba zweryfkowc kilka dni w popszednim miesiacu sprawdzić założenie eistenijaće g budżetu ale braku statystyk dal tego konta
-    //Pamietąc że nie któę kraje mająwiecej niż jedno konto
-    //Jakośc weryfikować ilość wydanej kasy naet gdy ostanie 30 dni nie łapią sięw nasyzm zakresie dat
-
 
     it("Testing correct calculate data about response api", function (
         string $currentDateResponseApi,
