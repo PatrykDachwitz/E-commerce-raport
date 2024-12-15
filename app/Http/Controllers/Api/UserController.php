@@ -54,6 +54,7 @@ class UserController extends Controller
     }
 
     public function setSuperAdmin(SetSuperAdminRequest $request, int $id) {
+
         if(Gate::denies('checkSuperAdmin', Auth::user())) abort(403);
 
         $user = $this->user

@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'password' => ['min:8', "max:50", 'string', "confirmed"],
             'name' => ['min:3', "max:50", 'string'],
-            'email' => ['min:8', "max:50", 'email', "unique:users,email"],
+            'email' => ['min:8', "max:50", 'email'],
         ];
     }
 }

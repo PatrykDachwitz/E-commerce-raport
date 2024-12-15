@@ -15,7 +15,7 @@ export function getContent(url, setSuccessCommunicate = true) {
              {
                  headers: {
                      'X-CSRF-Token': getCSRFToken(),
-                     Accept: 'application/json'
+                     'Accept': 'application/json'
                  }
              })
             .then(response => {

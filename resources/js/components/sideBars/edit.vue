@@ -1,19 +1,25 @@
 <script setup>
 import NameByRoute from "@/components/sideBars/nameByRoute.vue";
 import {inject} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {updateElement} from "@/utils/updateElement.js";
 import {setCommunicate} from "@/utils/setCommunicate.js";
+import {formDataToJson} from "@/utils/formDataToJson.js";
 
 const route = useRoute();
 const apiUrl = (inject('apiUrl') + route.fullPath).replace('/edit', '');
 const communicates = inject('communicates');
+const nameRoute = route.params.target;
 
 async function updateCurrentElement() {
-    const statusCode = await updateElement(route.params.target, apiUrl);
+    const formElement = document.querySelector(`form#${nameRoute}`);
+    const formData = new FormData(formElement);
+    const dataUpdate = formDataToJson(formData);
+    const statusCode = await updateElement(apiUrl, JSON.stringify(
+        dataUpdate
+    ));
 
     communicates.value.push(setCommunicate(communicates.value, statusCode))
-
 }
 </script>
 

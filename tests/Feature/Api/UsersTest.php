@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
@@ -22,7 +24,7 @@ describe('Test create user', function () {
          'password_confirmation' => "patryk123",
        ];
 
-       $response = postJson(route('user.store'), $testUser);
+       $response = postJson(route('users.store'), $testUser);
 
        $response->assertStatus(401);
 
@@ -44,7 +46,7 @@ describe('Test create user', function () {
        ]);
 
        $response = actingAs($user)
-       ->postJson(route('user.store'), $testUser);
+       ->postJson(route('users.store'), $testUser);
 
        $response->assertOk();
 
@@ -69,7 +71,7 @@ describe('Test create user', function () {
        ]);
 
        $response = actingAs($user)
-       ->postJson(route('user.store'), $testUser);
+       ->postJson(route('users.store'), $testUser);
 
        $response->assertOk();
 
@@ -95,7 +97,7 @@ describe('Test create user', function () {
        ]);
 
        $response = actingAs($user)
-       ->postJson(route('user.store'), $testUser);
+       ->postJson(route('users.store'), $testUser);
 
        $response->assertStatus(403);
 
@@ -117,7 +119,7 @@ describe('Test create user', function () {
         ]);
 
         $response = actingAs($user)
-            ->postJson(route('user.store'), $testUser);
+            ->postJson(route('users.store'), $testUser);
 
         $response->assertStatus(422);
 
@@ -146,7 +148,7 @@ describe('Test create user', function () {
         ]);
 
        $response = actingAs($user)
-       ->postJson(route('user.store'), $testUser);
+       ->postJson(route('users.store'), $testUser);
 
        $response->assertStatus(422);
 
@@ -171,7 +173,7 @@ describe('Test create user', function () {
         unset($testUser[$nameInput]);
 
         $response = actingAs($user)
-        ->postJson(route('user.store'), $testUser);
+        ->postJson(route('users.store'), $testUser);
 
         $response->assertStatus(422);
 
@@ -194,7 +196,7 @@ describe('User index route', function () {
       ]);
 
       $response = actingAs($user)
-       ->getJson(route('user.index'));
+       ->getJson(route('users.index'));
 
       $response->assertOk();
 
@@ -214,7 +216,7 @@ describe('User index route', function () {
       ]);
 
       $response = actingAs($user)
-       ->getJson(route('user.index'));
+       ->getJson(route('users.index'));
 
       $response->assertOk();
 
@@ -229,7 +231,7 @@ describe('User index route', function () {
             ->create()
             ->toArray();
 
-        $response = getJson(route('user.index'));
+        $response = getJson(route('users.index'));
 
         $response->assertStatus(401);
 
@@ -244,7 +246,7 @@ describe('User delete route', function () {
         $user = User::factory()->create();
 
         deleteJson(
-            route('user.destroy', $user->id)
+            route('users.destroy', $user->id)
         )->assertStatus(401);
 
 
@@ -264,7 +266,7 @@ describe('User delete route', function () {
 
         $response = actingAs($userLogIn)
             ->deleteJson(
-            route('user.destroy', $user['id'])
+            route('users.destroy', $user['id'])
         );
 
         $response->assertStatus(100);
@@ -288,7 +290,7 @@ describe('User delete route', function () {
 
         $response = actingAs($userLogIn)
             ->deleteJson(
-            route('user.destroy', 9769)
+            route('users.destroy', 9769)
         );
 
         $response->assertStatus(100);
@@ -308,7 +310,7 @@ describe('User delete route', function () {
 
         $response = actingAs($userLogIn)
             ->deleteJson(
-            route('user.destroy', $user['id'])
+            route('users.destroy', $user['id'])
         );
 
         $response->assertStatus(403);
@@ -328,7 +330,7 @@ describe('Testing show user route', function () {
             ]);
 
         $response = actingAs($user)
-            ->getJson(route('user.show', $user->id));
+            ->getJson(route('users.show', $user->id));
 
         $response->assertOk();
 
@@ -348,7 +350,7 @@ describe('Testing show user route', function () {
             ]);
 
         $response = actingAs($userActing)
-            ->getJson(route('user.show', $user['id']));
+            ->getJson(route('users.show', $user['id']));
 
         $response->assertStatus(403);
 
@@ -366,7 +368,7 @@ describe('Testing show user route', function () {
             ]);
 
         $response = actingAs($userActing)
-            ->getJson(route('user.show', $user['id']));
+            ->getJson(route('users.show', $user['id']));
 
         $response->assertOk();
 
@@ -379,7 +381,7 @@ describe('Testing show user route', function () {
             ->create();
 
 
-        $response = getJson(route('user.show', $user->id));
+        $response = getJson(route('users.show', $user->id));
 
         $response->assertStatus(401);
 
@@ -393,7 +395,7 @@ describe('Testing show user route', function () {
 
 
         $response = actingAs($user)
-        ->getJson(route('user.show', ($user->id + 10)));
+        ->getJson(route('users.show', ($user->id + 10)));
 
         $response->assertStatus(404);
 
@@ -408,41 +410,48 @@ describe('Testing update user info', function () {
             ->create();
 
 
-        $response = getJson(route('user.update', ['user' => 1]), ['name' => 'test']);
+        $response = getJson(route('users.update', ['user' => 1]), ['name' => 'test']);
 
         $response->assertStatus(401);
 
     });
 
     it('Update data self profile expend success', function () {
+        $passwordNew = "testPassword12";
+
         $user = User::factory()
             ->create([
                 'id' => 10,
                 'super_admin' => false
             ]);
+
         $userExpectData = [
             'id' => 10,
             'name' => "test",
-            'email' => "test@wp.pl"
+            'email' => "test@wp.pl",
         ];
 
         assertDatabaseMissing('users', $userExpectData);
-        /*
-         * 'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'super_admin' => false,
-         */
+        $userExpectData['password_confirmation'] = $passwordNew;
+        $userExpectData['password'] = $passwordNew;
 
         $response = actingAs($user)
-            ->putJson(route('user.update', [
+            ->putJson(route('users.update', [
                 'user' => 10
             ]), $userExpectData);
 
         $response->assertOk();
+
+        unset($userExpectData['password_confirmation']);
+        unset($userExpectData['password']);
+
+        $userData = DB::table('users')->find(10);
+
+        expect(Hash::check($passwordNew, $userData->password))
+            ->toBeTrue();
+
         assertDatabaseHas('users', $userExpectData);
+
 
     });
     it('Update data other user without super admin permission expend error http code 403', function () {
@@ -457,7 +466,7 @@ describe('Testing update user info', function () {
         ]);
 
         actingAs($user)
-            ->putJson(route('user.update', [
+            ->putJson(route('users.update', [
                 'user' => 3
             ]), [
                 'name' => "test"
@@ -465,6 +474,8 @@ describe('Testing update user info', function () {
 
     });
     it('Update data other user with super admin permission expend success', function () {
+        $passwordNew = "testPassword12";
+
         $user = User::factory()
             ->create([
                 'id' => 1,
@@ -477,26 +488,62 @@ describe('Testing update user info', function () {
         $userExpectData = [
             'id' => 10,
             'name' => "test",
-            'email' => "test@wp.pl"
+            'email' => "test@wp.pl",
         ];
 
         assertDatabaseMissing('users', $userExpectData);
-        /*
-         * 'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'super_admin' => false,
-         */
+        $userExpectData['password_confirmation'] = $passwordNew;
+        $userExpectData['password'] = $passwordNew;
+
 
         $response = actingAs($user)
-            ->putJson(route('user.update', [
+            ->putJson(route('users.update', [
                 'user' => 10
             ]), $userExpectData);
 
         $response->assertOk();
+        unset($userExpectData['password_confirmation']);
+        unset($userExpectData['password']);
+
         assertDatabaseHas('users', $userExpectData);
+
+        $userData = DB::table('users')->find(10);
+
+        expect(Hash::check($passwordNew, $userData->password))
+            ->toBeTrue();
+    });
+    it('Test update password without confirmed password with super admin permission expected error 422', function () {
+        $passwordNew = "testPassword12";
+        $passwordHash = Hash::make($passwordNew);
+
+        $user = User::factory()
+            ->create([
+                'id' => 1,
+                'super_admin' => true
+            ]);
+        User::factory()->create([
+            'id' => 10
+        ]);
+
+        $userExpectData = [
+            'password' => $passwordHash,
+        ];
+
+        assertDatabaseMissing('users', $userExpectData);
+        $userExpectData['password'] = $passwordNew;
+
+        $response = actingAs($user)
+            ->putJson(route('users.update', [
+                'user' => 10
+            ]), $userExpectData);
+
+        $response
+            ->assertStatus(422);
+
+        expect($response->json('errors'))
+            ->toHaveKey('password');
+
+        assertDatabaseMissing('users', $userExpectData);
 
     });
 
@@ -521,7 +568,7 @@ describe('Testing update user info', function () {
         ];
 
         $response = actingAs($user)
-            ->putJson(route('user.update', [
+            ->putJson(route('users.update', [
                 'user' => 10
             ]), $userExpectDataUpdate);
 
@@ -549,7 +596,7 @@ describe('Testing update user info', function () {
         ];
 
         $response = actingAs($user)
-            ->putJson(route('user.update', [
+            ->putJson(route('users.update', [
                 'user' => 1
             ]), $userExpectDataUpdate);
 
@@ -562,7 +609,7 @@ describe('Testing update user info', function () {
 
 describe('Test update super admin permission', function () {
    it('Update status super admin not log in user expected error 401', function () {
-       putJson(route('user.superAdmin', [
+       putJson(route('users.superAdmin', [
            'user' => 1
        ]))->assertStatus(401);
    });
@@ -575,7 +622,7 @@ describe('Test update super admin permission', function () {
            ]);
 
        actingAs($user)
-           ->putJson(route('user.superAdmin', [
+           ->putJson(route('users.superAdmin', [
                'user' => 1
            ]), [
                'super_admin' => true
@@ -596,7 +643,7 @@ describe('Test update super admin permission', function () {
            ]);
 
        actingAs($user)
-           ->putJson(route('user.superAdmin', [
+           ->putJson(route('users.superAdmin', [
                'user' => 1
            ]), [
                'super_admin' => true
@@ -623,7 +670,7 @@ describe('Test update super admin permission', function () {
            ]);
 
        actingAs($user)
-           ->putJson(route('user.superAdmin', [
+           ->putJson(route('users.superAdmin', [
                'user' => 2
            ]), [
                'super_admin' => true
@@ -651,7 +698,7 @@ describe('Test update super admin permission', function () {
 
 
        actingAs($user)
-           ->putJson(route('user.superAdmin', [
+           ->putJson(route('users.superAdmin', [
                'user' => 2
            ]), [
                'super_admin' => true

@@ -22,7 +22,7 @@ class SetSuperAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'super_admin' => ['required', 'boolean']
+            'super_admin' => ['boolean']
         ];
     }
 }

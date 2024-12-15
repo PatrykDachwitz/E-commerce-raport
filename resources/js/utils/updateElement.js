@@ -1,17 +1,16 @@
 import {getCSRFToken} from "@/utils/getCSRFToken.js";
 import {setValidInputs} from "@/utils/setValidInputs.js";
+import {inject} from "vue";
 
-export async function updateElement(nameRoute, url) {
-    const formElement = document.querySelector(`form#${nameRoute}`);
-    const formData = new FormData(formElement);
-
+export async function updateElement(url, data) {
     return await fetch(url, {
         method: "PUT",
         headers: {
             'X-CSRF-Token': getCSRFToken(),
-            Accept: 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: formData
+        body: data
     })
         .then(response => {
            return response.status;

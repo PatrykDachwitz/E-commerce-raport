@@ -4,6 +4,7 @@ namespace App\Repository\Eloquent;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements \App\Repository\UserRepository
 {
@@ -40,6 +41,10 @@ class UserRepository implements \App\Repository\UserRepository
 
     public function update(int $id, array $data)
     {
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         return $this->user
             ->where('id', $id)
             ->update($data);

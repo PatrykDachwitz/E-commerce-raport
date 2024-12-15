@@ -1,5 +1,8 @@
 <script setup>
 import NameByRoute from "@/components/sideBars/nameByRoute.vue";
+import {inject} from "vue";
+
+const communicates = inject('communicates');
 </script>
 
 <template>

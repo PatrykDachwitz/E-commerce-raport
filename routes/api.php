@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::put('users/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
     ->middleware('auth:sanctum')
-    ->name('user.superAdmin');
+    ->name('users.superAdmin');
 
 Route::apiResource('users', UserController::class)
     ->middleware('auth:sanctum');

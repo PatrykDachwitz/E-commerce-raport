@@ -19,40 +19,33 @@ const lang = inject('lang');
             </div>
         </div>
         <div class="col-md-5 form__input">
-            <label for="validationCustomUsername" class="form-label">{{ lang.email }}</label>
+            <label for="validationCustom03" class="form-label">{{ lang.email }}</label>
             <div class="input-group has-validation">
-                <input type="email" class="form-control" name="email" id="validationCustomUsername" :placeholder="lang.templateEmail" required>
+                <input type="email" class="form-control" name="email" id="validationCustom03" :placeholder="lang.templateEmail" required>
             </div>
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustomUsername" class="form-label">{{ lang.password }}</label>
+            <label for="validationCustom04" class="form-label">{{ lang.password }}</label>
             <div class="input-group has-validation">
-                <input type="password" class="form-control" name="password" id="validationCustomUsername" :placeholder="lang.password" required>
+                <input type="password" class="form-control" name="password" id="validationCustom04" :placeholder="lang.password">
             </div>
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustomUsername" class="form-label">{{ lang.confirmedPassword }}</label>
+            <label for="validationCustom05" class="form-label">{{ lang.confirmedPassword }}</label>
             <div class="input-group has-validation">
-                <input type="password" class="form-control" name="password_confirmation" id="validationCustomUsername" :placeholder="lang.password" required>
+                <input type="password" class="form-control" name="password_confirmation" id="validationCustom05" :placeholder="lang.password">
             </div>
         </div>
         <div class="col-md-3 form__input">
-            <label for="validationCustom04" class="form-label">{{ lang.userBanned }}</label>
-            <select class="form-select" id="validationCustom04" name="banned" required>
-                <option selected value="0">{{ lang.no }}</option>
-                <option value="1">{{ lang.yes }}</option>
-            </select>
-        </div>
-        <div class="col-md-3 form__input">
-            <label for="validationCustom04" class="form-label">{{ lang.userRight }}</label>
-            <select class="form-select" id="validationCustom04" name="user_right" required>
+            <label for="validationCustom06" class="form-label">{{ lang.userRight }}</label>
+            <select class="form-select" id="validationCustom06" name="user_right" required>
                 <option selected value="1">{{ lang.read }}</option>
                 <option value="2">{{ lang.editAndSave }}</option>
             </select>
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustom04" class="form-label">{{ lang.superAdmin }}</label>
-            <select class="form-select" id="validationCustom04" name="super_admin" disabled>
+            <label for="validationCustom07" class="form-label">{{ lang.superAdmin }}</label>
+            <select class="form-select" id="validationCustom07" name="super_admin" disabled>
                 <option selected value="0">{{ lang.no }}</option>
                 <option value="1">{{ lang.yes }}</option>
             </select>
