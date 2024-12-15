@@ -111,10 +111,12 @@ class UserController extends Controller
      */
     public function destroy(int $id)
     {
+
         if(Gate::denies('checkSuperAdmin', Auth::user())) abort(403);
+
         return response([
             'data' => $this->user
-            ->destroy($id)
-        ], 100);
+                ->destroy($id)
+        ], 200);
     }
 }

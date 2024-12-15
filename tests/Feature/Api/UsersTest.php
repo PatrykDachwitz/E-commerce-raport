@@ -269,7 +269,7 @@ describe('User delete route', function () {
             route('users.destroy', $user['id'])
         );
 
-        $response->assertStatus(100);
+        $response->assertStatus(200);
 
         assertDatabaseMissing('users', [
             'id' => $user['id']
@@ -293,7 +293,7 @@ describe('User delete route', function () {
             route('users.destroy', 9769)
         );
 
-        $response->assertStatus(100);
+        $response->assertStatus(200);
 
         assertDatabaseMissing('users', [
             'id' => 9769
