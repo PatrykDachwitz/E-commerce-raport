@@ -2,7 +2,7 @@
 
 use App\Console\Commands\ReportComparisonDay;
 use App\Console\Commands\ReportResultDay;
-use App\Console\Commands\ReportWeeklyDay;
+use App\Console\Commands\ReportResultWeekly;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -21,7 +21,7 @@ Schedule::command(ReportComparisonDay::class, [$date])
     ->timezone($timezone)
     ->dailyAt('6:20');
 
-Schedule::command(ReportWeeklyDay::class, [$date])
+Schedule::command(ReportResultWeekly::class, [$date])
     ->timezone($timezone)
     ->dailyAt('6:50')
     ->mondays();

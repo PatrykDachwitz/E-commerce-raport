@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ReportWeeklyDay extends Command
+class ReportResultWeekly extends Command
 {
     private string $path;
     private ResultWeekly $resultWeekly;

@@ -19,14 +19,13 @@ Route::apiResource('users', UserController::class)
 Route::group([
     'prefix' => 'report',
     'as' => 'report.',
+    'middleware' => 'auth:sanctum',
 ], function () {
     Route::get('daily', DailyController::class)
-        ->name('daily')
-        ->middleware('auth:sanctum');
+        ->name('daily');
     Route::get('weekly', WeeklyController::class)
         ->name('weekly');
 
     Route::get('comparison', ComparisonController::class)
-        ->name('comparison')
-        ->middleware('auth:sanctum');
+        ->name('comparison');
 });
