@@ -42,6 +42,12 @@ class WeeklyReport extends Seeder
                 "google" => 123327821,
                 "google_daily_budget" => 80
           ],[
+              'name' => "Anglia",
+              "shop" => 2,
+                "analytics" => 287213359,
+                "facebook" => 3055428861222484,
+                "facebook_daily_budget" => 123
+          ],[
               'name' => "B2B",
               "shop" => 101,
               "result-summary" => false

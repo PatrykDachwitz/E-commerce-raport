@@ -4,6 +4,13 @@ namespace App\Providers;
 
 use App\Repository\Eloquent\UserRepository;
 use App\Repository\UserRepository as UserRepositoryInterface;
+
+use App\Services\Report\Fake\AnalyticsApiResponse;
+use App\Services\Report\Fake\GoogleAdsResponse;
+use App\Services\Report\Fake\MetaAdsResponse;
+use App\Services\Report\Fake\NbpApiResponse;
+use App\Services\Report\Fake\ReportWeeklyResult;
+use App\Services\Report\Fake\ShopApiResponse;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +21,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(AnalyticsApiResponse::class, function ($app) {
+            return new AnalyticsApiResponse();
+        });
+        $this->app->singleton(GoogleAdsResponse::class, function ($app) {
+            return new GoogleAdsResponse();
+        });
+        $this->app->singleton(MetaAdsResponse::class, function ($app) {
+            return new MetaAdsResponse();
+        });
+        $this->app->singleton(NbpApiResponse::class, function ($app) {
+            return new NbpApiResponse();
+        });
+        $this->app->singleton(ReportWeeklyResult::class, function ($app) {
+            return new ReportWeeklyResult();
+        });
+
+        $this->app->singleton(ShopApiResponse::class, function ($app) {
+            return new ShopApiResponse();
+        });
     }
 
     /**
