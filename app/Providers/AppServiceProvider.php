@@ -9,6 +9,7 @@ use App\Services\Report\Fake\AnalyticsApiResponse;
 use App\Services\Report\Fake\GoogleAdsResponse;
 use App\Services\Report\Fake\MetaAdsResponse;
 use App\Services\Report\Fake\NbpApiResponse;
+use App\Services\Report\Fake\ReportDayResult;
 use App\Services\Report\Fake\ReportWeeklyResult;
 use App\Services\Report\Fake\ShopApiResponse;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ShopApiResponse::class, function ($app) {
             return new ShopApiResponse();
+        });
+        $this->app->singleton(ReportDayResult::class, function ($app) {
+            return new ReportDayResult();
         });
     }
 

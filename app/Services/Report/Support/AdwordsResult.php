@@ -301,8 +301,19 @@ class AdwordsResult
         ];
     }
 
+    private function clearResponseData(array $data) : array {
+
+        foreach ($data as $key => $item) {
+            unset($data[$key]['budget']["summaryWithoutCurrent"]);
+            unset($data[$key]['click']["summaryWithoutCurrent"]);
+        }
+
+        return $data;
+    }
     public function getResult(Collection $countries, AdwordsApi $adwordsApi, string $currentDate, string $lastDate) : array {
         $response = [];
+        $this->clearSummaryResult();
+        $this->countDates = 30;
 
         foreach ($countries as $country) {
 
@@ -315,9 +326,12 @@ class AdwordsResult
                 ->get($currentDate, $lastDate, $country);
 
             $response[$country->id] = $this->getStructureWithData($adwordsResult, $currentDate);
+            $this->setSummaryResult($adwordsResult);
         }
 
-        return $this->calculateSummaryRow($response, $currentDate);
+        return $this->clearResponseData(
+            $this->calculateSummaryRowNewsetOptionWithManyRow($response, $currentDate)
+        );
     }
     private function clearSummaryResult() : void {
         $this->summaryResult = [];
