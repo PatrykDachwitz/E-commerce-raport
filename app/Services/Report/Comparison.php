@@ -2,12 +2,16 @@
 declare(strict_types=1);
 namespace App\Services\Report;
 
+use App\Repository\HistoryReportRepository;
 use App\Services\ShopSales;
 use Exception;
 
 class Comparison
 {
     private ShopSales $sales;
+
+    const REPORT_NAME = 'comparison-day';
+    private HistoryReportRepository $historyReportRepository;
     private array $response;
     private array $data = [
         'resultForBeginMonthToDateReport' => null,
@@ -33,8 +37,9 @@ class Comparison
             'end' => null,
         ],
     ];
-    public function __construct(ShopSales $sales)
+    public function __construct(ShopSales $sales, HistoryReportRepository $repository)
     {
+        $this->historyReportRepository = $repository;
         $this->sales = $sales;
     }
 
@@ -184,6 +189,11 @@ class Comparison
         try {
             $this->buildResponseFile($date);
 
+            $this->historyReportRepository
+                ->create([
+                    'date' => $date,
+                    'type' => self::REPORT_NAME
+                ]);
             return $this->response;
         } catch (Exception) {
             return [];

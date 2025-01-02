@@ -9,6 +9,8 @@ use App\Facades\NbpApiResponseFacade;
 use App\Facades\ReportWeeklyResultFacade;
 use App\Facades\ShopApiResponseFacade;
 use App\Models\Country;
+use App\Models\HistoryReport;
+use App\Repository\Eloquent\HistoryReportRepository;
 use App\Services\Adwords\AnalyticsApi;
 use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
@@ -21,6 +23,8 @@ use App\Services\Report\ResultWeekly;
 use App\Services\ShopSales;
 use Database\Seeders\WeeklyReport;
 use Illuminate\Support\Facades\Http;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
@@ -57,7 +61,14 @@ it('Verification response Weekly report with current data', function() {
         ]
     ];
 
-     $reportWeekly = new ResultWeekly(
+    $searchRow = [
+        'date' => $rangesDate["end"],
+        'type' => 'result-week'
+    ];
+
+    assertDatabaseMissing('history_reports', $searchRow);
+
+    $reportWeekly = new ResultWeekly(
          new Country(),
          new AnalyticsResult(new AnalyticsApi()),
          new MetaAdsApi(new CoursePLN()),
@@ -69,7 +80,10 @@ it('Verification response Weekly report with current data', function() {
              ),
              new CoursePLN()
          ),
-         new GoogleAdwordsApi()
+         new GoogleAdwordsApi(),
+        new HistoryReportRepository(
+            new HistoryReport()
+        )
      );
 
 
@@ -78,4 +92,6 @@ it('Verification response Weekly report with current data', function() {
         ->get($rangesDate, $rangesOtherDate)
     )
         ->toMatchArray(ReportWeeklyResultFacade::getSuccess());
+
+    assertDatabaseHas('history_reports', $searchRow);
 });

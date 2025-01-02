@@ -24,7 +24,7 @@ class ReportResultWeekly extends Command
      *
      * @var string
      */
-    protected $signature = 'report:weekly-day {date}';
+    protected $signature = 'report:result-week {date}';
 
     /**
      * The console command description.

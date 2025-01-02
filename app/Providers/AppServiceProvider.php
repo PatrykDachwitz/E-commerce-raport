@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repository\Eloquent\UserRepository;
 use App\Repository\UserRepository as UserRepositoryInterface;
+use App\Repository\Eloquent\HistoryReportRepository;
+use App\Repository\HistoryReportRepository as HistoryReportInterface;
 
 use App\Services\Report\Fake\AnalyticsApiResponse;
 use App\Services\Report\Fake\GoogleAdsResponse;
@@ -55,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             UserRepositoryInterface::class,
             UserRepository::class,
+        );
+        $this->app->singleton(
+            HistoryReportInterface::class,
+            HistoryReportRepository::class,
         );
 
 

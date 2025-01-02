@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Report;
 
 use App\Models\Country;
+use App\Repository\HistoryReportRepository;
 use App\Services\Adwords\AnalyticsApi;
 use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
@@ -13,6 +14,7 @@ use App\Services\Report\Support\ShopResult;
 class ResultDay
 {
 
+    const REPORT_NAME = 'result-day';
     private Country $country;
     private MetaAdsApi $metaAdsApi;
     private AdwordsResult $adwordsResult;
@@ -21,8 +23,10 @@ class ResultDay
     private ShopResult $shopResult;
     private GoogleAdwordsApi $googleAdwordsApi;
 
-    public function __construct(Country $country, AnalyticsResult $analyticsResult, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi)
+    private HistoryReportRepository $historyReportRepository;
+    public function __construct(Country $country, AnalyticsResult $analyticsResult, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi, HistoryReportRepository $historyReportRepository)
     {
+        $this->historyReportRepository = $historyReportRepository;
         $this->country = $country;
         $this->analyticsResult = $analyticsResult;
         $this->metaAdsApi = $metaAdsApi;
@@ -92,6 +96,11 @@ class ResultDay
             'costGoogle' => $googleResults["summary"]['budget'],
         ];
 
+        $this->historyReportRepository
+            ->create([
+                'date' => $date,
+                'type' => self::REPORT_NAME,
+            ]);
 
         return $completeReport;
     }

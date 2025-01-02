@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Report;
 
 use App\Models\Country;
+use App\Repository\HistoryReportRepository;
 use App\Services\Adwords\AnalyticsApi;
 use App\Services\Adwords\GoogleAdwordsApi;
 use App\Services\Adwords\MetaAdsApi;
@@ -12,9 +13,12 @@ use App\Services\Report\Support\ShopResult;
 use App\Services\ShopSales;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Exception;
+use function Laravel\Prompts\select;
 
 class ResultWeekly
 {
+
+    private HistoryReportRepository $historyReportRepository;
     private Country $country;
     private MetaAdsApi $metaAdsApi;
     private AdwordsResult $adwordsResult;
@@ -23,7 +27,9 @@ class ResultWeekly
     private ShopResult $shopResult;
     private GoogleAdwordsApi $googleAdwordsApi;
 
-    public function __construct(Country $country, AnalyticsResult $analyticsResult, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi)
+    const REPORT_NAME = 'result-week';
+
+    public function __construct(Country $country, AnalyticsResult $analyticsResult, MetaAdsApi $metaAdsApi, AdwordsResult $adwordsResult, ShopResult $shopResult, GoogleAdwordsApi $googleAdwordsApi, HistoryReportRepository $historyReportRepository)
     {
         $this->country = $country;
         $this->analyticsResult = $analyticsResult;
@@ -31,6 +37,7 @@ class ResultWeekly
         $this->adwordsResult = $adwordsResult;
         $this->shopResult = $shopResult;
         $this->googleAdwordsApi = $googleAdwordsApi;
+        $this->historyReportRepository = $historyReportRepository;
     }
 
     private function searchOldestDate(string $date, string $comparisonDate) : string {
@@ -88,7 +95,6 @@ class ResultWeekly
 
         $resultShopApi = $this->shopResult
             ->getResultNewset($this->datesReport, $analyticsResult, $facebookResults, $googleResults, $activesCountry);
-//Na przyszłość do usuniećea removeSummaryWithoutCurrent
 
         foreach ($activesCountry as $country) {
             $completeReport[] = [
@@ -112,6 +118,11 @@ class ResultWeekly
             'costGoogle' => $this->removeSummaryWithoutCurrent($googleResults["summary"]['budget']),
         ];
 
+        $this->historyReportRepository
+            ->create([
+               'type' => self::REPORT_NAME,
+               'date' => $currentDate['end']
+            ]);
 
         return $completeReport;
     }

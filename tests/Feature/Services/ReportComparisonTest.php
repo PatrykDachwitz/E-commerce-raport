@@ -2,17 +2,23 @@
 declare(strict_types=1);
 
 use App\Models\Country;
+use App\Models\HistoryReport;
+use App\Repository\Eloquent\HistoryReportRepository;
 use App\Services\Connection\Shop;
 use App\Services\Report\Comparison;
 use App\Services\ShopSales;
 use Database\Seeders\ComparisonDayJuneCountry;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\artisan;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\seed;
 
 beforeEach(function () {
    seed(ComparisonDayJuneCountry::class);
+   DB::table('history_reports')->truncate();
 });
 
 
@@ -35,7 +41,12 @@ it('Verification working comparison service class for June 20 day in 2024 with 1
     $country = new Country();
     $sales = new ShopSales($salesConnection, $country);
 
-    $comparison = new Comparison($sales);
+    $comparison = new Comparison(
+        $sales,
+        new HistoryReportRepository(
+            new HistoryReport()
+        )
+    );
 
     $expectArray = [
         "resultsFromBeginnerMonthCurrentYear" => [
@@ -88,6 +99,13 @@ it('Verification working comparison service class for June 20 day in 2024 with 1
     ) {
 
     $startDay = "2024-06-20";
+    $searchRow = [
+        'date' => $startDay,
+        'type' => 'comparison-day'
+    ];
+
+    assertDatabaseMissing('history_reports', $searchRow);
+
     Http::fake([
         config('api.shop') . "?start=2024-06-01&end=2024-06-20" => Http::response("", 500),
         config('api.shop') . "?start=2023-06-01&end=2023-06-20" => Http::response($shopResponseJuneTo20Day),
@@ -99,7 +117,12 @@ it('Verification working comparison service class for June 20 day in 2024 with 1
     $country = new Country();
     $sales = new ShopSales($salesConnection, $country);
 
-    $comparison = new Comparison($sales);
+    $comparison = new Comparison(
+        $sales,
+        new HistoryReportRepository(
+            new HistoryReport()
+        )
+    );
 
     $expectArray = [
         "resultsFromBeginnerMonthCurrentYear" => [
@@ -143,6 +166,8 @@ it('Verification working comparison service class for June 20 day in 2024 with 1
 
     expect($comparison->get($startDay))
         ->toBe($expectArray);
+
+    assertDatabaseHas('history_reports', $searchRow);
 
 })->with( 'shopApiResponseJune1_20Year2023', 'shopApiResponseJune1_30Year2023');
 
