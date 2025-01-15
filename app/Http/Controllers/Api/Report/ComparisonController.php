@@ -21,12 +21,19 @@ class ComparisonController extends Controller
 
     private function getHeadersName() : array {
 
+        $resultsFromBeginnerPreviousMonthCurrentYear = "1-{$this->currentDay} " . __("month.{$this->previousMonth}") . " {$this->currentYear}";
+
+        if ($this->previousMonth <= 0) {
+            $temporaryYear = $this->currentYear - 1;
+            $resultsFromBeginnerPreviousMonthCurrentYear = "1-{$this->currentDay} " . __("month.12") . " {$temporaryYear}";
+        }
+
         return [
             'resultsFromBeginnerMonthCurrentYear' => "1-{$this->currentDay} " . __("month.{$this->currentMonth}") . " {$this->currentYear}",
             'resultsFromBeginnerMonthPreviousYear' => "1-{$this->currentDay} " . __("month.{$this->currentMonth}") . " {$this->previousYear}",
             'avgResultMonthCurrentYear' => __('content.avgValue') . " " . __("month.{$this->currentMonth}") . " {$this->currentYear}",
             'avgResultMonthPreviousYear' => __('content.avgValue') . " " . __("month.{$this->currentMonth}") . " {$this->previousYear}",
-            'resultsFromBeginnerPreviousMonthCurrentYear' => "1-{$this->currentDay} " . __("month.{$this->previousMonth}") . " {$this->currentYear}",
+            'resultsFromBeginnerPreviousMonthCurrentYear' => $resultsFromBeginnerPreviousMonthCurrentYear,
         ];
     }
 

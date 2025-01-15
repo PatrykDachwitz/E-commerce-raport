@@ -131,7 +131,7 @@ class Comparison
         $monthCheck = intval($month);
 
         if ($monthCheck > 12) $monthCheck = 1;
-        if ($monthCheck <= 0) $monthCheck = 12;
+        if ($monthCheck < 0) $monthCheck = 12;
 
         if (strlen(strval($monthCheck)) === 1) return "0{$monthCheck}";
         else return strval($monthCheck);
