@@ -13,6 +13,12 @@ class HistoryReportRepository implements \App\Repository\HistoryReportRepository
         $this->historyReport = $historyReport;
     }
 
+    public function index(int $paginate = 15)
+    {
+        return $this->historyReport
+            ->paginate($paginate);
+    }
+
     public function create(array $data): HistoryReport
     {
         return $this->historyReport

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HistoriesReportController;
 use App\Http\Controllers\Api\Report\ComparisonController;
 use App\Http\Controllers\Api\Report\DailyController;
 use App\Http\Controllers\Api\Report\WeeklyController;
@@ -13,6 +14,10 @@ Route::put('users/{user}/super_admin', [UserController::class, 'setSuperAdmin'])
     ->name('users.superAdmin');
 
 Route::apiResource('users', UserController::class)
+    ->middleware('auth:sanctum');
+
+Route::apiResource('histories_report', HistoriesReportController::class)
+    ->only('index')
     ->middleware('auth:sanctum');
 
 
