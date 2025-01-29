@@ -1,0 +1,31 @@
+.history {
+    &__select {
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+        max-height: 250px;
+        background-color: $dark;
+    }
+
+    &__title {
+        cursor: pointer;
+    }
+
+    &__button {
+        font-size: 0.8em;
+        border: none;
+        color: $grey-dark;
+        background: none;
+        border-bottom: 1px solid $dark;
+        padding: 0 1em;
+        &:hover {
+            background-color: white;
+            color: $dark;
+        }
+    }
+
+    &__icon {
+        cursor: pointer;
+    }
+}

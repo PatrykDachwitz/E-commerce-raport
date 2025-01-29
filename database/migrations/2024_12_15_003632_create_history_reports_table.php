@@ -17,6 +17,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->string('type', 255);
             $table->date('date');
+            $table->string('name');
         });
     }
 

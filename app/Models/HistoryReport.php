@@ -12,11 +12,13 @@ class HistoryReport extends Model
 
     protected $casts = [
       'type' => 'string',
-      'date' => 'date',
+      'date' => 'string',
+      'name' => 'string',
     ];
 
     protected $fillable = [
         'type',
         'date',
+        'string',
     ];
 }

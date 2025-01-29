@@ -121,7 +121,8 @@ class ResultWeekly
         $this->historyReportRepository
             ->create([
                'type' => self::REPORT_NAME,
-               'date' => $currentDate['end']
+               'date' => $currentDate['end'],
+               'name' => $currentDate['end']
             ]);
 
         return $completeReport;

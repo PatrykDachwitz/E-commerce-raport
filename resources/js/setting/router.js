@@ -12,6 +12,7 @@ import createView from "@/views/element/create.vue";
 import editView from "@/views/element/edit.vue";
 import showView from "@/views/element/show.vue";
 import indexView from "@/views/element/index.vue";
+import reportBar from "@/components/sideBars/reportBar.vue";
 
 
 
@@ -61,7 +62,10 @@ const routes = [
             {
                 path: "daily",
                 name: "report-daily",
-                component: daily
+                components: {
+                    sideBar: reportBar,
+                    default: daily
+                }
             },
             {
                 path: "weekly",

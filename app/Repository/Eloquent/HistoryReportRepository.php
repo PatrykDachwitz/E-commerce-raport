@@ -13,9 +13,19 @@ class HistoryReportRepository implements \App\Repository\HistoryReportRepository
         $this->historyReport = $historyReport;
     }
 
-    public function index(int $paginate = 15)
+    public function index(int $paginate = 15, string|null $type = null, string $order = 'asc')
     {
-        return $this->historyReport
+
+        $query = $this->historyReport
+            ->query();
+
+        if(!is_null($type)) {
+            $query
+                ->where('type', $type);
+        }
+
+        return $query
+            ->orderBy('date', $order)
             ->paginate($paginate);
     }
 

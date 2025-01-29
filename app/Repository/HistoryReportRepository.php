@@ -10,5 +10,5 @@ interface HistoryReportRepository
 
     public function create(array $data) : HistoryReport;
 
-    public function index(int $paginate = 15);
+    public function index(int $paginate = 15, string|null $type = null, string $order = 'asc');
 }

@@ -9,6 +9,7 @@ use App\Repository\HistoryReportRepository as HistoryReportInterface;
 
 use App\Services\Report\Fake\AnalyticsApiResponse;
 use App\Services\Report\Fake\GoogleAdsResponse;
+use App\Services\Report\Fake\HistoryReport;
 use App\Services\Report\Fake\MetaAdsResponse;
 use App\Services\Report\Fake\NbpApiResponse;
 use App\Services\Report\Fake\ReportDayResult;
@@ -45,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton(ReportDayResult::class, function ($app) {
             return new ReportDayResult();
+        });
+        $this->app->singleton(HistoryReport::class, function ($app) {
+            return new HistoryReport();
         });
     }
 

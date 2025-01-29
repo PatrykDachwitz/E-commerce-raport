@@ -27,8 +27,10 @@ class HistoryReportFactory extends Factory
 
     public function definition(): array
     {
+        $date = fake()->date('Y-m-d');
         return [
-            'date' => fake()->date('Y-m-d'),
+            'date' => $date,
+            'name' => $date,
             'type' => $this->getRandomType()
         ];
     }

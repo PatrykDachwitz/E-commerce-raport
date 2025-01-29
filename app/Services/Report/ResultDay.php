@@ -99,6 +99,7 @@ class ResultDay
         $this->historyReportRepository
             ->create([
                 'date' => $date,
+                'name' => $date,
                 'type' => self::REPORT_NAME,
             ]);
 

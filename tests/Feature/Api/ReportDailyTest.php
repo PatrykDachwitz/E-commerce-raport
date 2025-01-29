@@ -857,8 +857,10 @@ describe('verification format and count response data', function () {
                            'costGoogle' => $structureStatisticCost,
                            'costFacebook' => $structureStatisticCost,
                        ]
-                   ]
+                   ],
+                   'date'
                ]
+
            );
    });
 
@@ -1049,8 +1051,8 @@ describe('verification format and count response data', function () {
    });
 
     it('Verification correct response for empty date input', function () {
-
-        $expectResult = [
+        $lastDay = date("Y-m-d", strtotime("-1 day"));
+        $fileSaveData = [
             [
                 "country" => "Test",
                 "shop" => [
@@ -1094,16 +1096,62 @@ describe('verification format and count response data', function () {
                 ]
             ],
         ];
-        $lastDay = date("Y-m-d", strtotime("-1 day"));
+        $expectResult = [
+            'data' => [
+                [
+                "country" => "Test",
+                "shop" => [
+                    "shopSales" => [
+                        "value" => 123,
+                        "art" => 242
+                    ],
+                    "avgComparison" => [
+                        "value" => -19800,
+                        "art" => 183
+                    ],
+                    "avgLast30Day" => [
+                        "value" => 96876,
+                        "art" => 58
+                    ],
+                    "minValueLast30Day" => [
+                        "value" => 77076,
+                        "art" => 10
+                    ],
+                    "maxValueLast30Day" => [
+                        "value" => 99076,
+                        "art" => 242
+                    ]
+                ],
+                "global" => [
+                    'countClick' => [
+                        'value' => 100
+                    ],
+                    'avgComparison' => [
+                        'value' => -3604
+                    ],
+                    'avgLast30Day' => [
+                        'value' => 3704
+                    ],
+                    'minValueLast30Day' => [
+                        'value' => 9
+                    ],
+                    'maxValueLast30Day' => [
+                        'value' => 100000
+                    ]
+                ]
+            ]
+                ],
+            'date' => $lastDay
+        ];
 
         Storage::fake();
         Storage::disk()
-            ->put(config('report.containerReportResultDay') . "{$lastDay}.json", json_encode($expectResult));
+            ->put(config('report.containerReportResultDay') . "{$lastDay}.json", json_encode($fileSaveData));
 
         $user = User::factory()->create();
         $responseApi = actingAs($user)
             ->get(route('report.daily'))
-            ->json('data');
+            ->json();
 
         expect($responseApi)
             ->toMatchArray($expectResult);

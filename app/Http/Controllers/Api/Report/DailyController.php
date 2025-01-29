@@ -17,11 +17,13 @@ class DailyController extends Controller
 
     public function __invoke(ReportDateFormat $request)
     {
+        $dateReport = $request->input('date', date("Y-m-d", strtotime('-1 day')));
         $fileContent = Storage::disk()
-            ->get(config('report.containerReportResultDay') . $request->input('date', date("Y-m-d", strtotime('-1 day'))) . ".json");
+            ->get(config('report.containerReportResultDay') . $dateReport . ".json");
 
         return response([
-            'data' => json_decode($fileContent)
+            'data' => json_decode($fileContent),
+            'date' => $dateReport
         ]);
     }
 }

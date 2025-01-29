@@ -65,4 +65,7 @@ return [
     'universal_edit' => [
         'users' => 'Edytuj użytkownika'
     ],
+    'report-daily' => "Raport dzienny",
+    'report-comparison' => "Raport porównawczy",
+    'weekly' => "Raport miesięczny",
 ];

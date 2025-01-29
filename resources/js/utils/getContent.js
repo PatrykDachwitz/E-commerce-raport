@@ -10,7 +10,6 @@ export function getContent(url, setSuccessCommunicate = true) {
 
      watchEffect(() => {
         data.value = null;
-
          fetch(url,
              {
                  headers: {

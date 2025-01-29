@@ -2,7 +2,7 @@
 
 import {getContent} from "@/utils/getContent.js";
 import {useRoute} from "vue-router";
-import {inject, onMounted, watch} from "vue";
+import {inject, onMounted, provide, ref, watch} from "vue";
 import DailyShopResult from "@/components/report/dailyShopResult.vue";
 import DailyAdwordsResult from "@/components/report/dailyAdwordsResult.vue";
 import DailyCost from "@/components/report/dailyCost.vue";
@@ -16,6 +16,11 @@ const apiUrl = inject('apiUrl');
 const lang = inject('lang');
 
 const { data } = getContent(`${apiUrl}${route.path}`, false);
+const dateReport = inject('dateReport')
+
+watch(data, () => {
+    dateReport.value = data.value.date;
+});
 
 
 const nameHeaderResult = [

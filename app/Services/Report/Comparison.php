@@ -192,6 +192,7 @@ class Comparison
             $this->historyReportRepository
                 ->create([
                     'date' => $date,
+                    'name' => $date,
                     'type' => self::REPORT_NAME
                 ]);
             return $this->response;

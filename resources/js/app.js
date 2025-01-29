@@ -20,6 +20,7 @@ createApp(Dashboard)
     .provide('loginUrl', getUrlByData('data-login-url'))
     .provide('apiUrl', import.meta.env.VITE_API_PREFIX)
     .provide('communicates', communicates)
+    .provide('dateReport', ref(null))
     .mount("#app")
 /**
  * The following block of code may be used to automatically register your
