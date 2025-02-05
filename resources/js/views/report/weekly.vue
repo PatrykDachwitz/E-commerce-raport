@@ -2,7 +2,7 @@
 
 import {getContent} from "@/utils/getContent.js";
 import {useRoute} from "vue-router";
-import {inject, onMounted} from "vue";
+import {inject, onMounted, watch} from "vue";
 import DailyShopResult from "@/components/report/dailyShopResult.vue";
 import DailyAdwordsResult from "@/components/report/dailyAdwordsResult.vue";
 import DailyCost from "@/components/report/dailyCost.vue";
@@ -26,6 +26,9 @@ const nameHeaderCost = [
   'google',
   'facebook',
 ];
+const dateReport = inject('dateReport')
+
+const selectDateReport = inject('selectDateReport')
 
 onMounted(() => {
     changePositionTableHeader('report__row--header', "report", 'report__row--first');
@@ -33,6 +36,19 @@ onMounted(() => {
 })
 
 
+watch(data, () => {
+    dateReport.value = data.value.date;
+});
+
+watch(selectDateReport, () => {
+    changeDataReport();
+});
+
+async function changeDataReport() {
+    let dataReport = await getContentToJson(`${apiUrl}${route.path}?date=` + selectDateReport.value, false);
+    data.value.data = dataReport.data;
+    data.value.date = dataReport.date;
+}
 
 </script>
 

@@ -48,8 +48,10 @@ class ComparisonController extends Controller
 
     public function __invoke(ReportDateFormat $request)
     {
+        $dateReport = $request->input('date', date("Y-m-d", strtotime('-1 day')));
+
         $fileContent = json_decode(Storage::disk()
-            ->get(config('report.containerReportComparisonDay') . $request->input('date', date("Y-m-d", strtotime('-1 day'))) . '.json'), true);
+            ->get(config('report.containerReportComparisonDay') . $dateReport . '.json'), true);
 
         $this->updateDates($fileContent["date"]);
 
@@ -58,7 +60,8 @@ class ComparisonController extends Controller
         ], $fileContent);
 
         return response([
-            'data' => $response
+            'data' => $response,
+            'date' => $dateReport
         ]);
     }
 }

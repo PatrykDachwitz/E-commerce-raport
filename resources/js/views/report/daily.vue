@@ -10,17 +10,28 @@ import {
     changePositionCountryName,
     changePositionTableHeader
 } from "@/utils/changePositionToFixed.js";
+import {getContentToJson} from "@/utils/getContentToJson.js";
 
 const route = useRoute();
 const apiUrl = inject('apiUrl');
 const lang = inject('lang');
-
-const { data } = getContent(`${apiUrl}${route.path}`, false);
+const selectDateReport = inject('selectDateReport')
+let { data } = getContent(`${apiUrl}${route.path}`, false);
 const dateReport = inject('dateReport')
 
 watch(data, () => {
     dateReport.value = data.value.date;
 });
+
+watch(selectDateReport, () => {
+    changeDataReport();
+});
+
+async function changeDataReport() {
+    let dataReport = await getContentToJson(`${apiUrl}${route.path}?date=` + selectDateReport.value, false);
+    data.value.data = dataReport.data;
+    data.value.date = dataReport.date;
+}
 
 
 const nameHeaderResult = [

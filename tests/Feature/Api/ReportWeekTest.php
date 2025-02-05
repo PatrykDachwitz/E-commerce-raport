@@ -1529,7 +1529,8 @@ describe('verification format and count response data', function () {
                            'costGoogle' => $structureStatisticCost,
                            'costFacebook' => $structureStatisticCost,
                        ]
-                   ]
+                   ],
+                   'date'
                ]
            );
    });
@@ -2248,10 +2249,13 @@ describe('verification format and count response data', function () {
 
        $response = actingAs($user)
                         ->get(route('report.weekly') . "?date={$lastDay}")
-                        ->json('data');
+                        ->json();
 
        expect($response)
-           ->toMatchArray($expectResult);
+           ->toMatchArray([
+               'data' => $expectResult,
+               'date' =>$lastDay
+           ]);
    });
 
     it('Verification correct response for empty date input', function () {

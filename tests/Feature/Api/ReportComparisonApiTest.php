@@ -267,10 +267,13 @@ describe('test format and structure response api', function () {
 
        $response = actingAs($user)
            ->get(route('report.comparison'))
-           ->json("data");
+           ->json();
 
        expect($response)
-           ->toMatchArray(array_merge($expectArray, $expectNames));
+           ->toMatchArray([
+               'data' => array_merge($expectArray, $expectNames),
+               'date' => $lastDayDate
+           ]);
 
    });
 });

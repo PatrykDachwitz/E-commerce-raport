@@ -35,7 +35,8 @@ class WeeklyController extends Controller
             ->get(config('report.containerReportResultWeekly') . "{$sunday}.json");
 
         return response([
-            'data' => json_decode($fileContent)
+            'data' => json_decode($fileContent),
+            'date' => $sunday
         ]);
     }
 }

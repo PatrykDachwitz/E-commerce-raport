@@ -11,7 +11,7 @@ import {languages} from "@/utils/languages.js";
 import {router} from "@/setting/router.js";
 import {getUrlByData} from "@/utils/getUrlByData.js";
 const communicates = ref([]);
-
+const selectDateReport = ref(null);
 
 createApp(Dashboard)
     .use(router)
@@ -20,6 +20,7 @@ createApp(Dashboard)
     .provide('loginUrl', getUrlByData('data-login-url'))
     .provide('apiUrl', import.meta.env.VITE_API_PREFIX)
     .provide('communicates', communicates)
+    .provide('selectDateReport', selectDateReport)
     .provide('dateReport', ref(null))
     .mount("#app")
 /**

@@ -20,6 +20,6 @@ class HistoriesReportController extends Controller
     public function index(IndexRequest $request) {
 
         return $this->historyReport
-            ->index(20, $request->validated(['type']), $request->input(['order'], 'asc'));
+            ->index(20, $request->validated(['type']), $request->validated(['order'], 'asc'));
     }
 }

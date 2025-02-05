@@ -1,5 +1,5 @@
 <script setup>
-import {inject, onMounted} from "vue";
+import {inject, onMounted, watch} from "vue";
 import {useRoute} from "vue-router";
 import {getContent} from "@/utils/getContent.js";
 import {insertSpace} from "../../utils/insertSpace.js";
@@ -7,9 +7,23 @@ import {insertSpace} from "../../utils/insertSpace.js";
 const apiUrl = inject('apiUrl');
 const route = useRoute();
 const lang = inject('lang');
-
+const dateReport = inject('dateReport')
+const selectDateReport = inject('selectDateReport')
 const { data, error } = getContent(`${apiUrl}${route.path}`, false);
 
+watch(data, () => {
+    dateReport.value = data.value.date;
+});
+
+watch(selectDateReport, () => {
+    changeDataReport();
+});
+
+async function changeDataReport() {
+    let dataReport = await getContentToJson(`${apiUrl}${route.path}?date=` + selectDateReport.value, false);
+    data.value.data = dataReport.data;
+    data.value.date = dataReport.date;
+}
 </script>
 
 <template>

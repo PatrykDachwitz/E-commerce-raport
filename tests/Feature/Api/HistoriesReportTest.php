@@ -27,7 +27,6 @@ describe('Test for index url', function () {
 
     });
 
-
     it('Test response expected success', function () {
        $response = actingAs(User::factory()->make())
        ->getJson(route('histories_report.index'));
@@ -41,6 +40,7 @@ describe('Test for index url', function () {
            ->toHaveCount(20)
            ->toMatchArray($expectedResponse);
     });
+
     it('Test pagination 2 page expected success', function () {
        $response = actingAs(User::factory()->make())
        ->getJson(route('histories_report.index') . "?page=2");
