@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\HistoriesReportController;
 use App\Http\Controllers\Api\Report\ComparisonController;
 use App\Http\Controllers\Api\Report\DailyController;
@@ -20,6 +21,8 @@ Route::apiResource('histories_report', HistoriesReportController::class)
     ->only('index')
     ->middleware('auth:sanctum');
 
+Route::apiResource('countries', CountryController::class)
+    ->middleware('auth:sanctum');
 
 Route::group([
     'prefix' => 'report',

@@ -6,7 +6,10 @@ use App\Repository\Eloquent\UserRepository;
 use App\Repository\UserRepository as UserRepositoryInterface;
 use App\Repository\Eloquent\HistoryReportRepository;
 use App\Repository\HistoryReportRepository as HistoryReportInterface;
+use App\Repository\Eloquent\CountryRepository;
+use App\Repository\CountryRepository as CountryRepositoryInterface;
 
+use App\Services\Pest\Countries;
 use App\Services\Report\Fake\AnalyticsApiResponse;
 use App\Services\Report\Fake\GoogleAdsResponse;
 use App\Services\Report\Fake\HistoryReport;
@@ -50,6 +53,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(HistoryReport::class, function ($app) {
             return new HistoryReport();
         });
+        $this->app->singleton(Countries::class, function ($app) {
+            return new Countries();
+        });
     }
 
     /**
@@ -65,6 +71,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             HistoryReportInterface::class,
             HistoryReportRepository::class,
+        );
+        $this->app->singleton(
+            CountryRepositoryInterface::class,
+            CountryRepository::class,
         );
 
 

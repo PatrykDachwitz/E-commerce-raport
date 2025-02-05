@@ -1,18 +1,27 @@
 <?php
-
+declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repository\CountryRepository;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
+    private CountryRepository $countryRepository;
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct(CountryRepository $countryRepository)
+    {
+        $this->countryRepository = $countryRepository;
+    }
+
     public function index()
     {
-        //
+        return $this->countryRepository
+            ->index(20);
     }
 
     /**

@@ -18,7 +18,16 @@ class CountryFactory extends Factory
     {
         return [
             "name" => fake()->country(),
-            "shop" => fake()->numberBetween(1, 10)
+            "shop" => fake()->numberBetween(1, 10),
+            'google' => rand(10000, 99999999),
+            'facebook' => rand(10000, 99999999),
+            'analytics' => rand(10000, 99999999),
+            'active' => rand(0, 1),
+            'facebook_daily_budget' => rand(100, 1000),
+            'google_daily_budget' => rand(100, 1000),
+            'facebook_budget_currency' => rand(100, 1000),
+            'google_budget_currency' => rand(100, 1000),
+            'result-summary' => rand(0, 1),
         ];
     }
 }
