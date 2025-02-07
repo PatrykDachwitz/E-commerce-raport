@@ -50,4 +50,23 @@ class Countries
             })
             ->toArray();
     }
+
+
+    private function getCountryById(int $idCountry) : array {
+        return (array) DB::table('countries')
+            ->find($idCountry);
+    }
+
+    private function removeNotExpectedValueInCountry(array $country) : array {
+        unset($country['created_at']);
+        unset($country['updated_at']);
+
+        return $country;
+    }
+
+    public function getCountry(int $idCountry) : array {
+        $country = $this->getCountryById($idCountry);
+
+        return $this->removeNotExpectedValueInCountry($country);
+    }
 }

@@ -20,4 +20,10 @@ class CountryRepository implements \App\Repository\CountryRepository
         return $this->country
             ->paginate($paginate);
     }
+
+    public function show(int $id): country
+    {
+        return $this->country
+            ->findOrFail($id);
+    }
 }

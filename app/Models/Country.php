@@ -44,4 +44,5 @@ class Country extends Model
         return $this->where("active", true);
     }
 
+
 }

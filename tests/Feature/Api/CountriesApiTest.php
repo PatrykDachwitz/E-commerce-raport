@@ -97,3 +97,24 @@ describe('Testing index Route', function () {
     })->with('permissionsuperadmin');
 
 });
+
+describe('Verification correct access to show route countries api', function () {
+    it('Verification access with different super admin permission', function (string $superAdmin) {
+
+        $response = actingAs(User::factory()->make([
+            'super_admin' => $superAdmin
+        ]))
+            ->getJson(route('countries.show', [
+                'country' => 1
+            ]))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => CountriesFacade::getExpectedStructureCountry()
+            ])
+            ->json('data');
+
+        expect($response)
+            ->toMatchArray(CountriesFacade::getCountry(1));
+
+    })->with('permissionsuperadmin');
+});
