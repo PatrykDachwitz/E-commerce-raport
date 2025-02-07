@@ -11,4 +11,6 @@ interface CountryRepository
     public function index(int $paginate = 15);
 
     public function show(int $id) : country;
+
+    public function destroy(int $id);
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repository\CountryRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CountryController extends Controller
 {
@@ -54,8 +56,11 @@ class CountryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        if(Gate::denies('checkSuperAdmin', Auth::user())) abort(403);
+
+        return $this->countryRepository
+            ->destroy($id);
     }
 }

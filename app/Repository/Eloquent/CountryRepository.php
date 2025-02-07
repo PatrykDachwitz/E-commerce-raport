@@ -26,4 +26,10 @@ class CountryRepository implements \App\Repository\CountryRepository
         return $this->country
             ->findOrFail($id);
     }
+
+    public function destroy(int $id)
+    {
+        return $this->country
+            ->destroy($id);
+    }
 }

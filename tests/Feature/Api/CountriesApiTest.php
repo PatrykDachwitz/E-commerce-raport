@@ -5,6 +5,8 @@ use App\Facades\Pest\CountriesFacade;
 use App\Models\User;
 use Database\Seeders\Pest\CountriesSeed;
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
@@ -117,4 +119,96 @@ describe('Verification correct access to show route countries api', function () 
             ->toMatchArray(CountriesFacade::getCountry(1));
 
     })->with('permissionsuperadmin');
+
+    it('Verification response for not isset row expected 404 status code', function (string $superAdmin) {
+
+        actingAs(User::factory()->make([
+            'super_admin' => $superAdmin
+        ]))
+            ->getJson(route('countries.show', [
+                'country' => 10000009
+            ]))
+            ->assertStatus(404);
+
+    })->with('permissionsuperadmin');
+});
+
+describe('Verification remove row route', function () {
+
+   it('Verification remove isset row, user without super admin permission expected 403 status code and no remove search country', function () {
+        $countrySearch = CountriesFacade::getCountry(1);
+
+        assertDatabaseHas('countries', $countrySearch);
+
+        actingAs(User::factory()->make([
+            'super_admin' => false
+        ]))
+            ->deleteJson(route('countries.destroy', [
+                'country' => $countrySearch['id']
+            ]))
+            ->assertStatus(403);
+
+        assertDatabaseHas('countries', $countrySearch);
+    });
+   it('Verification remove not isset, row user without super admin permission expected 403 status code and no remove search country', function () {
+
+       $id = 9993299;
+
+        assertDatabaseMissing('countries', [
+            'id' => $id
+        ]);
+
+        actingAs(User::factory()->make([
+            'super_admin' => false
+        ]))
+            ->deleteJson(route('countries.destroy', [
+                'country' => $id
+            ]))
+            ->assertStatus(403);
+
+       assertDatabaseMissing('countries', [
+           'id' => $id
+       ]);
+    });
+
+
+   it('Verification remove isset row, user with super admin permission expected 200 status code and remove search country', function () {
+        $countrySearch = CountriesFacade::getCountry(1);
+
+        assertDatabaseHas('countries', $countrySearch);
+
+        actingAs(User::factory()->create([
+            'super_admin' => true
+        ]))
+            ->deleteJson(route('countries.destroy', [
+                'country' => $countrySearch['id']
+            ]))
+            ->assertStatus(200);
+
+        assertDatabaseMissing('countries', $countrySearch);
+   });
+
+
+   it('Verification remove not isset row, user with super admin permission expected 200 status code and remove search country', function () {
+        $id = 993299392;
+
+        assertDatabaseMissing('countries', [
+            'id' => $id
+        ]);
+
+        actingAs(User::factory()->create([
+            'super_admin' => true
+        ]))
+            ->deleteJson(route('countries.destroy', [
+                'country' => $id
+            ]))
+            ->assertStatus(200);
+
+        assertDatabaseMissing('countries', [
+            'id' => $id
+        ]);
+   });
+
+
+
 });
