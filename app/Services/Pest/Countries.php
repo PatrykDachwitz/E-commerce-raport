@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace App\Services\Pest;
 
+use App\Models\Country;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class Countries
@@ -64,6 +66,49 @@ class Countries
         return $country;
     }
 
+    private function getInvalidValueForIntegerInput() : array {
+        return [
+            "testValue",
+            null,
+            12.12,
+        ];
+    }
+    private function getInvalidValueForStringInput() : array {
+        return [
+            13231,
+            null,
+            true,
+            false,
+            12.12,
+        ];
+    }
+    private function getInvalidValueForBoolInput() : array {
+        return [
+            13231,
+            null,
+            12.12,
+            "testValue",
+        ];
+    }
+    public function getInvalidValueInput(string $nameValue) : array {
+        switch ($nameValue) {
+            case "facebook_daily_budget":
+            case "google_daily_budget":
+            case "shop":
+                return $this->getInvalidValueForIntegerInput();
+            case "result-summary":
+            case "active":
+                return $this->getInvalidValueForBoolInput();
+            default:
+                return $this->getInvalidValueForStringInput();
+        }
+    }
+
+    public function getNotIssetCountry() : array {
+        return Country::factory()
+            ->make()
+            ->attributesToArray();
+    }
     public function getCountry(int $idCountry) : array {
         $country = $this->getCountryById($idCountry);
 

@@ -133,7 +133,7 @@ describe('Verification correct access to show route countries api', function () 
     })->with('permissionsuperadmin');
 });
 
-describe('Verification remove row route', function () {
+describe('Verification remove country route', function () {
 
    it('Verification remove isset row, user without super admin permission expected 403 status code and no remove search country', function () {
         $countrySearch = CountriesFacade::getCountry(1);
@@ -150,6 +150,7 @@ describe('Verification remove row route', function () {
 
         assertDatabaseHas('countries', $countrySearch);
     });
+
    it('Verification remove not isset, row user without super admin permission expected 403 status code and no remove search country', function () {
 
        $id = 9993299;
@@ -171,7 +172,6 @@ describe('Verification remove row route', function () {
        ]);
     });
 
-
    it('Verification remove isset row, user with super admin permission expected 200 status code and remove search country', function () {
         $countrySearch = CountriesFacade::getCountry(1);
 
@@ -187,7 +187,6 @@ describe('Verification remove row route', function () {
 
         assertDatabaseMissing('countries', $countrySearch);
    });
-
 
    it('Verification remove not isset row, user with super admin permission expected 200 status code and remove search country', function () {
         $id = 993299392;
@@ -209,6 +208,75 @@ describe('Verification remove row route', function () {
         ]);
    });
 
+});
 
+describe('Verification create country route', function () {
+    it('User without super admin permission expected 403 status http and no create row', function () {
+        $country = CountriesFacade::getNotIssetCountry();
+        assertDatabaseMissing('countries', $country);
 
+        actingAs(User::factory()->create([
+            'super_admin' => false
+        ]))
+            ->postJson(route('countries.store'), $country)
+            ->assertStatus(403);
+
+        assertDatabaseMissing('countries', $country);
+    });
+
+    it('User with super admin permission expected 200 status http and create row', function () {
+        $country = CountriesFacade::getNotIssetCountry();
+        assertDatabaseMissing('countries', $country);
+
+        $response = actingAs(User::factory()->create([
+            'super_admin' => true
+        ]))
+            ->postJson(route('countries.store'), $country)
+            ->assertStatus(200)
+            ->json('data');
+
+        expect($response)
+            ->toMatchArray($country);
+
+        assertDatabaseHas('countries', $country);
+    });
+    it('Testing create country with only required inputs, user with super admin permission expected 200 status http and create row', function () {
+        $country['name'] = CountriesFacade::getNotIssetCountry()['name'];
+
+        $response = actingAs(User::factory()->create([
+            'super_admin' => true
+        ]))
+            ->postJson(route('countries.store'), $country)
+            ->assertStatus(200)
+            ->json('data');
+
+        expect($response)
+            ->toMatchArray($country);
+
+        assertDatabaseHas('countries', $country);
+    });
+
+    it('Testing correct work valid inputs expected error status code 422', function ($nameInput) {
+        $invalidValues = CountriesFacade::getInvalidValueInput($nameInput);
+        $country = CountriesFacade::getNotIssetCountry();
+
+        foreach ($invalidValues as $invalidValue) {
+            $country[$nameInput] = $invalidValue;
+
+            $response = actingAs(User::factory()->create([
+                'super_admin' => true
+            ]))
+                ->postJson(route('countries.store'), $country)
+                ->assertStatus(422)
+                ->assertJsonStructure([
+                    'message',
+                    'errors' => [
+                        $nameInput
+                    ]
+                ]);
+
+            assertDatabaseMissing('countries', $country);
+        }
+
+    })->with('inputcountrymodel');
 });

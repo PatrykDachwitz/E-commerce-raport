@@ -13,4 +13,6 @@ interface CountryRepository
     public function show(int $id) : country;
 
     public function destroy(int $id);
+
+    public function create(array $data) : country;
 }

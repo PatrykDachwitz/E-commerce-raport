@@ -32,4 +32,10 @@ class CountryRepository implements \App\Repository\CountryRepository
         return $this->country
             ->destroy($id);
     }
+
+    public function create(array $data): country
+    {
+        return $this->country
+            ->create($data);
+    }
 }
