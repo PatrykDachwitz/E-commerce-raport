@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Country\StoreRequest;
+use App\Http\Requests\Country\UpdateRequest;
 use App\Repository\CountryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,9 +69,16 @@ class CountryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, int $id)
     {
-        //
+        if(Gate::denies('checkSuperAdmin', Auth::user())) abort(403);
+
+        $searchCountry = $this->countryRepository
+            ->show($id);
+
+        return response([
+            'data' => $this->countryRepository->update($searchCountry, $request->only(self::FILLABLE_INPUTS))
+        ], 200);
     }
 
     /**

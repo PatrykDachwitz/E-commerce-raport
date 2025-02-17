@@ -38,4 +38,10 @@ class CountryRepository implements \App\Repository\CountryRepository
         return $this->country
             ->create($data);
     }
+
+    public function update(Country $country, array $data): bool
+    {
+        return $country
+            ->update($data);
+    }
 }

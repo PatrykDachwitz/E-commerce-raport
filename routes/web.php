@@ -19,4 +19,3 @@ Route::get('{any}', function () {
     ->where('any', '.*')
     ->middleware('auth:sanctum')
     ->name('dashboard');
-//Route::get('{any}', \App\Http\Controllers\TestApiResponseController::class)->where('any', '.*');

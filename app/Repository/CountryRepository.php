@@ -15,4 +15,6 @@ interface CountryRepository
     public function destroy(int $id);
 
     public function create(array $data) : country;
+
+    public function update(Country $country, array $data) : bool;
 }

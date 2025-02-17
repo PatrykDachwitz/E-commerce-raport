@@ -280,3 +280,77 @@ describe('Verification create country route', function () {
 
     })->with('inputcountrymodel');
 });
+
+describe('Testing update route', function () {
+
+    it('Verification access for user without super admin permission', function () {
+
+        actingAs(User::factory()
+        ->make([
+            'super_admin' => false
+        ]))
+            ->putJson(route('countries.update', [
+                'country' => 1
+            ]))
+            ->assertStatus(403);
+    });
+
+    it('Verification correct response for not isset country expected 404', function () {
+
+        actingAs(User::factory()
+        ->make([
+            'super_admin' => true
+        ]))
+            ->putJson(route('countries.update', [
+                'country' => 99999999999
+            ]))
+            ->assertStatus(404);
+    });
+
+    it('Verification correct updated data expected success' , function () {
+       $updateData = CountriesFacade::getNotIssetCountry();
+
+       $response = actingAs(User::factory()
+       ->make([
+           'super_admin' => true
+       ]))
+           ->putJson(route('countries.update', [
+               'country' => 1
+           ]), $updateData)
+           ->assertOk()
+           ->json('data');
+
+
+       expect($response)
+           ->toBe(true);
+
+       $updateData['id'] = 1;
+       assertDatabaseHas('countries', $updateData);
+    });
+
+    it('Testing correct work valid inputs expected error status code 422', function ($nameInput) {
+        $invalidValues = CountriesFacade::getInvalidValueInput($nameInput);
+        $country = CountriesFacade::getNotIssetCountry();
+
+        foreach ($invalidValues as $invalidValue) {
+            $country[$nameInput] = $invalidValue;
+
+            actingAs(User::factory()->create([
+                'super_admin' => true
+            ]))
+                ->putJson(route('countries.update', [
+                    'country' => 1
+                ]), $country)
+                ->assertStatus(422)
+                ->assertJsonStructure([
+                    'message',
+                    'errors' => [
+                        $nameInput
+                    ]
+                ]);
+
+            assertDatabaseMissing('countries', $country);
+        }
+
+    })->with('inputcountrymodel');
+});
