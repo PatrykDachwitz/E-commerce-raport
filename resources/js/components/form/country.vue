@@ -5,49 +5,67 @@ const lang = inject('lang');
 </script>
 
 <template>
-    <form class="row g-3 needs-validation align-items-start" id="users" novalidate>
+    <form class="row g-3 needs-validation align-items-start" id="countries" novalidate>
         <div class="col-md-1 form__input">
             <label for="validationCustom01" class="form-label">{{ lang.id }}</label>
             <input type="text" class="form-control" name="id" id="validationCustom01" placeholder="1" required>
 
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustom02" class="form-label">{{ lang.fullName }}</label>
-            <input type="text" class="form-control" name="name" id="validationCustom02" :placeholder="lang.templateFullName" required>
+            <label for="validationCustom02" class="form-label">{{ lang.country }}</label>
+            <input type="text" class="form-control" name="name" id="validationCustom02" :placeholder="lang.country" required>
             <div class="valid-feedback">
                 Looks good!
             </div>
         </div>
         <div class="col-md-5 form__input">
-            <label for="validationCustom03" class="form-label">{{ lang.email }}</label>
+            <label for="validationCustom03" class="form-label">{{ lang.google }}</label>
             <div class="input-group has-validation">
-                <input type="email" class="form-control" name="email" id="validationCustom03" :placeholder="lang.templateEmail" required>
+                <input type="text" class="form-control" name="google" id="validationCustom03" :placeholder="lang.google" required>
             </div>
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustom04" class="form-label">{{ lang.password }}</label>
+            <label for="validationCustom04" class="form-label">{{ lang.idShop }}</label>
             <div class="input-group has-validation">
-                <input type="password" class="form-control" name="password" id="validationCustom04" :placeholder="lang.password">
+                <input type="text" class="form-control" name="shop" id="validationCustom04" :placeholder="lang.idShop">
             </div>
         </div>
         <div class="col-md-6 form__input">
-            <label for="validationCustom05" class="form-label">{{ lang.confirmedPassword }}</label>
+            <label for="validationCustom05" class="form-label">{{ lang.facebook }}</label>
             <div class="input-group has-validation">
-                <input type="password" class="form-control" name="password_confirmation" id="validationCustom05" :placeholder="lang.password">
+                <input type="text" class="form-control" name="facebook" id="validationCustom05" :placeholder="lang.facebook">
+            </div>
+        </div>
+        <div class="col-md-6 form__input">
+            <label for="validationCustom05" class="form-label">{{ lang.analytics }}</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control" name="analytics" id="validationCustom05" :placeholder="lang.analytics">
+            </div>
+        </div>
+        <div class="col-md-6 form__input">
+            <label for="validationCustom05" class="form-label">{{ lang.googleDailyBudget }}</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control" name="google_daily_budget" id="validationCustom05" :placeholder="lang.googleDailyBudget">
+            </div>
+        </div>
+        <div class="col-md-6 form__input">
+            <label for="validationCustom05" class="form-label">{{ lang.facebookDailyBudget }}</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control" name="facebook_daily_budget" id="validationCustom05" :placeholder="lang.facebookDailyBudget">
             </div>
         </div>
         <div class="col-md-3 form__input">
-            <label for="validationCustom06" class="form-label">{{ lang.userRight }}</label>
+            <label for="validationCustom06" class="form-label">{{ lang.resultSummary }}</label>
             <select class="form-select" id="validationCustom06" name="user_right" required>
-                <option selected value="1">{{ lang.read }}</option>
-                <option value="2">{{ lang.editAndSave }}</option>
+                <option selected value="1">{{ lang.yes }}</option>
+                <option value="0">{{ lang.no }}</option>
             </select>
         </div>
-        <div class="col-md-6 form__input">
-            <label for="validationCustom07" class="form-label">{{ lang.superAdmin }}</label>
-            <select class="form-select" id="validationCustom07" name="super_admin" disabled>
-                <option selected value="0">{{ lang.no }}</option>
-                <option value="1">{{ lang.yes }}</option>
+        <div class="col-md-3 form__input">
+            <label for="validationCustom06" class="form-label">{{ lang.active }}</label>
+            <select class="form-select" id="validationCustom06" name="active" required>
+                <option selected value="1">{{ lang.yes }}</option>
+                <option value="0">{{ lang.no }}</option>
             </select>
         </div>
 

@@ -19,6 +19,6 @@ class HistoryReport extends Model
     protected $fillable = [
         'type',
         'date',
-        'string',
+        'name',
     ];
 }

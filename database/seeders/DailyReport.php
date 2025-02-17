@@ -54,8 +54,7 @@ class DailyReport extends Seeder
             ],
         ];
         foreach ($countries as $country) {
-            Country::factory()
-                ->create($country);
+            Country::create($country);
         }
     }
 }

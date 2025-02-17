@@ -12,6 +12,7 @@ use App\Services\Report\Support\AnalyticsResult;
 use App\Services\Report\Support\ShopResult;
 use App\Services\ShopSales;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
 use function Laravel\Prompts\select;
 
@@ -80,6 +81,7 @@ class ResultWeekly
     public function get(array $currentDate, array $otherDate) : array {
         $this->createRangesDate($currentDate, $otherDate);
 
+       // dd($this->datesReport);
         $completeReport = [];
 
 
@@ -87,6 +89,8 @@ class ResultWeekly
         $activesCountry = $this->country
             ->active()
             ->get();
+
+
 
         $analyticsResult = $this->analyticsResult->getWithManyRangesDate($activesCountry, $this->datesReport);
 

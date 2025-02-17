@@ -44,7 +44,7 @@ const loginUrl = inject('loginUrl');
                     <router-link :to="{name: 'report-daily'}" class="navigation__subsection">{{ lang['dailyReport'] }}</router-link>
                 </li>
                 <li class="my-1">
-                    <router-link :to="{name: 'weekly'}" class="navigation__subsection">Raport weekendowy</router-link>
+                    <router-link :to="{name: 'weekly'}" class="navigation__subsection">{{ lang['weeklyReport'] }}</router-link>
                 </li>
                 <li class="my-1">
                     <router-link :to="{name: 'report-comparison'}" class="navigation__subsection">{{ lang['comparisonReport'] }}</router-link>
@@ -53,8 +53,10 @@ const loginUrl = inject('loginUrl');
             </ul>
             <span class="navigation__list--header">{{ lang['setting'] }}</span>
             <ul class="navigation__list ps-2">
-                <li class="navigation__subsection my-1">{{ lang['countryAvailability'] }}</li>
-                <li class="navigation__subsection my-1">{{ lang['schedule'] }}</li>
+                <li class="navigation__subsection my-1">
+                    <router-link class="navigation__subsection" :to="{name: 'universal_index', params:{target: 'countries'}}">{{ lang['countryAvailability'] }}</router-link>
+                </li>
+<!--                <li class="navigation__subsection my-1">{{ lang['schedule'] }}</li>-->
                 <li class="navigation__subsection my-1">
                     <router-link class="navigation__subsection" :to="{name: 'universal_index', params:{target: 'users'}}">{{ lang['users'] }}</router-link>
                 </li>

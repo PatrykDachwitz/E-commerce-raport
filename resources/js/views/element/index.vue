@@ -1,5 +1,5 @@
 <script setup>
-import {inject} from "vue";
+import {inject, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {getContent} from "@/utils/getContent.js";
 import {updateElement} from "@/utils/updateElement.js";
@@ -10,9 +10,14 @@ import {removeElementInIndexElementByDataSet} from "@/utils/removeElementInIndex
 const baseUrlApi = inject('apiUrl');
 const communicates = inject('communicates');
 const router = useRouter();
-const apiUrl = `${baseUrlApi}${router.currentRoute.value.fullPath}`;
+const currentRoute = ref(router.currentRoute);
+const apiUrl = ref(`${baseUrlApi}${router.currentRoute.value.fullPath}`);
 const nameRoute = router.currentRoute.value.params.target;
-const { data, error } = getContent(`${apiUrl}`, false);
+const { data, error } = getContent(apiUrl, false);
+
+watch(currentRoute, () => {
+    apiUrl.value = `${baseUrlApi}${currentRoute.value.fullPath}`;
+});
 
 async function updateCurrentElement(id) {
     const urlApiSuperAdmin = `${baseUrlApi}/users/${id}/super_admin`;

@@ -27,12 +27,9 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\seed;
 
-beforeEach(function () {
+it('Verification response Weekly report with current data', function() {
     seed(WeeklyReport::class);
     NbpApiResponseFacade::getResponse();
-});
-
-it('Verification response Weekly report with current data', function() {
     ShopApiResponseFacade::getSuccessWeekly();
     GoogleAdsResponseFacade::getSuccessWeekly();
     MetaAdsResponseFacade::getSuccessWeekly();
@@ -63,6 +60,7 @@ it('Verification response Weekly report with current data', function() {
 
     $searchRow = [
         'date' => $rangesDate["end"],
+        'name' => $rangesDate["end"],
         'type' => 'result-week'
     ];
 
@@ -87,6 +85,9 @@ it('Verification response Weekly report with current data', function() {
      );
 
 
+  /*  dd(      $reportWeekly
+        ->get($rangesDate, $rangesOtherDate)
+    );*/
     expect(
       $reportWeekly
         ->get($rangesDate, $rangesOtherDate)

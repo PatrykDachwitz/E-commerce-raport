@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use function Pest\Laravel\actingAs;
@@ -13,7 +12,10 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
-uses(RefreshDatabase::class);
+beforeEach(function () {
+    DB::table('users')
+        ->truncate();
+});
 
 describe('Test create user', function () {
     it('Test create user not log in expected error', function () {

@@ -1,4 +1,4 @@
-import {inject, ref, watchEffect} from "vue";
+import {inject, ref, toValue, watchEffect} from "vue";
 import {getCSRFToken} from "@/utils/getCSRFToken.js";
 import {setCommunicate} from "@/utils/setCommunicate.js";
 
@@ -10,7 +10,7 @@ export function getContent(url, setSuccessCommunicate = true) {
 
      watchEffect(() => {
         data.value = null;
-         fetch(url,
+         fetch(toValue(url),
              {
                  headers: {
                      'X-CSRF-Token': getCSRFToken(),
