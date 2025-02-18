@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Http;
 
 trait GoogleRefreshToken
 {
-    const URL_TOKEN_REFRESH = "https://oauth2.googleapis.com/token";
+    private string $urlRefreshToken;
     private string $credentialsConfigName, $tokenConfigName;
 
     public function getAccessToken(string $credentialsConfigName, string $tokenConfigName) : string {
+        $this->urlRefreshToken = config('api.endPointGoogleRefreshToken');
         $this->credentialsConfigName = $credentialsConfigName;
         $this->tokenConfigName = $tokenConfigName;
 
@@ -20,7 +21,7 @@ trait GoogleRefreshToken
             "Content-Type" => "application/json",
         ])
             ->withBody(json_encode($this->getBody()))
-            ->post(self::URL_TOKEN_REFRESH);
+            ->post($this->urlRefreshToken);
 
         if ($response->ok()) {
             return $response->json('access_token');

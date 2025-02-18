@@ -56,7 +56,7 @@ class GoogleAdwordsApi extends AdwordsApi
             "login-customer-id" => $this->loginCustomerId,
         ])
             ->withBody($bodyQuery)
-            ->post("https://googleads.googleapis.com/v17/customers/{$idCompany}/googleAds:searchStream");
+            ->post(config('api.endPointGoogle') . "/v17/customers/{$idCompany}/googleAds:searchStream");
 
 
         try {

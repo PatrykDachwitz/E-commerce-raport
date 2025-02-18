@@ -12,5 +12,8 @@ return [
     'pathGoogleAdwordsToken' => storage_path('credentials\token-google-adwords.json'),
     'pathGoogleAdwordsCredentials' => storage_path('credentials\credentials-google-adwords.json'),
 
-    'endPointAnalytics' => "https://analyticsdata.googleapis.com",
+    'endPointAnalytics' => env('URL_ANALYTICS_API', "https://analyticsdata.googleapis.com"),
+    'endPointGoogle' => env('URL_GOOGLE_API', "https://googleads.googleapis.com"),
+    'endPointGoogleRefreshToken' => env('URL_GOOGLE_REFRESH_TOKEN', "https://oauth2.googleapis.com/token"),
+    'endPointFacebook' => env('URL_FACEBOOK_API', "https://graph.facebook.com"),
 ];

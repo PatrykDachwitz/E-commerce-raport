@@ -31,7 +31,7 @@ class AnalyticsApi
             'Content-Type' => "application/json",
         ])
             ->withBody($bodyQuery)
-            ->post("https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertiesCountry}:runReport");
+            ->post(config('api.endPointAnalytics') . "/v1beta/properties/{$this->propertiesCountry}:runReport");
 
         return $response->json();
     }

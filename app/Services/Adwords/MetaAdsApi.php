@@ -28,7 +28,7 @@ class MetaAdsApi extends AdwordsApi
             "Accept" => "application/json",
             "Authorization" => "Bearer {$tokenMeta}",
         ])
-            ->get("https://graph.facebook.com/v20.0/act_{$idAccount}/insights?fields=clicks,spend&action_attribution_windows=['7d_click','1d_view']&time_range[since]={$startDate}&time_range[until]={$endDate}");
+            ->get(config('api.endPointFacebook'). "/v20.0/act_{$idAccount}/insights?fields=clicks,spend&action_attribution_windows=['7d_click','1d_view']&time_range[since]={$startDate}&time_range[until]={$endDate}");
 
 
         if ($response->ok()) {
