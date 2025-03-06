@@ -24,7 +24,6 @@ class DemoSeed extends Seeder
                     'shop' => $i,
                     'active' => true,
                     'result-summary' => true,
-                    'google_additional_campaign' => "",
                 ]);
         }
 
@@ -39,14 +38,14 @@ class DemoSeed extends Seeder
                 'analytics' => "",
                 'facebook_daily_budget' => 0,
                 'google_budget_currency' => 0,
-                'google_additional_campaign' => "",
             ]);
+
         User::factory()
-            ->count(3)
+            ->count(10)
             ->create();
         User::factory()
             ->create([
-                'name' => 'admin@admin.pl',
+                'email' => 'admin@admin.pl',
                 'password' => "admin12",
                 'super_admin' => true,
             ]);
