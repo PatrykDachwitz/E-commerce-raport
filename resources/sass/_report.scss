@@ -38,15 +38,15 @@
     }
 
     &__value {
-        min-height: 50px !important;
-        max-height: 50px !important;
+        min-height: 25px !important;
+        max-height: 25px !important;
         display: flex;
         justify-content: center;
         align-items: center;
         border-bottom: 1px solid $grey-dark;
         &--double {
-            min-height: 100px !important;
-            max-height: 100px !important;
+            min-height: 50px !important;
+            max-height: 50px !important;
         }
         &--danger {
             background-color: $red !important;
