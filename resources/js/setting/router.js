@@ -70,12 +70,18 @@ const routes = [
             {
                 path: "weekly",
                 name: "weekly",
-                component: weekly
+                components: {
+                    sideBar: reportBar,
+                    default: weekly
+                }
             },
             {
                 path: "comparison",
                 name: "report-comparison",
-                component: comparison
+                components: {
+                    sideBar: reportBar,
+                    default: comparison
+                }
             }
         ],
     }

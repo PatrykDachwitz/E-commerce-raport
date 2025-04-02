@@ -4,7 +4,7 @@ import {inject, onMounted, ref, watch} from "vue";
 import {getContentToJson} from "@/utils/getContentToJson.js";
 
 const router = useRouter();
-const nameRoute = router.currentRoute.value.name;
+const currentRoute = ref(router.currentRoute);
 const lang = inject('lang');
 const dateReport = inject('dateReport')
 const viewHistory = ref(false);
@@ -14,7 +14,7 @@ const apiUrl = inject('apiUrl');
 const selectDateReport = inject('selectDateReport')
 
 function getTypeReport() {
-    switch (nameRoute) {
+    switch (currentRoute.value.name) {
         case "report-daily":
             return "result-day";
             break;
@@ -46,6 +46,11 @@ async function searchDateReport() {
     setOptionsHistory(await getContentToJson(urlApi, false));
 
 }
+function changeTypeReport() {
+    currentPageHistory.value = 0;
+    optionsReportDate.value = [];
+    searchDateReport();
+}
 
 function setOptionsHistory(data) {
     data.data.forEach(item => {
@@ -57,13 +62,19 @@ function setOptionsHistory(data) {
 
 
 
-onMounted(()=>{searchDateReport();})
+onMounted(()=>{
+    searchDateReport();
+})
 
+watch(currentRoute, () => {
+    changeTypeReport();
+    console.log('test');
+})
 </script>
 
 <template>
     <div class="d-flex ">
-        <span>{{ lang[nameRoute] }}: </span>
+        <span>{{ lang[currentRoute.name] }}: </span>
         <div>
             <span class="history__title position-relative ms-2 pe-1"  @click="viewHistory = !viewHistory"> {{dateReport}} <img class="history__icon" src="/assets/arrow.png" width="20" height="25">
                 <div class="history__select position-absolute" v-show="viewHistory" @mouseleave="viewHistory = false">
