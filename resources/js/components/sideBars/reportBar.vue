@@ -68,7 +68,6 @@ onMounted(()=>{
 
 watch(currentRoute, () => {
     changeTypeReport();
-    console.log('test');
 })
 </script>
 

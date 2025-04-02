@@ -10,6 +10,7 @@ import {
     changePositionCountryName,
     changePositionTableHeader
 } from "@/utils/changePositionToFixed.js";
+import {getContentToJson} from "@/utils/getContentToJson.js";
 
 const route = useRoute();
 const apiUrl = inject('apiUrl');

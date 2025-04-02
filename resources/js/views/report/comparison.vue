@@ -3,6 +3,7 @@ import {inject, onMounted, watch} from "vue";
 import {useRoute} from "vue-router";
 import {getContent} from "@/utils/getContent.js";
 import {insertSpace} from "../../utils/insertSpace.js";
+import {getContentToJson} from "@/utils/getContentToJson.js";
 
 const apiUrl = inject('apiUrl');
 const route = useRoute();
